@@ -349,7 +349,7 @@ Example: `einblick_results_snowflake_20260419_143022.md`
 
 ### Programmatic (CLI, full LLM report)
 
-Requires an LLM API key. Use the SQLSCOUT-prefixed variable so it doesn't collide with Claude Code (which also reads ANTHROPIC_API_KEY):
+Requires an LLM API key. Use the EINBLICK-prefixed variable so it doesn't collide with Claude Code (which also reads ANTHROPIC_API_KEY):
 
     export EINBLICK_ANTHROPIC_API_KEY=sk-ant-...   # or EINBLICK_OPENAI_API_KEY=sk-...
 

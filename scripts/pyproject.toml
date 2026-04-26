@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sqlscout"
+version = "0.1.0"
+description = "Analyze Snowflake, Databricks, and MotherDuck query history and recommend data modeling improvements"
+readme = {text = "Analyze query history and recommend data modeling improvements", content-type = "text/plain"}
+license = "MIT"
+requires-python = ">=3.10"
+authors = [
+    {name = "Luke Kranz"}
+]
+keywords = ["snowflake", "databricks", "motherduck", "data-modeling", "query-analysis", "sql"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Database",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "sqlglot>=23.0,<28",
+    "duckdb>=0.10,<2",
+    "click>=8.0,<9",
+    "pyyaml>=6.0,<7",
+    "pydantic>=2.0,<3",
+    "rich>=13.0,<15",
+    "requests>=2.31,<3",
+    "tomli>=2.0,<3; python_version < '3.11'",
+]
+
+[project.optional-dependencies]
+snowflake = [
+    "snowflake-connector-python>=3.6,<4",
+]
+databricks = [
+    "databricks-sql-connector>=3.0,<5",
+    "pyarrow>=14,<25",
+]
+llm = [
+    "anthropic>=0.40,<1",
+    "openai>=1.0,<2",
+]
+dev = [
+    "pytest>=8.0,<9",
+    "pytest-mock>=3.0,<4",
+]
+all = [
+    "sqlscout[snowflake,databricks,llm,dev]",
+]
+
+[project.scripts]
+sqlscout = "sqlscout.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

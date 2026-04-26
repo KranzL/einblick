@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+*.duckdb
+*.duckdb.wal
+.venv/
+venv/
+.pytest_cache/
+.env
+.env.*
+!.env.example
+*.log
+CLAUDE.md

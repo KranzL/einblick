@@ -1,0 +1,11 @@
+{
+  "name": "sqlscout",
+  "version": "0.1.0",
+  "description": "Analyze Snowflake, Databricks, and MotherDuck query history and recommend data modeling improvements",
+  "author": {
+    "name": "Luke Kranz"
+  },
+  "repository": "https://github.com/KranzL/sqlscout",
+  "license": "MIT",
+  "keywords": ["snowflake", "databricks", "motherduck", "data-modeling", "query-analysis", "sql"]
+}

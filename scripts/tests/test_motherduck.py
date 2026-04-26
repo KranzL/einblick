@@ -5,40 +5,40 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from sqlscout.config import load_motherduck_credentials
-from sqlscout.extractor import _is_likely_service_account
-from sqlscout.models import SqlscoutConfig
-from sqlscout.warehouse import credits_per_hour, estimate_compute_credits, normalize_warehouse_size
+from einblick.config import load_motherduck_credentials
+from einblick.extractor import _is_likely_service_account
+from einblick.models import EinblickConfig
+from einblick.warehouse import credits_per_hour, estimate_compute_credits, normalize_warehouse_size
 
 
 class TestMotherDuckCredentials:
     def test_lowercase_env_var_picked_up(self, monkeypatch):
         monkeypatch.setenv("motherduck_token", "tok-123")
-        creds = load_motherduck_credentials(SqlscoutConfig())
+        creds = load_motherduck_credentials(EinblickConfig())
         assert creds["token"] == "tok-123"
 
     def test_uppercase_env_var_works_too(self, monkeypatch):
         monkeypatch.delenv("motherduck_token", raising=False)
         monkeypatch.setenv("MOTHERDUCK_TOKEN", "tok-456")
-        creds = load_motherduck_credentials(SqlscoutConfig())
+        creds = load_motherduck_credentials(EinblickConfig())
         assert creds["token"] == "tok-456"
 
     def test_config_field_overrides_env(self, monkeypatch):
         monkeypatch.setenv("motherduck_token", "from-env")
-        config = SqlscoutConfig(motherduck_token="from-config")
+        config = EinblickConfig(motherduck_token="from-config")
         creds = load_motherduck_credentials(config)
         assert creds["token"] == "from-config"
 
     def test_database_field_propagates(self, monkeypatch):
         monkeypatch.setenv("motherduck_token", "tok")
-        config = SqlscoutConfig(motherduck_database="my_db")
+        config = EinblickConfig(motherduck_database="my_db")
         creds = load_motherduck_credentials(config)
         assert creds["database"] == "my_db"
 
     def test_no_token_returns_empty(self, monkeypatch):
         monkeypatch.delenv("motherduck_token", raising=False)
         monkeypatch.delenv("MOTHERDUCK_TOKEN", raising=False)
-        creds = load_motherduck_credentials(SqlscoutConfig())
+        creds = load_motherduck_credentials(EinblickConfig())
         assert "token" not in creds
 
 
@@ -81,17 +81,17 @@ class TestMotherDuckCost:
 
 class TestMotherDuckPlatformDispatch:
     def test_unknown_platform_raises_in_connector(self):
-        from sqlscout.connector import PlatformAccessError, connect
-        config = SqlscoutConfig.model_construct(platform="bigquery")
+        from einblick.connector import PlatformAccessError, connect
+        config = EinblickConfig.model_construct(platform="bigquery")
         with pytest.raises(PlatformAccessError, match="Unknown platform"):
             with connect(config):
                 pass
 
     def test_motherduck_routes_through_connector(self, monkeypatch):
-        from sqlscout.connector import connect
+        from einblick.connector import connect
 
         monkeypatch.setenv("motherduck_token", "fake-token")
-        config = SqlscoutConfig(platform="motherduck")
+        config = EinblickConfig(platform="motherduck")
 
         fake_duckdb = MagicMock()
         fake_conn = MagicMock()
@@ -107,10 +107,10 @@ class TestMotherDuckPlatformDispatch:
         assert call_args[1]["config"]["motherduck_token"] == "fake-token"
 
     def test_motherduck_with_database_appends_to_uri(self, monkeypatch):
-        from sqlscout.connector import connect
+        from einblick.connector import connect
 
         monkeypatch.setenv("motherduck_token", "fake-token")
-        config = SqlscoutConfig(platform="motherduck", motherduck_database="analytics")
+        config = EinblickConfig(platform="motherduck", motherduck_database="analytics")
 
         fake_duckdb = MagicMock()
         fake_conn = MagicMock()
@@ -123,11 +123,11 @@ class TestMotherDuckPlatformDispatch:
         assert fake_duckdb.connect.call_args[0][0] == "md:analytics"
 
     def test_no_token_raises_helpful_error(self, monkeypatch):
-        from sqlscout.connector import PlatformAccessError, connect
+        from einblick.connector import PlatformAccessError, connect
 
         monkeypatch.delenv("motherduck_token", raising=False)
         monkeypatch.delenv("MOTHERDUCK_TOKEN", raising=False)
-        config = SqlscoutConfig(platform="motherduck")
+        config = EinblickConfig(platform="motherduck")
 
         with pytest.raises(PlatformAccessError, match="MotherDuck token"):
             with connect(config):
@@ -168,7 +168,7 @@ class TestPlatformBuiltinServiceUsers:
 
 class TestMotherDuckValidateAccess:
     def test_permission_error_wraps_with_business_plan_hint(self):
-        from sqlscout.connector import PlatformAccessError, _validate_motherduck
+        from einblick.connector import PlatformAccessError, _validate_motherduck
 
         conn = MagicMock()
         conn.execute.side_effect = Exception("permission denied")
@@ -176,7 +176,7 @@ class TestMotherDuckValidateAccess:
             _validate_motherduck(conn)
 
     def test_unrelated_error_propagates_unchanged(self):
-        from sqlscout.connector import _validate_motherduck
+        from einblick.connector import _validate_motherduck
 
         conn = MagicMock()
         conn.execute.side_effect = ValueError("network blip")
@@ -184,7 +184,7 @@ class TestMotherDuckValidateAccess:
             _validate_motherduck(conn)
 
     def test_validate_passes_when_query_succeeds(self):
-        from sqlscout.connector import _validate_motherduck
+        from einblick.connector import _validate_motherduck
 
         conn = MagicMock()
         result = MagicMock()
@@ -196,7 +196,7 @@ class TestMotherDuckValidateAccess:
 
 class TestMotherDuckExtractIteration:
     def test_extract_motherduck_streams_rows_through_cursor(self):
-        from sqlscout.extractor import _extract_motherduck
+        from einblick.extractor import _extract_motherduck
 
         rows = [
             ("q1", "SELECT * FROM analytics.events", "luke", "", "duckling-1",
@@ -209,7 +209,7 @@ class TestMotherDuckExtractIteration:
         conn = MagicMock()
         conn.execute.return_value = cursor
 
-        config = SqlscoutConfig(platform="motherduck", days=1)
+        config = EinblickConfig(platform="motherduck", days=1)
         extracted = list(_extract_motherduck(conn, config))
         assert len(extracted) == 2
         assert extracted[0].query_id == "q1"
@@ -224,7 +224,7 @@ class TestMotherDuckExtractIteration:
 
 class TestMotherDuckDialect:
     def test_aggregator_uses_duckdb_dialect_for_motherduck(self):
-        from sqlscout.fingerprinter import fingerprint_query
+        from einblick.fingerprinter import fingerprint_query
 
         snowflake_fp = fingerprint_query("SELECT 1::INT", dialect="snowflake")
         duckdb_fp = fingerprint_query("SELECT 1::INT", dialect="duckdb")

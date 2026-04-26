@@ -8,7 +8,7 @@ from typing import Any
 
 import yaml
 
-from sqlscout.models import SqlscoutConfig
+from einblick.models import EinblickConfig
 
 if sys.version_info >= (3, 11):
     import tomllib
@@ -25,8 +25,8 @@ _SNOWFLAKE_CLI_CONFIG_PATHS = [
     Path.home() / ".config" / "snowflake" / "config.toml",
 ]
 _DATABRICKS_CONFIG_PATH = Path.home() / ".databrickscfg"
-_USER_CONFIG_PATH = Path.home() / ".sqlscout.yml"
-_PROJECT_CONFIG_NAME = ".sqlscout.yml"
+_USER_CONFIG_PATH = Path.home() / ".einblick.yml"
+_PROJECT_CONFIG_NAME = ".einblick.yml"
 
 _ENV_MAP = {
     "SNOWFLAKE_ACCOUNT": "snowflake_account",
@@ -64,7 +64,7 @@ _SNOWFLAKE_KEY_MAP = {
 def load_config(
     cli_overrides: dict[str, Any] | None = None,
     config_path: str | None = None,
-) -> SqlscoutConfig:
+) -> EinblickConfig:
     merged: dict[str, Any] = {}
 
     user_config = _load_yaml(_USER_CONFIG_PATH)
@@ -82,10 +82,10 @@ def load_config(
     if cli_overrides:
         merged.update({k: v for k, v in cli_overrides.items() if v is not None})
 
-    return SqlscoutConfig(**merged)
+    return EinblickConfig(**merged)
 
 
-def load_snowflake_credentials(config: SqlscoutConfig) -> dict[str, str]:
+def load_snowflake_credentials(config: EinblickConfig) -> dict[str, str]:
     creds: dict[str, str] = {}
 
     toml_creds = _load_snowflake_toml(config.snowflake_connection)
@@ -164,7 +164,7 @@ def _load_snowflake_toml(connection_name: str) -> dict[str, str]:
     return {}
 
 
-def load_motherduck_credentials(config: SqlscoutConfig) -> dict[str, str]:
+def load_motherduck_credentials(config: EinblickConfig) -> dict[str, str]:
     creds: dict[str, str] = {}
 
     for env_name in ("motherduck_token", "MOTHERDUCK_TOKEN"):
@@ -181,7 +181,7 @@ def load_motherduck_credentials(config: SqlscoutConfig) -> dict[str, str]:
     return creds
 
 
-def load_databricks_credentials(config: SqlscoutConfig) -> dict[str, str]:
+def load_databricks_credentials(config: EinblickConfig) -> dict[str, str]:
     creds: dict[str, str] = {}
 
     if _DATABRICKS_CONFIG_PATH.exists():

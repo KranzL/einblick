@@ -1,12 +1,12 @@
 """Live Databricks integration tests. SKIPPED unless explicit env vars are set.
 
 These tests connect to a real Databricks SQL warehouse and run the actual
-queries sqlscout uses against `system.query.history`. They exist because pure
+queries einblick uses against `system.query.history`. They exist because pure
 unit tests with mocked cursors only verify substring presence in rendered SQL --
 they cannot catch column-name typos, dialect quirks, or schema mismatches that
 only surface at runtime.
 
-Two real bugs slipped past unit tests and were caught only when sqlscout was
+Two real bugs slipped past unit tests and were caught only when einblick was
 pointed at a live Databricks workspace:
 1. `date_sub(current_timestamp(), INTERVAL X HOUR)` is not valid Databricks SQL
    (date_sub takes integer days, not interval).
@@ -14,7 +14,7 @@ pointed at a live Databricks workspace:
    warehouse id is nested under `q.compute.warehouse_id`.
 
 To run:
-    SQLSCOUT_LIVE_DATABRICKS=1 \
+    EINBLICK_LIVE_DATABRICKS=1 \
     DATABRICKS_HOST=dbc-xxxx.cloud.databricks.com \
     DATABRICKS_HTTP_PATH=/sql/1.0/warehouses/abc123 \
     DATABRICKS_TOKEN=dapi... \
@@ -30,7 +30,7 @@ import os
 import pytest
 
 LIVE = (
-    os.environ.get("SQLSCOUT_LIVE_DATABRICKS") == "1"
+    os.environ.get("EINBLICK_LIVE_DATABRICKS") == "1"
     and os.environ.get("DATABRICKS_HOST")
     and os.environ.get("DATABRICKS_HTTP_PATH")
     and os.environ.get("DATABRICKS_TOKEN")
@@ -39,17 +39,17 @@ LIVE = (
 
 pytestmark = pytest.mark.skipif(
     not LIVE,
-    reason="Live Databricks tests opt-in: set SQLSCOUT_LIVE_DATABRICKS=1 plus DATABRICKS_HOST/HTTP_PATH/TOKEN",
+    reason="Live Databricks tests opt-in: set EINBLICK_LIVE_DATABRICKS=1 plus DATABRICKS_HOST/HTTP_PATH/TOKEN",
 )
 
 
 def _config(**overrides):
-    from sqlscout.config import load_config
+    from einblick.config import load_config
     return load_config(cli_overrides={"platform": "databricks", "days": 1, **overrides})
 
 
 def test_validate_access_succeeds():
-    from sqlscout.connector import connect, validate_access
+    from einblick.connector import connect, validate_access
 
     config = _config()
     with connect(config) as conn:
@@ -57,8 +57,8 @@ def test_validate_access_succeeds():
 
 
 def test_count_queries_runs_without_sql_error():
-    from sqlscout.connector import connect
-    from sqlscout.extractor import count_queries
+    from einblick.connector import connect
+    from einblick.extractor import count_queries
 
     config = _config(hours=1)
     with connect(config) as conn:
@@ -68,8 +68,8 @@ def test_count_queries_runs_without_sql_error():
 
 
 def test_extract_queries_returns_well_formed_rows():
-    from sqlscout.connector import connect
-    from sqlscout.extractor import extract_queries
+    from einblick.connector import connect
+    from einblick.extractor import extract_queries
 
     config = _config(hours=24)
     with connect(config) as conn:
@@ -82,8 +82,8 @@ def test_extract_queries_returns_well_formed_rows():
 
 
 def test_list_users_includes_executor_metadata():
-    from sqlscout.connector import connect
-    from sqlscout.extractor import list_users
+    from einblick.connector import connect
+    from einblick.extractor import list_users
 
     config = _config(hours=24)
     with connect(config) as conn:
@@ -100,9 +100,9 @@ def test_list_users_includes_executor_metadata():
 def test_full_pipeline_through_aggregate():
     """End-to-end: extract -> aggregate. Catches column-rename bugs that only
     fire when the result actually flows through the cluster pipeline."""
-    from sqlscout.aggregator import aggregate
-    from sqlscout.connector import connect
-    from sqlscout.extractor import extract_queries
+    from einblick.aggregator import aggregate
+    from einblick.connector import connect
+    from einblick.extractor import extract_queries
 
     config = _config(hours=24)
     with connect(config) as conn:

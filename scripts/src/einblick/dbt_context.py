@@ -10,9 +10,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
-from sqlscout.atomic_io import atomic_write_bytes
+from einblick.atomic_io import atomic_write_bytes
 
-from sqlscout.dbt_discovery import (
+from einblick.dbt_discovery import (
     DbtAuthError,
     DbtConfigError,
     DbtDiscoveryClient,
@@ -22,15 +22,15 @@ from sqlscout.dbt_discovery import (
     match_patterns_to_models,
     resolve_discovery_config,
 )
-from sqlscout.models import AnalysisResult
+from einblick.models import AnalysisResult
 
 def _default_context_path() -> Path:
     base = Path(tempfile.gettempdir())
     try:
         uid = os.getuid()
-        return base / f"sqlscout-dbt-context-{uid}.json"
+        return base / f"einblick-dbt-context-{uid}.json"
     except AttributeError:
-        return base / "sqlscout-dbt-context.json"
+        return base / "einblick-dbt-context.json"
 
 
 DEFAULT_CONTEXT_PATH = _default_context_path()
@@ -38,7 +38,7 @@ MAX_PERF_FETCHES = 50
 PERF_FETCH_WORKERS = 8
 PERF_FETCH_TOTAL_TIMEOUT_SECONDS = 60.0
 
-log = logging.getLogger("sqlscout.dbt_context")
+log = logging.getLogger("einblick.dbt_context")
 
 
 @dataclass

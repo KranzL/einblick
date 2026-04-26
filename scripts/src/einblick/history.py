@@ -5,9 +5,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from sqlscout.atomic_io import atomic_write_bytes
+from einblick.atomic_io import atomic_write_bytes
 
-DEFAULT_HISTORY_DIR = Path.home() / ".sqlscout" / "history"
+DEFAULT_HISTORY_DIR = Path.home() / ".einblick" / "history"
 DEFAULT_KEEP = 12
 
 
@@ -15,7 +15,7 @@ def resolve_history_dir(platform: str, override: Optional[str] = None) -> Path:
     if override:
         base = Path(override).expanduser()
     else:
-        env_override = os.environ.get("SQLSCOUT_HISTORY_DIR")
+        env_override = os.environ.get("EINBLICK_HISTORY_DIR")
         base = Path(env_override).expanduser() if env_override else DEFAULT_HISTORY_DIR
     return base / platform
 

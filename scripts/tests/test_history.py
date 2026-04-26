@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 import pytest
 
-from sqlscout.history import (
+from einblick.history import (
     DEFAULT_HISTORY_DIR,
     _atomic_write,
     latest_run,
@@ -27,12 +27,12 @@ class TestResolveHistoryDir:
         assert path == tmp_path / "databricks"
 
     def test_env_var_respected(self, tmp_path, monkeypatch):
-        monkeypatch.setenv("SQLSCOUT_HISTORY_DIR", str(tmp_path))
+        monkeypatch.setenv("EINBLICK_HISTORY_DIR", str(tmp_path))
         path = resolve_history_dir("snowflake")
         assert path == tmp_path / "snowflake"
 
     def test_explicit_override_beats_env(self, tmp_path, monkeypatch):
-        monkeypatch.setenv("SQLSCOUT_HISTORY_DIR", "/should/not/win")
+        monkeypatch.setenv("EINBLICK_HISTORY_DIR", "/should/not/win")
         path = resolve_history_dir("snowflake", override=str(tmp_path))
         assert path == tmp_path / "snowflake"
 

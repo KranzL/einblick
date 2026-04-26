@@ -1,11 +1,11 @@
 services:
-  sqlscout:
-    image: ghcr.io/kranzl/sqlscout:latest
+  einblick:
+    image: ghcr.io/kranzl/einblick:latest
     env_file:
       - .env
     volumes:
       - ./reports:/workspace/reports
-      - ./history:/home/sqlscout/.sqlscout/history
+      - ./history:/home/einblick/.einblick/history
     command:
       - analyze
       - --platform
@@ -17,4 +17,4 @@ services:
       - --slack-mode
       - alert
       - --output
-      - /workspace/reports/sqlscout.md
+      - /workspace/reports/einblick.md

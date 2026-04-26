@@ -1,4 +1,4 @@
-from sqlscout.warehouse import (
+from einblick.warehouse import (
     credits_per_hour,
     estimate_compute_credits,
     infer_size_from_name,
@@ -89,7 +89,7 @@ class TestCreditsPerHour:
         assert credits_per_hour("WEIRD", platform="databricks") == 0
 
     def test_databricks_underscore_size_normalization(self):
-        from sqlscout.warehouse import normalize_warehouse_size
+        from einblick.warehouse import normalize_warehouse_size
         assert normalize_warehouse_size("X_SMALL") == "X-SMALL"
         assert normalize_warehouse_size("2X_LARGE") == "2X-LARGE"
         assert normalize_warehouse_size("2X_SMALL") == "2X-SMALL"

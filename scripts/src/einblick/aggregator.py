@@ -9,20 +9,20 @@ from typing import Callable, Generator, Optional
 
 import duckdb
 
-from sqlscout.extractor import _is_likely_service_account
-from sqlscout.fingerprinter import fingerprint_query
-from sqlscout.log import get_logger
+from einblick.extractor import _is_likely_service_account
+from einblick.fingerprinter import fingerprint_query
+from einblick.log import get_logger
 
 _log = get_logger("aggregator")
 
-from sqlscout.models import (
+from einblick.models import (
     AnalysisResult,
     ExtractionMetadata,
     Offenders,
     QueryCluster,
     RawQuery,
     SlowestPattern,
-    SqlscoutConfig,
+    EinblickConfig,
     UserStats,
     WarehouseStats,
 )
@@ -157,14 +157,14 @@ LIMIT 15
 
 def aggregate(
     queries: Generator[RawQuery, None, None],
-    config: SqlscoutConfig,
+    config: EinblickConfig,
     progress_callback: Optional[Callable[[str, int], None]] = None,
 ) -> AnalysisResult:
     dialect = {"databricks": "databricks", "motherduck": "duckdb"}.get(config.platform, "snowflake")
-    db_path = None if not config.keep_db else str(Path.cwd() / "sqlscout_working.duckdb")
+    db_path = None if not config.keep_db else str(Path.cwd() / "einblick_working.duckdb")
 
     if db_path is None:
-        db_path = os.path.join(tempfile.mkdtemp(), "sqlscout.duckdb")
+        db_path = os.path.join(tempfile.mkdtemp(), "einblick.duckdb")
 
     db = duckdb.connect(db_path)
     try:
@@ -347,7 +347,7 @@ def _ingest_serial(
     return total
 
 
-def _compute_offenders(db: duckdb.DuckDBPyConnection, config: SqlscoutConfig) -> Offenders:
+def _compute_offenders(db: duckdb.DuckDBPyConnection, config: EinblickConfig) -> Offenders:
 
     def _parse_user_rows(rows) -> list[UserStats]:
         return [
@@ -452,7 +452,7 @@ def export_markdown_summary(
     cost_label = "Est. Compute Cost"
 
     lines = [
-        f"# SqlScout Analysis ({platform_label})",
+        f"# Einblick Analysis ({platform_label})",
         f"",
         f"- Platform: {platform_label}",
         f"- Time window: {_format_time_window(result.metadata)}",

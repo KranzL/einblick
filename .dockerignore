@@ -15,8 +15,8 @@ commands
 README.md
 LICENSE
 CLAUDE.md
-sqlscout_results_*.md
-sqlscout_remediation_*.sql
+einblick_results_*.md
+einblick_remediation_*.sql
 *.duckdb
 *.duckdb.wal
 .DS_Store

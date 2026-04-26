@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
-from sqlscout.config import load_config, load_snowflake_credentials, _load_snowflake_toml
-from sqlscout.models import SqlscoutConfig
+from einblick.config import load_config, load_snowflake_credentials, _load_snowflake_toml
+from einblick.models import EinblickConfig
 
 
 class TestConfigDefaults:
@@ -53,14 +53,14 @@ class TestConfigEnvironment:
 
 class TestConfigFile:
     def test_yaml_config_loading(self, tmp_path):
-        config_file = tmp_path / ".sqlscout.yml"
+        config_file = tmp_path / ".einblick.yml"
         config_file.write_text("days: 14\nexclude_users:\n  - FIVETRAN\n  - DBT_CLOUD\n")
         config = load_config(config_path=str(config_file))
         assert config.days == 14
         assert config.exclude_users == ["FIVETRAN", "DBT_CLOUD"]
 
     def test_cli_overrides_file(self, tmp_path):
-        config_file = tmp_path / ".sqlscout.yml"
+        config_file = tmp_path / ".einblick.yml"
         config_file.write_text("days: 14\ntop_n: 200\n")
         config = load_config(
             cli_overrides={"days": 30},
@@ -70,7 +70,7 @@ class TestConfigFile:
         assert config.top_n == 200
 
     def test_platform_in_config_file(self, tmp_path):
-        config_file = tmp_path / ".sqlscout.yml"
+        config_file = tmp_path / ".einblick.yml"
         config_file.write_text("platform: databricks\ndays: 7\n")
         config = load_config(config_path=str(config_file))
         assert config.platform == "databricks"
@@ -83,13 +83,13 @@ class TestSnowflakeHost:
         assert config.snowflake_host == "myorg.privatelink.snowflakecomputing.com"
 
     def test_host_included_in_credentials(self):
-        config = SqlscoutConfig(
+        config = EinblickConfig(
             snowflake_account="acct",
             snowflake_user="user",
             snowflake_host="myorg.privatelink.snowflakecomputing.com",
         )
-        with patch("sqlscout.config._SNOWSQL_CONFIG_PATH") as mock_ini, \
-             patch("sqlscout.config._load_snowflake_toml", return_value={}):
+        with patch("einblick.config._SNOWSQL_CONFIG_PATH") as mock_ini, \
+             patch("einblick.config._load_snowflake_toml", return_value={}):
             mock_ini.exists.return_value = False
             creds = load_snowflake_credentials(config)
         assert creds["host"] == "myorg.privatelink.snowflakecomputing.com"
@@ -108,7 +108,7 @@ class TestSnowflakeTomlConfig:
             'warehouse = "COMPUTE_WH"\n'
         )
         monkeypatch.setattr(
-            "sqlscout.config._SNOWFLAKE_CLI_CONFIG_PATHS", [toml_path]
+            "einblick.config._SNOWFLAKE_CLI_CONFIG_PATHS", [toml_path]
         )
         creds = _load_snowflake_toml("work")
         assert creds["account"] == "myorg-myaccount"
@@ -126,14 +126,14 @@ class TestSnowflakeTomlConfig:
             'user = "prod-user"\n'
         )
         monkeypatch.setattr(
-            "sqlscout.config._SNOWFLAKE_CLI_CONFIG_PATHS", [toml_path]
+            "einblick.config._SNOWFLAKE_CLI_CONFIG_PATHS", [toml_path]
         )
         creds = _load_snowflake_toml("nonexistent")
         assert creds["account"] == "prod-account"
 
     def test_toml_returns_empty_when_no_file(self, monkeypatch):
         monkeypatch.setattr(
-            "sqlscout.config._SNOWFLAKE_CLI_CONFIG_PATHS", []
+            "einblick.config._SNOWFLAKE_CLI_CONFIG_PATHS", []
         )
         creds = _load_snowflake_toml("work")
         assert creds == {}
@@ -147,9 +147,9 @@ class TestSnowflakeTomlConfig:
             'host = "priv.snowflakecomputing.com"\n'
         )
         monkeypatch.setattr(
-            "sqlscout.config._SNOWFLAKE_CLI_CONFIG_PATHS", [toml_path]
+            "einblick.config._SNOWFLAKE_CLI_CONFIG_PATHS", [toml_path]
         )
-        config = SqlscoutConfig(snowflake_connection="connections")
+        config = EinblickConfig(snowflake_connection="connections")
         creds = load_snowflake_credentials(config)
         assert creds.get("host") == "priv.snowflakecomputing.com"
 

@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 Platform = Literal["snowflake", "databricks", "motherduck"]
 
 
-class SqlscoutConfig(BaseModel):
+class EinblickConfig(BaseModel):
     platform: Platform = "snowflake"
     days: int = 7
     hours: Optional[int] = None

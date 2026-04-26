@@ -1,6 +1,6 @@
 from click.testing import CliRunner
 
-from sqlscout.cli import main
+from einblick.cli import main
 
 
 class TestCliHelp:

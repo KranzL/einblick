@@ -16,12 +16,12 @@ from rich.progress import (
     TimeElapsedColumn,
 )
 
-from sqlscout.aggregator import aggregate, export_json, export_markdown_summary
-from sqlscout.config import load_config
-from sqlscout.connector import connect, validate_access, PlatformAccessError
-from sqlscout.extractor import count_queries, effective_hours, extract_queries, list_users
-from sqlscout.history import DEFAULT_KEEP, list_runs, resolve_history_dir, store_run
-from sqlscout.redact import format_error as _format_error
+from einblick.aggregator import aggregate, export_json, export_markdown_summary
+from einblick.config import load_config
+from einblick.connector import connect, validate_access, PlatformAccessError
+from einblick.extractor import count_queries, effective_hours, extract_queries, list_users
+from einblick.history import DEFAULT_KEEP, list_runs, resolve_history_dir, store_run
+from einblick.redact import format_error as _format_error
 
 console = Console()
 
@@ -85,7 +85,7 @@ def _save_to_history(
 
 
 def _run_dbt_aware_prestep(result) -> None:
-    from sqlscout.dbt_context import DEFAULT_CONTEXT_PATH, run_dbt_context_prestep
+    from einblick.dbt_context import DEFAULT_CONTEXT_PATH, run_dbt_context_prestep
 
     console.print("[dim]Cross-referencing patterns against dbt project...[/dim]")
     handoff = run_dbt_context_prestep(result)
@@ -123,7 +123,7 @@ def _gated_overrides(ctx: click.Context, mapping: dict[str, tuple[str, object]])
     return out
 
 
-from sqlscout.aggregator import format_window as _format_window_hours
+from einblick.aggregator import format_window as _format_window_hours
 
 
 def _scrub_sensitive_flags(argv: list[str]) -> list[str]:
@@ -147,7 +147,7 @@ def _rerun_command(resolved_excludes: list[str] | None = None) -> str:
     if resolved_excludes is not None:
         argv = _substitute_auto_exclude(argv, resolved_excludes)
     argv = _scrub_sensitive_flags(argv)
-    return " ".join(["sqlscout"] + [shlex.quote(a) for a in argv])
+    return " ".join(["einblick"] + [shlex.quote(a) for a in argv])
 
 
 def _substitute_auto_exclude(argv: list[str], resolved: list[str]) -> list[str]:
@@ -189,7 +189,7 @@ def _substitute_auto_exclude(argv: list[str], resolved: list[str]) -> list[str]:
 
 
 def _require_llm_api_key(provider: str) -> None:
-    scoped = f"SQLSCOUT_{provider.upper()}_API_KEY"
+    scoped = f"EINBLICK_{provider.upper()}_API_KEY"
     generic = f"{provider.upper()}_API_KEY"
     other = "openai" if provider == "anthropic" else "anthropic"
 
@@ -203,7 +203,7 @@ def _require_llm_api_key(provider: str) -> None:
         return
     console.print(
         f"[red]Missing {scoped}.[/red] Set it, run --provider {other}, "
-        f"or use /sqlscout inside Claude Code (no key needed)."
+        f"or use /einblick inside Claude Code (no key needed)."
     )
     sys.exit(1)
 
@@ -214,8 +214,8 @@ recommend what to materialize, cluster, or denormalize.
 
 \b
 Two ways to run this:
-  /sqlscout              -- inside Claude Code / Codex; no API key needed.
-  sqlscout analyze       -- cron / Airflow / CI; needs an LLM API key.
+  /einblick              -- inside Claude Code / Codex; no API key needed.
+  einblick analyze       -- cron / Airflow / CI; needs an LLM API key.
 """
 
 
@@ -226,7 +226,7 @@ def main():
 
 def _find_sample_data():
     from pathlib import Path
-    env_override = os.environ.get("SQLSCOUT_SAMPLE_DATA_DIR")
+    env_override = os.environ.get("EINBLICK_SAMPLE_DATA_DIR")
     candidates = []
     if env_override:
         candidates.append(Path(env_override) / "generate.py")
@@ -266,7 +266,7 @@ def _run_analyze_sample(config, output):
     )
 
     console.print("Generating report via LLM...")
-    from sqlscout.reporter import generate_report
+    from einblick.reporter import generate_report
     report = generate_report(result, config)
 
     if output:
@@ -287,7 +287,7 @@ def _maybe_post_to_slack(config, result, output, history_dir_override):
     if not config.slack_webhook_url or config.slack_mode == "off":
         return
 
-    from sqlscout.slack import compute_diff_against_previous, post_report, should_post
+    from einblick.slack import compute_diff_against_previous, post_report, should_post
 
     diff = compute_diff_against_previous(result, history_dir_override=history_dir_override)
     if not should_post(config.slack_mode, diff):
@@ -363,8 +363,8 @@ def _run_sample(config, output, fmt):
 
 
 @main.command(help="""Pull query history, fingerprint, cluster patterns. No
-LLM call. Writes JSON or a markdown summary. This is what /sqlscout runs
-under the hood; for a full LLM-written report use `sqlscout analyze`.""")
+LLM call. Writes JSON or a markdown summary. This is what /einblick runs
+under the hood; for a full LLM-written report use `einblick analyze`.""")
 @click.option("--platform", type=click.Choice(["snowflake", "databricks", "motherduck"]), default="snowflake")
 @click.option("--days", type=click.Choice(["1", "7", "14", "30"]), default="7")
 @click.option("--hours", type=int, default=None, help="Time window in hours. Overrides --days when set. Use 1 or 6 for quick previews.")
@@ -387,12 +387,12 @@ under the hood; for a full LLM-written report use `sqlscout analyze`.""")
 @click.option("--keep-db", is_flag=True, default=False)
 @click.option("--sample", is_flag=True, default=False, help="Use built-in sample data instead of connecting to a live platform")
 @click.option("--verbose", "-v", is_flag=True, default=False, help="Show additional progress details.")
-@click.option("--no-history", is_flag=True, default=False, help="Skip saving this run to ~/.sqlscout/history/. History is on by default so run-over-run diffs work.")
-@click.option("--history-dir", type=click.Path(), default=None, help="Override history location (default: ~/.sqlscout/history/, or $SQLSCOUT_HISTORY_DIR).")
+@click.option("--no-history", is_flag=True, default=False, help="Skip saving this run to ~/.einblick/history/. History is on by default so run-over-run diffs work.")
+@click.option("--history-dir", type=click.Path(), default=None, help="Override history location (default: ~/.einblick/history/, or $EINBLICK_HISTORY_DIR).")
 @click.option("--keep-history", type=int, default=DEFAULT_KEEP, help=f"How many past runs to keep per platform. Default: {DEFAULT_KEEP}. Use 0 for unlimited.")
 @click.pass_context
 def extract(ctx, platform, days, hours, output, fmt, config_path, connection, exclude_users, exclude_roles, auto_exclude_service_users, service_user_pattern, service_user_role, min_duration_ms, include_trivial, exclude_cache_hits, accurate_cost, top_n, analysis_depth, dbt_aware, keep_db, sample, verbose, no_history, history_dir, keep_history):
-    from sqlscout.models import resolve_preset
+    from einblick.models import resolve_preset
     resolved_top_n, resolved_min_duration = resolve_preset(analysis_depth, top_n, min_duration_ms)
 
     overrides = _gated_overrides(ctx, {
@@ -559,9 +559,9 @@ def extract(ctx, platform, days, hours, output, fmt, config_path, connection, ex
 
 
 @main.command(help="""Extract query history, cluster patterns, and ask an LLM
-to write the report. For cron / Airflow / CI. Needs SQLSCOUT_ANTHROPIC_API_KEY
-or SQLSCOUT_OPENAI_API_KEY (the SQLSCOUT_-prefixed forms avoid colliding with
-Claude Code). For interactive use, run /sqlscout instead.""")
+to write the report. For cron / Airflow / CI. Needs EINBLICK_ANTHROPIC_API_KEY
+or EINBLICK_OPENAI_API_KEY (the EINBLICK_-prefixed forms avoid colliding with
+Claude Code). For interactive use, run /einblick instead.""")
 @click.option("--platform", type=click.Choice(["snowflake", "databricks", "motherduck"]), default="snowflake")
 @click.option("--days", type=click.Choice(["1", "7", "14", "30"]), default="7")
 @click.option("--hours", type=int, default=None, help="Time window in hours. Overrides --days when set. Use 1 or 6 for quick previews.")
@@ -583,7 +583,7 @@ Claude Code). For interactive use, run /sqlscout instead.""")
 @click.option("--provider", type=click.Choice(["anthropic", "openai"]), default="anthropic")
 @click.option("--model", default=None)
 @click.option("--llm-base-url", default=None, help="Override the LLM API base URL. Useful for OpenAI-compatible endpoints (e.g., Venice.ai: https://api.venice.ai/api/v1) or Anthropic-compatible proxies. Use with --provider matching the protocol.")
-@click.option("--slack-webhook", default=None, envvar="SQLSCOUT_SLACK_WEBHOOK_URL", help="Slack incoming webhook URL. Sends a Block Kit summary after the report is written. Also reads $SQLSCOUT_SLACK_WEBHOOK_URL.")
+@click.option("--slack-webhook", default=None, envvar="EINBLICK_SLACK_WEBHOOK_URL", help="Slack incoming webhook URL. Sends a Block Kit summary after the report is written. Also reads $EINBLICK_SLACK_WEBHOOK_URL.")
 @click.option("--slack-mode", type=click.Choice(["off", "digest", "alert"]), default="digest", help="When to post: 'digest' always posts, 'alert' only when something interesting changed vs last run (>=20% cost delta, >=3 new patterns, or any disappeared), 'off' never posts. Ignored if --slack-webhook is unset.")
 @click.option("--context-ingestion", default=None, help="Ingestion pattern (e.g., 'Managed connectors (Fivetran)'). Shapes LLM recommendations.")
 @click.option("--context-freshness", default=None, help="Freshness requirement (e.g., 'Daily', 'Real-time').")
@@ -592,14 +592,14 @@ Claude Code). For interactive use, run /sqlscout instead.""")
 @click.option("--sample", is_flag=True, default=False, help="Use built-in sample data instead of connecting to Snowflake/Databricks. Useful for smoke-testing the LLM pipeline end-to-end. Still calls the LLM API.")
 @click.option("--keep-db", is_flag=True, default=False)
 @click.option("--verbose", "-v", is_flag=True, default=False, help="Show additional progress details.")
-@click.option("--no-history", is_flag=True, default=False, help="Skip saving this run to ~/.sqlscout/history/.")
-@click.option("--history-dir", type=click.Path(), default=None, help="Override history location (default: ~/.sqlscout/history/, or $SQLSCOUT_HISTORY_DIR).")
+@click.option("--no-history", is_flag=True, default=False, help="Skip saving this run to ~/.einblick/history/.")
+@click.option("--history-dir", type=click.Path(), default=None, help="Override history location (default: ~/.einblick/history/, or $EINBLICK_HISTORY_DIR).")
 @click.option("--keep-history", type=int, default=DEFAULT_KEEP, help=f"How many past runs to keep per platform. Default: {DEFAULT_KEEP}. Use 0 for unlimited.")
 @click.pass_context
 def analyze(ctx, platform, days, hours, output, config_path, connection, exclude_users, exclude_roles, auto_exclude_service_users, service_user_pattern, service_user_role, min_duration_ms, include_trivial, exclude_cache_hits, accurate_cost, top_n, analysis_depth, dbt_aware, provider, model, llm_base_url, slack_webhook, slack_mode, context_ingestion, context_freshness, context_transform, context_spend, sample, keep_db, verbose, no_history, history_dir, keep_history):
     _require_llm_api_key(provider)
 
-    from sqlscout.models import resolve_preset
+    from einblick.models import resolve_preset
     resolved_top_n, resolved_min_duration = resolve_preset(analysis_depth, top_n, min_duration_ms)
 
     overrides = _gated_overrides(ctx, {
@@ -695,7 +695,7 @@ def analyze(ctx, platform, days, hours, output, config_path, connection, exclude
                 _run_dbt_aware_prestep(result)
             console.print("Generating report via LLM...")
 
-            from sqlscout.reporter import generate_report
+            from einblick.reporter import generate_report
             report = generate_report(result, config)
 
             if not no_history:
@@ -779,7 +779,7 @@ def setup(platform, connection):
         sys.exit(1)
 
 
-@main.group(help="Inspect past sqlscout runs stored under ~/.sqlscout/history/ (or $SQLSCOUT_HISTORY_DIR).")
+@main.group(help="Inspect past einblick runs stored under ~/.einblick/history/ (or $EINBLICK_HISTORY_DIR).")
 def history():
     pass
 

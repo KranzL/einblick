@@ -6,7 +6,7 @@ import re
 import sqlglot
 from sqlglot import exp
 
-from sqlscout.log import get_logger
+from einblick.log import get_logger
 
 _log = get_logger("fingerprinter")
 

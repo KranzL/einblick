@@ -5,12 +5,12 @@ import sys
 from contextlib import contextmanager
 from typing import Any, Generator
 
-from sqlscout.config import (
+from einblick.config import (
     load_databricks_credentials,
     load_motherduck_credentials,
     load_snowflake_credentials,
 )
-from sqlscout.models import SqlscoutConfig
+from einblick.models import EinblickConfig
 
 
 class PlatformAccessError(Exception):
@@ -44,7 +44,7 @@ def _is_non_interactive() -> bool:
 
 
 @contextmanager
-def connect(config: SqlscoutConfig) -> Generator[Any, None, None]:
+def connect(config: EinblickConfig) -> Generator[Any, None, None]:
     if config.platform == "snowflake":
         yield from _connect_snowflake(config)
     elif config.platform == "databricks":
@@ -55,7 +55,7 @@ def connect(config: SqlscoutConfig) -> Generator[Any, None, None]:
         raise PlatformAccessError(f"Unknown platform: {config.platform}")
 
 
-def _connect_snowflake(config: SqlscoutConfig) -> Generator[Any, None, None]:
+def _connect_snowflake(config: EinblickConfig) -> Generator[Any, None, None]:
     import snowflake.connector
 
     creds = load_snowflake_credentials(config)
@@ -66,7 +66,7 @@ def _connect_snowflake(config: SqlscoutConfig) -> Generator[Any, None, None]:
         raise PlatformAccessError(
             f"Missing Snowflake credentials: {', '.join(missing)}. "
             "Set them in ~/.snowsql/config, environment variables "
-            "(SNOWFLAKE_ACCOUNT, SNOWFLAKE_USER), or .sqlscout.yml"
+            "(SNOWFLAKE_ACCOUNT, SNOWFLAKE_USER), or .einblick.yml"
         )
 
     connect_kwargs = {k: v for k, v in creds.items() if v}
@@ -89,12 +89,12 @@ def _connect_snowflake(config: SqlscoutConfig) -> Generator[Any, None, None]:
         conn.close()
 
 
-def _connect_databricks(config: SqlscoutConfig) -> Generator[Any, None, None]:
+def _connect_databricks(config: EinblickConfig) -> Generator[Any, None, None]:
     try:
         from databricks import sql as databricks_sql
     except ImportError:
         raise ImportError(
-            "databricks-sql-connector not installed. Run: pip install sqlscout[databricks]"
+            "databricks-sql-connector not installed. Run: pip install einblick[databricks]"
         )
 
     creds = load_databricks_credentials(config)
@@ -105,7 +105,7 @@ def _connect_databricks(config: SqlscoutConfig) -> Generator[Any, None, None]:
         raise PlatformAccessError(
             f"Missing Databricks credentials: {', '.join(missing)}. "
             "Set them in ~/.databrickscfg, environment variables "
-            "(DATABRICKS_HOST, DATABRICKS_HTTP_PATH, DATABRICKS_TOKEN), or .sqlscout.yml"
+            "(DATABRICKS_HOST, DATABRICKS_HTTP_PATH, DATABRICKS_TOKEN), or .einblick.yml"
         )
 
     connect_kwargs = {
@@ -122,12 +122,12 @@ def _connect_databricks(config: SqlscoutConfig) -> Generator[Any, None, None]:
         conn.close()
 
 
-def _connect_motherduck(config: SqlscoutConfig) -> Generator[Any, None, None]:
+def _connect_motherduck(config: EinblickConfig) -> Generator[Any, None, None]:
     try:
         import duckdb
     except ImportError:
         raise ImportError(
-            "duckdb not installed. It's in sqlscout's main dependencies, "
+            "duckdb not installed. It's in einblick's main dependencies, "
             "but you may have a broken install. Run: pip install duckdb"
         )
 
@@ -135,7 +135,7 @@ def _connect_motherduck(config: SqlscoutConfig) -> Generator[Any, None, None]:
     if "token" not in creds:
         raise PlatformAccessError(
             "Missing MotherDuck token. Set MOTHERDUCK_TOKEN (or motherduck_token) "
-            "env var, or motherduck_token in .sqlscout.yml. Generate one at "
+            "env var, or motherduck_token in .einblick.yml. Generate one at "
             "app.motherduck.com under Organization Settings -> Create token. "
             "QUERY_HISTORY needs an organization-admin token."
         )

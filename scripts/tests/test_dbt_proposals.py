@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 import pytest
 
-from sqlscout.dbt_proposals import (
+from einblick.dbt_proposals import (
     AccessPatternProposal,
     EMIT_DBT_PROPOSALS_TOOL,
     ModifyExistingProposal,
@@ -138,7 +138,7 @@ class TestParseProposals:
             "proposed_sql": "select 1", "rationale": "r",
         }]}
         p = parse_proposals(raw)[0]
-        assert p.sqlscout_schema_version == "1"
+        assert p.einblick_schema_version == "1"
 
 
 class TestRenderProposalsSection:
@@ -195,7 +195,7 @@ class TestRenderProposalsSection:
         assert "Users hit RAW.ORDERS directly" in out
         assert "mart.fct_orders" in out
         assert "fp1, fp2" in out
-        assert "sqlscout will not auto-apply governance changes" in out
+        assert "einblick will not auto-apply governance changes" in out
 
     def test_numbers_proposals_sequentially(self):
         p1 = NewModelProposal(
@@ -227,7 +227,7 @@ class TestToolSchema:
 
 class TestReporterIntegration:
     def test_anthropic_extract_parses_tool_use(self):
-        from sqlscout.reporter import _extract_anthropic_content
+        from einblick.reporter import _extract_anthropic_content
 
         text_block = SimpleNamespace(type="text", text="# Executive Summary\nWords.")
         tool_block = SimpleNamespace(
@@ -248,7 +248,7 @@ class TestReporterIntegration:
         assert isinstance(proposals[0], NewModelProposal)
 
     def test_anthropic_extract_handles_no_tool_call(self):
-        from sqlscout.reporter import _extract_anthropic_content
+        from einblick.reporter import _extract_anthropic_content
 
         text_block = SimpleNamespace(type="text", text="# Just Prose")
         response = SimpleNamespace(content=[text_block])
@@ -257,7 +257,7 @@ class TestReporterIntegration:
         assert proposals == []
 
     def test_anthropic_extract_handles_malformed_tool_input(self):
-        from sqlscout.reporter import _extract_anthropic_content
+        from einblick.reporter import _extract_anthropic_content
 
         text_block = SimpleNamespace(type="text", text="# Prose")
         bad_tool = SimpleNamespace(
@@ -271,7 +271,7 @@ class TestReporterIntegration:
         assert "tool call failed validation" in prose
 
     def test_openai_extract_parses_tool_calls(self):
-        from sqlscout.reporter import _extract_openai_content
+        from einblick.reporter import _extract_openai_content
 
         import json
         tool_call = SimpleNamespace(
@@ -293,7 +293,7 @@ class TestReporterIntegration:
         assert isinstance(proposals[0], AccessPatternProposal)
 
     def test_openai_extract_handles_no_tool_calls(self):
-        from sqlscout.reporter import _extract_openai_content
+        from einblick.reporter import _extract_openai_content
 
         message = SimpleNamespace(content="# Just Prose", tool_calls=None)
         response = SimpleNamespace(choices=[SimpleNamespace(message=message)])
@@ -302,7 +302,7 @@ class TestReporterIntegration:
         assert proposals == []
 
     def test_anthropic_extract_merges_multiple_tool_calls(self):
-        from sqlscout.reporter import _extract_anthropic_content
+        from einblick.reporter import _extract_anthropic_content
 
         text = SimpleNamespace(type="text", text="# Prose")
         tool_a = SimpleNamespace(
@@ -328,7 +328,7 @@ class TestReporterIntegration:
         assert "called emit_dbt_proposals 2 times" in prose
 
     def test_openai_extract_merges_multiple_tool_calls(self):
-        from sqlscout.reporter import _extract_openai_content
+        from einblick.reporter import _extract_openai_content
 
         import json
         call_a = SimpleNamespace(function=SimpleNamespace(
@@ -352,7 +352,7 @@ class TestReporterIntegration:
         assert "called emit_dbt_proposals 2 times" in prose
 
     def test_empty_prose_with_proposals_returns_empty_text(self):
-        from sqlscout.reporter import _extract_openai_content
+        from einblick.reporter import _extract_openai_content
 
         import json
         tool_call = SimpleNamespace(function=SimpleNamespace(
@@ -370,12 +370,12 @@ class TestReporterIntegration:
         assert len(proposals) == 1
 
     def test_empty_prose_synthesizes_header(self):
-        from sqlscout.models import SqlscoutConfig
-        from sqlscout.reporter import generate_report
+        from einblick.models import EinblickConfig
+        from einblick.reporter import generate_report
         from tests.test_reporter import _make_result
         from unittest.mock import patch
 
-        with patch("sqlscout.reporter._call_anthropic") as mock_call:
+        with patch("einblick.reporter._call_anthropic") as mock_call:
             mock_call.return_value = ("", [
                 NewModelProposal(
                     type="new_model", name="x", layer="staging",
@@ -383,16 +383,16 @@ class TestReporterIntegration:
                     proposed_sql="select 1", rationale="r",
                 ),
             ])
-            config = SqlscoutConfig(llm_provider="anthropic")
+            config = EinblickConfig(llm_provider="anthropic")
             report = generate_report(_make_result(), config)
 
-        assert "# SqlScout Analysis" in report
+        assert "# Einblick Analysis" in report
         assert "## Run Summary" in report
         assert "Time window:" in report
         assert "Proposed dbt Changes" in report
 
     def test_empty_prose_with_no_proposals_stays_empty(self):
-        from sqlscout.reporter import _extract_openai_content
+        from einblick.reporter import _extract_openai_content
 
         message = SimpleNamespace(content=None, tool_calls=None)
         response = SimpleNamespace(choices=[SimpleNamespace(message=message)])
@@ -402,10 +402,10 @@ class TestReporterIntegration:
 
 
 class TestEndToEndReport:
-    @patch("sqlscout.reporter._call_anthropic")
+    @patch("einblick.reporter._call_anthropic")
     def test_report_appends_proposals_section(self, mock_call):
-        from sqlscout.models import SqlscoutConfig
-        from sqlscout.reporter import generate_report
+        from einblick.models import EinblickConfig
+        from einblick.reporter import generate_report
         from tests.test_reporter import _make_result
 
         mock_call.return_value = (
@@ -420,20 +420,20 @@ class TestEndToEndReport:
                 rationale="r",
             )],
         )
-        config = SqlscoutConfig(llm_provider="anthropic")
+        config = EinblickConfig(llm_provider="anthropic")
         report = generate_report(_make_result(), config)
         assert "# Executive Summary" in report
         assert "## Proposed dbt Changes" in report
         assert "`new_model`: staging/orders" in report
 
-    @patch("sqlscout.reporter._call_anthropic")
+    @patch("einblick.reporter._call_anthropic")
     def test_report_without_proposals_omits_section(self, mock_call):
-        from sqlscout.models import SqlscoutConfig
-        from sqlscout.reporter import generate_report
+        from einblick.models import EinblickConfig
+        from einblick.reporter import generate_report
         from tests.test_reporter import _make_result
 
         mock_call.return_value = ("# Just Prose", [])
-        config = SqlscoutConfig(llm_provider="anthropic")
+        config = EinblickConfig(llm_provider="anthropic")
         report = generate_report(_make_result(), config)
         assert report == "# Just Prose"
         assert "Proposed dbt Changes" not in report

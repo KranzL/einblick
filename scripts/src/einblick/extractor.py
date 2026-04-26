@@ -4,8 +4,8 @@ import re
 from datetime import datetime
 from typing import Any, Callable, Generator, Optional
 
-from sqlscout.models import RawQuery, SqlscoutConfig
-from sqlscout.warehouse import estimate_compute_credits
+from einblick.models import RawQuery, EinblickConfig
+from einblick.warehouse import estimate_compute_credits
 
 _CHUNK_SIZE = 10_000
 
@@ -234,7 +234,7 @@ GROUP BY 1, 2
 """
 
 
-def fetch_hourly_proration_factors(conn: Any, config: SqlscoutConfig) -> dict:
+def fetch_hourly_proration_factors(conn: Any, config: EinblickConfig) -> dict:
     if config.platform != "databricks":
         return {}
     hours = effective_hours(config)
@@ -290,19 +290,19 @@ _SKIP_PATTERNS = frozenset([
 ])
 
 
-def effective_hours(config: SqlscoutConfig) -> int:
+def effective_hours(config: EinblickConfig) -> int:
     if config.hours is not None:
         return config.hours
     return config.days * 24
 
 
-def _snowflake_noise_filter(config: SqlscoutConfig) -> str:
+def _snowflake_noise_filter(config: EinblickConfig) -> str:
     if config.include_trivial:
         return ""
     return _SNOWFLAKE_NOISE_FILTER.format(min_duration_ms=config.min_duration_ms)
 
 
-def _databricks_noise_filter(config: SqlscoutConfig) -> str:
+def _databricks_noise_filter(config: EinblickConfig) -> str:
     if config.include_trivial:
         return ""
     cache_filter = "AND COALESCE(q.from_result_cache, FALSE) = FALSE" if config.exclude_cache_hits else ""
@@ -312,7 +312,7 @@ def _databricks_noise_filter(config: SqlscoutConfig) -> str:
     )
 
 
-def count_queries(conn: Any, config: SqlscoutConfig) -> int:
+def count_queries(conn: Any, config: EinblickConfig) -> int:
     hours = effective_hours(config)
 
     if config.platform == "snowflake":
@@ -383,13 +383,13 @@ def _motherduck_user_filter(exclude_users: list[str]) -> tuple[str, list[str]]:
     return f"AND USER_NAME NOT IN ({placeholders})", list(exclude_users)
 
 
-def _motherduck_noise_filter(config: SqlscoutConfig) -> str:
+def _motherduck_noise_filter(config: EinblickConfig) -> str:
     if config.include_trivial:
         return ""
     return _MOTHERDUCK_NOISE_FILTER.format(min_duration_ms=config.min_duration_ms)
 
 
-def list_users(conn: Any, config: SqlscoutConfig) -> list[dict]:
+def list_users(conn: Any, config: EinblickConfig) -> list[dict]:
     hours = effective_hours(config)
 
     if config.platform == "snowflake":
@@ -503,7 +503,7 @@ def _is_likely_service_account(
 
 def extract_queries(
     conn: Any,
-    config: SqlscoutConfig,
+    config: EinblickConfig,
     progress_callback: Optional[Callable[[int], None]] = None,
 ) -> Generator[RawQuery, None, None]:
     proration: dict = {}
@@ -523,7 +523,7 @@ def extract_queries(
 
 def _extract_motherduck(
     conn: Any,
-    config: SqlscoutConfig,
+    config: EinblickConfig,
     progress_callback: Optional[Callable[[int], None]] = None,
 ) -> Generator[RawQuery, None, None]:
     hours = effective_hours(config)
@@ -539,7 +539,7 @@ def _extract_motherduck(
 
 def _extract_snowflake(
     conn: Any,
-    config: SqlscoutConfig,
+    config: EinblickConfig,
     progress_callback: Optional[Callable[[int], None]] = None,
     proration: Optional[dict] = None,
 ) -> Generator[RawQuery, None, None]:
@@ -574,7 +574,7 @@ def _extract_snowflake(
 
 def _extract_databricks(
     conn: Any,
-    config: SqlscoutConfig,
+    config: EinblickConfig,
     progress_callback: Optional[Callable[[int], None]] = None,
     proration: Optional[dict] = None,
 ) -> Generator[RawQuery, None, None]:

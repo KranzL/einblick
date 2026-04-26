@@ -6,21 +6,21 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from sqlscout.dbt_context import (
+from einblick.dbt_context import (
     DbtContextHandoff,
     PatternDbtContext,
     load_handoff,
     render_dbt_context_for_prompt,
     run_dbt_context_prestep,
 )
-from sqlscout.dbt_discovery import (
+from einblick.dbt_discovery import (
     DbtAuthError,
     DbtConfigError,
     DbtDiscoveryError,
     DbtModelSummary,
     DbtPerformanceStats,
 )
-from sqlscout.models import (
+from einblick.models import (
     AnalysisResult,
     ExtractionMetadata,
     Offenders,
@@ -85,7 +85,7 @@ class TestPreStepGracefulFailures:
         monkeypatch.setenv("DBT_PROD_ENV_ID", "1")
         mock_client = MagicMock()
         mock_client.get_all_models.side_effect = DbtAuthError("401")
-        with patch("sqlscout.dbt_context.DbtDiscoveryClient", return_value=mock_client):
+        with patch("einblick.dbt_context.DbtDiscoveryClient", return_value=mock_client):
             assert run_dbt_context_prestep(_make_result([("fp1", ["X"])]), output_path=tmp_path / "h.json") is None
 
     def test_returns_none_on_generic_error(self, monkeypatch, tmp_path):
@@ -93,7 +93,7 @@ class TestPreStepGracefulFailures:
         monkeypatch.setenv("DBT_PROD_ENV_ID", "1")
         mock_client = MagicMock()
         mock_client.get_all_models.side_effect = DbtDiscoveryError("network")
-        with patch("sqlscout.dbt_context.DbtDiscoveryClient", return_value=mock_client):
+        with patch("einblick.dbt_context.DbtDiscoveryClient", return_value=mock_client):
             assert run_dbt_context_prestep(_make_result([("fp1", ["X"])]), output_path=tmp_path / "h.json") is None
 
 
@@ -126,7 +126,7 @@ class TestPreStepSuccess:
 
         result = _make_result([("fp_abc", ["RAW.ORDERS"]), ("fp_unmatched", ["OTHER.TABLE"])])
         out_path = tmp_path / "context.json"
-        with patch("sqlscout.dbt_context.DbtDiscoveryClient", return_value=mock_client):
+        with patch("einblick.dbt_context.DbtDiscoveryClient", return_value=mock_client):
             handoff = run_dbt_context_prestep(result, output_path=out_path)
 
         assert handoff is not None
@@ -158,7 +158,7 @@ class TestPreStepSuccess:
         )
         result = _make_result([("fp1", ["RAW.ORDERS"])])
         out = tmp_path / "h.json"
-        with patch("sqlscout.dbt_context.DbtDiscoveryClient", return_value=mock_client):
+        with patch("einblick.dbt_context.DbtDiscoveryClient", return_value=mock_client):
             run_dbt_context_prestep(result, output_path=out)
 
         loaded = load_handoff(out)
@@ -174,7 +174,7 @@ class TestPreStepSuccess:
         assert load_handoff(p) is None
 
     def test_perf_fetch_capped_to_max(self, monkeypatch, tmp_path):
-        from sqlscout.dbt_context import MAX_PERF_FETCHES
+        from einblick.dbt_context import MAX_PERF_FETCHES
 
         monkeypatch.setenv("DBT_TOKEN", "x")
         monkeypatch.setenv("DBT_PROD_ENV_ID", "12345")
@@ -197,7 +197,7 @@ class TestPreStepSuccess:
 
         patterns = [(f"fp{i}", [f"RAW.S.T{i}"]) for i in range(MAX_PERF_FETCHES + 10)]
         result = _make_result(patterns)
-        with patch("sqlscout.dbt_context.DbtDiscoveryClient", return_value=mock_client):
+        with patch("einblick.dbt_context.DbtDiscoveryClient", return_value=mock_client):
             handoff = run_dbt_context_prestep(result, output_path=tmp_path / "h.json")
 
         assert handoff is not None
@@ -218,8 +218,8 @@ class TestPreStepSuccess:
                 raise OSError("disk full")
             return original_open(path, *args, **kwargs)
 
-        with patch("sqlscout.dbt_context.DbtDiscoveryClient", return_value=mock_client):
-            with patch("sqlscout.dbt_context.os.open", side_effect=_fake_open):
+        with patch("einblick.dbt_context.DbtDiscoveryClient", return_value=mock_client):
+            with patch("einblick.dbt_context.os.open", side_effect=_fake_open):
                 handoff = run_dbt_context_prestep(_make_result([("fp", ["X"])]), output_path=out_path)
 
         assert handoff is not None

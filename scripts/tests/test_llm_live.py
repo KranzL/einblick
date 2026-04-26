@@ -5,14 +5,14 @@ provider). They exist for one purpose: verifying that tool_use actually works
 end-to-end against a real provider's API, not just our mocks.
 
 To run against the official Anthropic API:
-    SQLSCOUT_LIVE_LLM=1 SQLSCOUT_ANTHROPIC_API_KEY=sk-ant-... \
+    EINBLICK_LIVE_LLM=1 EINBLICK_ANTHROPIC_API_KEY=sk-ant-... \
         pytest scripts/tests/test_llm_live.py -v
 
 To run against an OpenAI-compatible endpoint (e.g., Venice.ai):
-    SQLSCOUT_LIVE_LLM=1 \
-    SQLSCOUT_OPENAI_API_KEY=your-key \
-    SQLSCOUT_OPENAI_BASE_URL=https://api.venice.ai/api/v1 \
-    SQLSCOUT_OPENAI_MODEL=llama-3.3-70b \
+    EINBLICK_LIVE_LLM=1 \
+    EINBLICK_OPENAI_API_KEY=your-key \
+    EINBLICK_OPENAI_BASE_URL=https://api.venice.ai/api/v1 \
+    EINBLICK_OPENAI_MODEL=llama-3.3-70b \
         pytest scripts/tests/test_llm_live.py -v
 
 Default behavior with no env vars: every test is skipped.
@@ -25,7 +25,7 @@ from pathlib import Path
 
 import pytest
 
-LIVE_LLM = os.environ.get("SQLSCOUT_LIVE_LLM") == "1"
+LIVE_LLM = os.environ.get("EINBLICK_LIVE_LLM") == "1"
 
 
 def _sample_data_dir() -> Path:
@@ -44,23 +44,23 @@ def _generate_sample_queries(limit: int = 50):
 
 
 def _run_pipeline(config):
-    from sqlscout.aggregator import aggregate
-    from sqlscout.reporter import generate_report
+    from einblick.aggregator import aggregate
+    from einblick.reporter import generate_report
     queries = _generate_sample_queries()
     result = aggregate(iter(queries), config)
     return generate_report(result, config)
 
 
 @pytest.mark.skipif(
-    not (LIVE_LLM and os.environ.get("SQLSCOUT_ANTHROPIC_API_KEY")),
-    reason="Live LLM tests opt-in: set SQLSCOUT_LIVE_LLM=1 + SQLSCOUT_ANTHROPIC_API_KEY",
+    not (LIVE_LLM and os.environ.get("EINBLICK_ANTHROPIC_API_KEY")),
+    reason="Live LLM tests opt-in: set EINBLICK_LIVE_LLM=1 + EINBLICK_ANTHROPIC_API_KEY",
 )
 class TestAnthropicLive:
     def test_real_anthropic_returns_proposals_via_tool_use(self):
-        from sqlscout.models import SqlscoutConfig
-        config = SqlscoutConfig(
+        from einblick.models import EinblickConfig
+        config = EinblickConfig(
             llm_provider="anthropic",
-            llm_model=os.environ.get("SQLSCOUT_ANTHROPIC_MODEL", "claude-haiku-4-5-20251001"),
+            llm_model=os.environ.get("EINBLICK_ANTHROPIC_MODEL", "claude-haiku-4-5-20251001"),
             analysis_depth="quick",
         )
         report = _run_pipeline(config)
@@ -71,19 +71,19 @@ class TestAnthropicLive:
 
 
 @pytest.mark.skipif(
-    not (LIVE_LLM and os.environ.get("SQLSCOUT_OPENAI_API_KEY")),
-    reason="Live LLM tests opt-in: set SQLSCOUT_LIVE_LLM=1 + SQLSCOUT_OPENAI_API_KEY",
+    not (LIVE_LLM and os.environ.get("EINBLICK_OPENAI_API_KEY")),
+    reason="Live LLM tests opt-in: set EINBLICK_LIVE_LLM=1 + EINBLICK_OPENAI_API_KEY",
 )
 class TestOpenAICompatibleLive:
     """Tests an OpenAI-compatible endpoint. Defaults to api.openai.com but
-    SQLSCOUT_OPENAI_BASE_URL points it at Venice.ai or any other compatible."""
+    EINBLICK_OPENAI_BASE_URL points it at Venice.ai or any other compatible."""
 
     def test_real_openai_compatible_returns_proposals_via_tool_use(self):
-        from sqlscout.models import SqlscoutConfig
-        config = SqlscoutConfig(
+        from einblick.models import EinblickConfig
+        config = EinblickConfig(
             llm_provider="openai",
-            llm_model=os.environ.get("SQLSCOUT_OPENAI_MODEL", "gpt-4o-mini"),
-            llm_base_url=os.environ.get("SQLSCOUT_OPENAI_BASE_URL"),
+            llm_model=os.environ.get("EINBLICK_OPENAI_MODEL", "gpt-4o-mini"),
+            llm_base_url=os.environ.get("EINBLICK_OPENAI_BASE_URL"),
             analysis_depth="quick",
         )
         report = _run_pipeline(config)
@@ -97,11 +97,11 @@ class TestOpenAICompatibleLive:
         """Some OpenAI-compatible providers don't implement tool_use fully.
         Even when the tool isn't called, the run should produce a readable report,
         not crash."""
-        from sqlscout.models import SqlscoutConfig
-        config = SqlscoutConfig(
+        from einblick.models import EinblickConfig
+        config = EinblickConfig(
             llm_provider="openai",
-            llm_model=os.environ.get("SQLSCOUT_OPENAI_MODEL", "gpt-4o-mini"),
-            llm_base_url=os.environ.get("SQLSCOUT_OPENAI_BASE_URL"),
+            llm_model=os.environ.get("EINBLICK_OPENAI_MODEL", "gpt-4o-mini"),
+            llm_base_url=os.environ.get("EINBLICK_OPENAI_BASE_URL"),
             analysis_depth="quick",
         )
         report = _run_pipeline(config)

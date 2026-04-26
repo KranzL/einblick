@@ -2,10 +2,10 @@ import pytest
 from unittest.mock import patch, MagicMock
 from datetime import datetime
 
-from sqlscout.reporter import generate_report, _format_clusters, _format_offenders, _load_prompt
-from sqlscout.models import (
+from einblick.reporter import generate_report, _format_clusters, _format_offenders, _load_prompt
+from einblick.models import (
     AnalysisResult, ExtractionMetadata, QueryCluster, Offenders,
-    UserStats, WarehouseStats, SlowestPattern, SqlscoutConfig,
+    UserStats, WarehouseStats, SlowestPattern, EinblickConfig,
 )
 
 
@@ -105,10 +105,10 @@ class TestLoadPrompt:
 
 
 class TestGenerateReport:
-    @patch("sqlscout.reporter._call_anthropic")
+    @patch("einblick.reporter._call_anthropic")
     def test_calls_anthropic_by_default(self, mock_call):
         mock_call.return_value = ("# Report\nSome recommendations", [])
-        config = SqlscoutConfig(llm_provider="anthropic")
+        config = EinblickConfig(llm_provider="anthropic")
         result = _make_result()
 
         report = generate_report(result, config)
@@ -120,19 +120,19 @@ class TestGenerateReport:
         assert "data" in system_prompt.lower()
         assert "200" in user_prompt
 
-    @patch("sqlscout.reporter._call_anthropic")
+    @patch("einblick.reporter._call_anthropic")
     def test_dbt_aware_off_emits_skip_message_into_prompt(self, mock_call):
         mock_call.return_value = ("# Report", [])
-        config = SqlscoutConfig(llm_provider="anthropic", dbt_aware=False)
+        config = EinblickConfig(llm_provider="anthropic", dbt_aware=False)
         generate_report(_make_result(), config)
         user_prompt = mock_call.call_args[0][1]
         assert "not requested" in user_prompt
         assert "Only emit `new_model`" in user_prompt
 
-    @patch("sqlscout.reporter.load_handoff")
-    @patch("sqlscout.reporter._call_anthropic")
+    @patch("einblick.reporter.load_handoff")
+    @patch("einblick.reporter._call_anthropic")
     def test_dbt_aware_on_renders_cached_handoff_into_prompt(self, mock_call, mock_load):
-        from sqlscout.dbt_context import DbtContextHandoff, PatternDbtContext
+        from einblick.dbt_context import DbtContextHandoff, PatternDbtContext
         mock_load.return_value = DbtContextHandoff(
             generated_at="t",
             environment_id="1",
@@ -154,7 +154,7 @@ class TestGenerateReport:
             }},
         )
         mock_call.return_value = ("# Report", [])
-        config = SqlscoutConfig(llm_provider="anthropic", dbt_aware=True)
+        config = EinblickConfig(llm_provider="anthropic", dbt_aware=True)
         generate_report(_make_result(), config)
         user_prompt = mock_call.call_args[0][1]
         assert "fct_revenue" in user_prompt
@@ -162,27 +162,27 @@ class TestGenerateReport:
         assert "view" in user_prompt
         mock_load.assert_called_once()
 
-    @patch("sqlscout.reporter.load_handoff")
-    @patch("sqlscout.reporter._call_anthropic")
+    @patch("einblick.reporter.load_handoff")
+    @patch("einblick.reporter._call_anthropic")
     def test_dbt_aware_on_with_no_cached_handoff_emits_fallback_message(self, mock_call, mock_load):
         mock_load.return_value = None
         mock_call.return_value = ("# Report", [])
-        config = SqlscoutConfig(llm_provider="anthropic", dbt_aware=True)
+        config = EinblickConfig(llm_provider="anthropic", dbt_aware=True)
         generate_report(_make_result(), config)
         user_prompt = mock_call.call_args[0][1]
         assert "could not be fetched" in user_prompt
 
-    @patch("sqlscout.reporter._call_openai")
+    @patch("einblick.reporter._call_openai")
     def test_calls_openai_when_specified(self, mock_call):
         mock_call.return_value = ("# Report", [])
-        config = SqlscoutConfig(llm_provider="openai")
+        config = EinblickConfig(llm_provider="openai")
         result = _make_result()
 
         report = generate_report(result, config)
         mock_call.assert_called_once()
 
     def test_raises_on_unknown_provider(self):
-        config = SqlscoutConfig.model_construct(llm_provider="gemini")
+        config = EinblickConfig.model_construct(llm_provider="gemini")
         result = _make_result()
         with pytest.raises(ValueError, match="Unknown LLM provider"):
             generate_report(result, config)

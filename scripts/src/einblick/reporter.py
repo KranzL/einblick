@@ -3,18 +3,18 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from sqlscout.dbt_context import (
+from einblick.dbt_context import (
     DEFAULT_CONTEXT_PATH,
     load_handoff,
     render_dbt_context_for_prompt,
 )
-from sqlscout.dbt_proposals import (
+from einblick.dbt_proposals import (
     EMIT_DBT_PROPOSALS_TOOL,
     Proposal,
     parse_proposals,
     render_proposals_section,
 )
-from sqlscout.models import AnalysisResult, SqlscoutConfig
+from einblick.models import AnalysisResult, EinblickConfig
 
 _DEFAULT_MODELS = {
     "anthropic": "claude-sonnet-4-20250514",
@@ -23,10 +23,10 @@ _DEFAULT_MODELS = {
 
 _SCRIPT_DIR = Path(__file__).resolve().parent
 _REPO_ROOT = _SCRIPT_DIR.parent.parent.parent
-_REFERENCES_DIR = _REPO_ROOT / "skills" / "sqlscout-analysis" / "references"
+_REFERENCES_DIR = _REPO_ROOT / "skills" / "einblick-analysis" / "references"
 
 
-def generate_report(result: AnalysisResult, config: SqlscoutConfig) -> str:
+def generate_report(result: AnalysisResult, config: EinblickConfig) -> str:
     system_prompt = _load_prompt("system-prompt.md")
     analysis_template = _load_prompt("analysis-prompt.md")
 
@@ -38,7 +38,7 @@ def generate_report(result: AnalysisResult, config: SqlscoutConfig) -> str:
     safe_offender = offender_data.replace("{{", "{ {").replace("}}", "} }")
     safe_dbt_context = dbt_context_block.replace("{{", "{ {").replace("}}", "} }")
 
-    from sqlscout.aggregator import _format_time_window
+    from einblick.aggregator import _format_time_window
     analysis_prompt = analysis_template.replace("{{TIME_WINDOW}}", _format_time_window(result.metadata))
     analysis_prompt = analysis_prompt.replace("{{TOTAL_QUERIES}}", f"{result.metadata.total_queries_processed:,}")
     analysis_prompt = analysis_prompt.replace("{{DISTINCT_PATTERNS}}", f"{result.metadata.distinct_fingerprints:,}")
@@ -75,7 +75,7 @@ def generate_report(result: AnalysisResult, config: SqlscoutConfig) -> str:
 
 
 def _run_summary_lines(result: AnalysisResult) -> str:
-    from sqlscout.aggregator import _format_time_window
+    from einblick.aggregator import _format_time_window
     md = result.metadata
     return (
         f"## Run Summary\n\n"
@@ -88,20 +88,20 @@ def _run_summary_lines(result: AnalysisResult) -> str:
     )
 
 
-def _build_empty_response_header(result: AnalysisResult, config: SqlscoutConfig) -> str:
+def _build_empty_response_header(result: AnalysisResult, config: EinblickConfig) -> str:
     md = result.metadata
     return (
-        f"# SqlScout Analysis ({md.platform.title()})\n\n"
+        f"# Einblick Analysis ({md.platform.title()})\n\n"
         f"> LLM returned an empty response (no prose, no tool call). Re-run; "
         f"this usually clears.\n\n"
         + _run_summary_lines(result)
     )
 
 
-def _build_data_only_header(result: AnalysisResult, config: SqlscoutConfig) -> str:
+def _build_data_only_header(result: AnalysisResult, config: EinblickConfig) -> str:
     md = result.metadata
     return (
-        f"# SqlScout Analysis ({md.platform.title()})\n\n"
+        f"# Einblick Analysis ({md.platform.title()})\n\n"
         f"<!-- LLM emitted proposals via tool_use but no prose. Common on "
         f"OpenAI-compatible providers; switch to gpt-4o or claude-sonnet for "
         f"the full prose report. -->\n\n"
@@ -133,7 +133,7 @@ def _build_depth_directive(depth: str) -> str:
     return _DEPTH_DIRECTIVES.get(depth, _DEPTH_DIRECTIVES["standard"])
 
 
-def _maybe_build_dbt_context(result: AnalysisResult, config: SqlscoutConfig) -> str:
+def _maybe_build_dbt_context(result: AnalysisResult, config: EinblickConfig) -> str:
     if not config.dbt_aware:
         return (
             "dbt context: not requested (run without --dbt-aware). "
@@ -150,7 +150,7 @@ def _maybe_build_dbt_context(result: AnalysisResult, config: SqlscoutConfig) -> 
     return render_dbt_context_for_prompt(handoff)
 
 
-def _build_user_context(config: SqlscoutConfig) -> str:
+def _build_user_context(config: EinblickConfig) -> str:
     lines = [f"Platform: {config.platform.title()}."]
     if config.context_ingestion:
         lines.append(f"Ingestion: {config.context_ingestion}.")
@@ -167,7 +167,7 @@ def _build_user_context(config: SqlscoutConfig) -> str:
 
 def _resolve_api_key(provider: str) -> str | None:
     import os
-    scoped = f"SQLSCOUT_{provider.upper()}_API_KEY"
+    scoped = f"EINBLICK_{provider.upper()}_API_KEY"
     generic = f"{provider.upper()}_API_KEY"
     return os.environ.get(scoped) or os.environ.get(generic)
 
@@ -179,7 +179,7 @@ def _call_anthropic(
         import anthropic
     except ImportError:
         raise ImportError(
-            "anthropic package not installed. Run: pip install sqlscout[llm]"
+            "anthropic package not installed. Run: pip install einblick[llm]"
         )
 
     api_key = _resolve_api_key("anthropic")
@@ -213,11 +213,11 @@ def _extract_anthropic_content(response: Any) -> tuple[str, list[Proposal]]:
                 proposals.extend(parse_proposals(block.input))
             except Exception as e:
                 text_parts.append(
-                    f"\n\n<!-- sqlscout: emit_dbt_proposals tool call failed validation: {e} -->\n"
+                    f"\n\n<!-- einblick: emit_dbt_proposals tool call failed validation: {e} -->\n"
                 )
     if tool_call_count > 1:
         text_parts.append(
-            f"\n\n<!-- sqlscout: LLM called emit_dbt_proposals {tool_call_count} times; "
+            f"\n\n<!-- einblick: LLM called emit_dbt_proposals {tool_call_count} times; "
             f"proposals were merged into a single list. -->\n"
         )
     return "\n".join(text_parts), proposals
@@ -230,7 +230,7 @@ def _call_openai(
         import openai
     except ImportError:
         raise ImportError(
-            "openai package not installed. Run: pip install sqlscout[llm]"
+            "openai package not installed. Run: pip install einblick[llm]"
         )
 
     api_key = _resolve_api_key("openai")
@@ -275,10 +275,10 @@ def _extract_openai_content(response: Any) -> tuple[str, list[Proposal]]:
                 try:
                     proposals.extend(parse_proposals(json.loads(fn.arguments)))
                 except Exception as e:
-                    text += f"\n\n<!-- sqlscout: emit_dbt_proposals tool call failed validation: {e} -->\n"
+                    text += f"\n\n<!-- einblick: emit_dbt_proposals tool call failed validation: {e} -->\n"
     if emit_call_count > 1:
         text += (
-            f"\n\n<!-- sqlscout: LLM called emit_dbt_proposals {emit_call_count} times; "
+            f"\n\n<!-- einblick: LLM called emit_dbt_proposals {emit_call_count} times; "
             f"proposals were merged into a single list. -->\n"
         )
     return text, proposals
@@ -286,7 +286,7 @@ def _extract_openai_content(response: Any) -> tuple[str, list[Proposal]]:
 
 def _load_prompt(filename: str) -> str:
     import os
-    env_dir = os.environ.get("SQLSCOUT_PROMPTS_DIR")
+    env_dir = os.environ.get("EINBLICK_PROMPTS_DIR")
     if env_dir:
         env_path = Path(env_dir) / filename
         if env_path.exists():
@@ -298,14 +298,14 @@ def _load_prompt(filename: str) -> str:
 
     plugin_root_env = Path(__file__).resolve().parent
     for _ in range(6):
-        candidate = plugin_root_env / "skills" / "sqlscout-analysis" / "references" / filename
+        candidate = plugin_root_env / "skills" / "einblick-analysis" / "references" / filename
         if candidate.exists():
             return candidate.read_text()
         plugin_root_env = plugin_root_env.parent
 
     raise FileNotFoundError(
         f"Could not find {filename}. Expected at {_REFERENCES_DIR} or "
-        f"$SQLSCOUT_PROMPTS_DIR. If installed as a plugin, ensure the skills/ "
+        f"$EINBLICK_PROMPTS_DIR. If installed as a plugin, ensure the skills/ "
         f"directory is present."
     )
 

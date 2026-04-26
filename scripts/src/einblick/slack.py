@@ -9,14 +9,14 @@ from urllib.parse import urlparse
 
 import requests
 
-from sqlscout.history import list_runs, resolve_history_dir
-from sqlscout.models import AnalysisResult
+from einblick.history import list_runs, resolve_history_dir
+from einblick.models import AnalysisResult
 
 DEFAULT_TIMEOUT_SECONDS = 10.0
 ALERT_COST_DELTA_PCT = 20.0
 ALERT_NEW_PATTERN_COUNT = 3
 
-log = logging.getLogger("sqlscout.slack")
+log = logging.getLogger("einblick.slack")
 
 
 @dataclass
@@ -120,11 +120,11 @@ def _build_blocks(
     report_path: Optional[str],
     diff: Optional[RunDiff],
 ) -> list[dict]:
-    from sqlscout.aggregator import _format_time_window
+    from einblick.aggregator import _format_time_window
     md = result.metadata
 
     blocks: list[dict] = [
-        {"type": "header", "text": {"type": "plain_text", "text": "SqlScout report"}},
+        {"type": "header", "text": {"type": "plain_text", "text": "Einblick report"}},
         {
             "type": "section",
             "fields": [

@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 import click
 import pytest
 
-from sqlscout.cli import (
+from einblick.cli import (
     _format_error,
     _scrub_sensitive_flags,
     _substitute_auto_exclude,

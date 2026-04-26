@@ -1,4 +1,4 @@
-from sqlscout.fingerprinter import fingerprint_query
+from einblick.fingerprinter import fingerprint_query
 
 
 class TestFingerprintIdenticalPatterns:

@@ -9,7 +9,7 @@ allowed-tools:
   - AskUserQuestion
 ---
 
-# SqlScout: Query History Analysis
+# Einblick: Query History Analysis
 
 Analyze query history from Snowflake, Databricks, or MotherDuck to find repeated patterns, identify biggest offenders, and recommend data modeling improvements.
 
@@ -24,12 +24,12 @@ Use the interactive flow only for first-run or when the user hasn't provided eno
 If the user passed `--sample` in their arguments, skip Steps 1-2 and jump directly to Step 3 using this command:
 
 ```bash
-${CLAUDE_PLUGIN_ROOT}/.venv/bin/sqlscout extract --sample --format json --output "/tmp/sqlscout-results-$(id -u).json"
+${CLAUDE_PLUGIN_ROOT}/.venv/bin/einblick extract --sample --format json --output "/tmp/einblick-results-$(id -u).json"
 ```
 
-All sqlscout temp files are uid-scoped (`-$(id -u)`) so concurrent users on shared boxes do not collide and other users on the same host cannot read them.
+All einblick temp files are uid-scoped (`-$(id -u)`) so concurrent users on shared boxes do not collide and other users on the same host cannot read them.
 
-POSIX-only convention: every `/tmp/sqlscout-*-$(id -u).json` reference in this file assumes a Linux/macOS shell where `id -u` returns a numeric user id. On native Windows shells this won't work; use Git Bash, WSL, or substitute `$(whoami)` for `$(id -u)` and adjust paths accordingly. macOS users should also note that `tempfile.gettempdir()` resolves to `${TMPDIR:-/tmp}` (typically `/var/folders/...`); the cleanup glob in Step 9 covers both.
+POSIX-only convention: every `/tmp/einblick-*-$(id -u).json` reference in this file assumes a Linux/macOS shell where `id -u` returns a numeric user id. On native Windows shells this won't work; use Git Bash, WSL, or substitute `$(whoami)` for `$(id -u)` and adjust paths accordingly. macOS users should also note that `tempfile.gettempdir()` resolves to `${TMPDIR:-/tmp}` (typically `/var/folders/...`); the cleanup glob in Step 9 covers both.
 
 This uses a built-in dataset of 775 realistic Snowflake queries. No credentials needed. For user context in sample mode, use these defaults:
 - Platform: Snowflake
@@ -42,10 +42,10 @@ Then continue from Step 4.
 
 ## Step 1: Verify Setup
 
-Check if SqlScout is installed:
+Check if Einblick is installed:
 
 ```bash
-test -f "${CLAUDE_PLUGIN_ROOT}/.venv/bin/sqlscout" && echo "READY" || echo "SETUP_NEEDED"
+test -f "${CLAUDE_PLUGIN_ROOT}/.venv/bin/einblick" && echo "READY" || echo "SETUP_NEEDED"
 ```
 
 If SETUP_NEEDED, run the installer yourself (do not ask the user to run pip/python commands -- just do it):
@@ -117,7 +117,7 @@ Save the answer as `--analysis-depth quick|standard|deep` to pass to Step 3.
 **Question 7 - "Use dbt project context for this run?"** (only ask if dbt-mcp is available in the session OR if the user has set `DBT_HOST`/`DBT_TOKEN`/`DBT_PROD_ENV_ID` in their env)
 Header: "dbt Context"
 Options:
-- "Yes -- cross-reference against my dbt project" - Use `--dbt-aware`. sqlscout queries the dbt Discovery API to find existing models that cover the same tables as each pattern, so recommendations can differentiate new_model vs modify_existing vs access_pattern. Requires DBT_HOST / DBT_TOKEN / DBT_PROD_ENV_ID env vars. Falls back gracefully if those are missing or return an error.
+- "Yes -- cross-reference against my dbt project" - Use `--dbt-aware`. einblick queries the dbt Discovery API to find existing models that cover the same tables as each pattern, so recommendations can differentiate new_model vs modify_existing vs access_pattern. Requires DBT_HOST / DBT_TOKEN / DBT_PROD_ENV_ID env vars. Falls back gracefully if those are missing or return an error.
 - "No -- analyze patterns without project context" - Skip the Discovery cross-reference. All proposals will be `new_model` since we can't know what already exists.
 
 If the user doesn't have dbt-mcp and doesn't have the Discovery env vars set, skip this question entirely and proceed without `--dbt-aware`.
@@ -133,7 +133,7 @@ Format all answers as a bullet list and hold them for injection into the analysi
 First, run a quick sample of distinct users to show what's in their data:
 
 ```bash
-${CLAUDE_PLUGIN_ROOT}/.venv/bin/sqlscout users --platform <platform> --hours 24 --format json
+${CLAUDE_PLUGIN_ROOT}/.venv/bin/einblick users --platform <platform> --hours 24 --format json
 ```
 
 Look at the output. Notice any patterns: is it email-style (`alice@company.com`)? All caps (`FIVETRAN_PROD`)? Prefix-based (`svc_airflow`)? Suffix-based (`tableau_bot`)?
@@ -161,7 +161,7 @@ If the user picks the default `@` option, just proceed without patterns -- the p
 Use `--hours 24` here to make this step fast regardless of the main analysis window.
 
 ```bash
-${CLAUDE_PLUGIN_ROOT}/.venv/bin/sqlscout users --platform <platform> --hours 24 --service-only --format json
+${CLAUDE_PLUGIN_ROOT}/.venv/bin/einblick users --platform <platform> --hours 24 --service-only --format json
 ```
 
 Parse the JSON. Then use AskUserQuestion to ask the user which service accounts to exclude:
@@ -183,7 +183,7 @@ Pass the final exclude list to Step 3 via `--exclude-users` (comma separated).
 Run the extraction pipeline. Use the platform from Step 2 and the service-account exclusions from Step 2.5:
 
 ```bash
-${CLAUDE_PLUGIN_ROOT}/.venv/bin/sqlscout extract --platform <platform> $ARGUMENTS --exclude-users "USER1,USER2" --format json --output "/tmp/sqlscout-results-$(id -u).json"
+${CLAUDE_PLUGIN_ROOT}/.venv/bin/einblick extract --platform <platform> $ARGUMENTS --exclude-users "USER1,USER2" --format json --output "/tmp/einblick-results-$(id -u).json"
 ```
 
 The CLI will print:
@@ -200,9 +200,9 @@ If extraction fails:
 
 ## Step 4: Load Results
 
-Read the output file at `/tmp/sqlscout-results-$(id -u).json`. Resolve `$(id -u)` first via `Bash` (e.g. `id -u`) and substitute the literal numeric value into the file path you pass to the `Read` tool.
+Read the output file at `/tmp/einblick-results-$(id -u).json`. Resolve `$(id -u)` first via `Bash` (e.g. `id -u`) and substitute the literal numeric value into the file path you pass to the `Read` tool.
 
-If `/tmp/sqlscout-dbt-context-$UID.json` exists (or `/tmp/sqlscout-dbt-context.json` on systems where `getuid()` is unavailable), also read it. This is the dbt cross-reference handoff. Each pattern fingerprint may have a list of `matched_models` — model names, materialization, and recent performance stats. **Use this to ground the recommendations in Step 5/6:** if a pattern matches an existing model, prefer `modify_existing` over `new_model`. If a mart-layer model already exists for raw access, propose `access_pattern`.
+If `/tmp/einblick-dbt-context-$UID.json` exists (or `/tmp/einblick-dbt-context.json` on systems where `getuid()` is unavailable), also read it. This is the dbt cross-reference handoff. Each pattern fingerprint may have a list of `matched_models` — model names, materialization, and recent performance stats. **Use this to ground the recommendations in Step 5/6:** if a pattern matches an existing model, prefer `modify_existing` over `new_model`. If a mart-layer model already exists for raw access, propose `access_pattern`.
 
 After loading, ask follow-up questions if the data reveals:
 - Multiple schemas/databases (ask which are source vs. analytics)
@@ -210,7 +210,7 @@ After loading, ask follow-up questions if the data reveals:
 
 ## Step 5: Analyze
 
-Read the analysis expertise from `${CLAUDE_PLUGIN_ROOT}/skills/sqlscout-analysis/references/system-prompt.md`.
+Read the analysis expertise from `${CLAUDE_PLUGIN_ROOT}/skills/einblick-analysis/references/system-prompt.md`.
 
 Using that expertise AND the user context from Step 2, analyze each query pattern cluster. Tailor recommendations to the platform:
 
@@ -238,7 +238,7 @@ Produce a structured report with these sections:
 7. **Cost Analysis** (total estimated compute cost, top consumers, estimated savings -- use phrasing like "estimated" or "approximate")
 8. **Access Patterns** (who queries what, role distribution, governance)
 9. **Implementation Checklist** (ordered steps, permissions, dependencies, validation)
-10. **Proposed dbt Changes** (structured section, described below) -- always include. Every sqlscout report ends with this section so downstream tooling and humans have a consistent shape.
+10. **Proposed dbt Changes** (structured section, described below) -- always include. Every einblick report ends with this section so downstream tooling and humans have a consistent shape.
 
 **Important**: When writing the report, use language like "estimated compute cost", "approximate cost ranking", or "compute-cost score" rather than definitive credit numbers. Be honest about the limitation -- users need to understand what they're looking at.
 
@@ -289,22 +289,22 @@ select ...
 - **Patterns affected:** fp1, fp2, ...
 - **Suggested fix:** <fix description>
 
-> Surface-only recommendation -- sqlscout will not auto-apply governance changes.
+> Surface-only recommendation -- einblick will not auto-apply governance changes.
 ```
 
 If there are no concrete dbt changes worth proposing, the Proposed dbt Changes section should still exist but say: "No structured dbt proposals from this run -- recommendations above are copy-paste guidance only."
 
 Numbering is sequential across all three types (1, 2, 3 ...), not restarted per type.
 
-Schema version: the full sqlscout CLI output tags each proposal with `sqlscout_schema_version: "1"` in its JSON form. The interactive markdown rendering doesn't need to surface that field to the user.
+Schema version: the full einblick CLI output tags each proposal with `einblick_schema_version: "1"` in its JSON form. The interactive markdown rendering doesn't need to surface that field to the user.
 
 ### Also write the structured proposals as JSON for Step 8
 
-After writing the markdown report, use the Write tool to also save a JSON sidecar at `/tmp/sqlscout-proposals-$(id -u).json`. This is what Step 8 reads. Resolve `$(id -u)` via `Bash` once and substitute the numeric value when calling Write. Format:
+After writing the markdown report, use the Write tool to also save a JSON sidecar at `/tmp/einblick-proposals-$(id -u).json`. This is what Step 8 reads. Resolve `$(id -u)` via `Bash` once and substitute the numeric value when calling Write. Format:
 
 ```json
 {
-  "sqlscout_schema_version": "1",
+  "einblick_schema_version": "1",
   "report_path": "<absolute path to the saved .md>",
   "dbt_target": "<resolved dbt target name, if known>",
   "proposals": [
@@ -329,14 +329,14 @@ Include only the proposals you actually rendered in the markdown. Use the same f
 
 Always save the complete report to a uniquely-named file so historical runs are preserved (this enables `--diff` against previous runs later).
 
-**Filename format**: `sqlscout_results_<platform>_<YYYYMMDD>_<HHMMSS>.md` in the user's current working directory.
+**Filename format**: `einblick_results_<platform>_<YYYYMMDD>_<HHMMSS>.md` in the user's current working directory.
 
 - `<platform>` is `snowflake` or `databricks` (lowercase)
 - Timestamp is current local time at report generation
 
 To get the current timestamp, run: `date +%Y%m%d_%H%M%S`
 
-Example: `sqlscout_results_snowflake_20260419_143022.md`
+Example: `einblick_results_snowflake_20260419_143022.md`
 
 **The first section of the report MUST be a "Re-run this analysis" block** so the user can copy-paste it to rerun this exact analysis on demand, a cron job, or an Airflow task. Format (fill in the exact values used):
 
@@ -345,13 +345,13 @@ Example: `sqlscout_results_snowflake_20260419_143022.md`
 
 ### Interactive (Claude Code)
 
-    /sqlscout --platform <platform> --days <N> --exclude-users "USER1,USER2" --service-user-pattern 'PATTERN_*' [--dbt-aware]
+    /einblick --platform <platform> --days <N> --exclude-users "USER1,USER2" --service-user-pattern 'PATTERN_*' [--dbt-aware]
 
 ### Programmatic (CLI, full LLM report)
 
 Requires an LLM API key. Use the SQLSCOUT-prefixed variable so it doesn't collide with Claude Code (which also reads ANTHROPIC_API_KEY):
 
-    export SQLSCOUT_ANTHROPIC_API_KEY=sk-ant-...   # or SQLSCOUT_OPENAI_API_KEY=sk-...
+    export EINBLICK_ANTHROPIC_API_KEY=sk-ant-...   # or EINBLICK_OPENAI_API_KEY=sk-...
 
 If you used --dbt-aware in this run, also export the dbt env vars in your cron environment:
 
@@ -359,7 +359,7 @@ If you used --dbt-aware in this run, also export the dbt env vars in your cron e
     export DBT_TOKEN=dbts_...
     export DBT_PROD_ENV_ID=12345
 
-    sqlscout analyze \
+    einblick analyze \
       --platform <platform> \
       --days <N> \
       --analysis-depth <quick|standard|deep> \
@@ -378,18 +378,18 @@ For Airflow / cron: pipe `report.md` to Slack, S3, or wherever via a shell task.
 
 ### Extract only (no LLM, raw clusters)
 
-    sqlscout extract --platform <platform> --days <N> --exclude-users "USER1,USER2" [--dbt-aware] --format markdown --output report.md
+    einblick extract --platform <platform> --days <N> --exclude-users "USER1,USER2" [--dbt-aware] --format markdown --output report.md
 ```
 
 Use the exact flag values the user answered in Steps 2, 2.5, and 3 -- quote strings with commas or spaces. This section must appear before the Executive Summary.
 
 **Critical: never write `--auto-exclude-service-users` in this block.** The whole point of persisting this command is that it's reproducible on a cron without running the users-list step first. Write out the resolved usernames explicitly as `--exclude-users "USER1,USER2,..."`. If the list is long, include it all -- a 30-user exclude list is still better than a runtime detection step that adds 20 seconds to every cron run and can drift if new service accounts appear.
 
-Use the Write tool to save the full report contents (the same text you displayed in the conversation). Do not overwrite existing `sqlscout_results_*.md` files -- each run gets its own timestamped output.
+Use the Write tool to save the full report contents (the same text you displayed in the conversation). Do not overwrite existing `einblick_results_*.md` files -- each run gets its own timestamped output.
 
-Also update (or create) `sqlscout_results_latest.md` as a symlink/duplicate pointing to the most recent report, so users always have a stable filename to reference. Since we can't create symlinks with the Write tool, just write the same content to both filenames.
+Also update (or create) `einblick_results_latest.md` as a symlink/duplicate pointing to the most recent report, so users always have a stable filename to reference. Since we can't create symlinks with the Write tool, just write the same content to both filenames.
 
-After writing, confirm to the user with both filenames: "Report saved to `sqlscout_results_<platform>_<timestamp>.md` (also copied to `sqlscout_results_latest.md`). The top of the file has the exact command for re-running this analysis from the CLI, an Airflow task, or cron."
+After writing, confirm to the user with both filenames: "Report saved to `einblick_results_<platform>_<timestamp>.md` (also copied to `einblick_results_latest.md`). The top of the file has the exact command for re-running this analysis from the CLI, an Airflow task, or cron."
 
 ## Step 8: Offer to create dbt models (only if dbt-mcp is loaded in this session)
 
@@ -401,7 +401,7 @@ If dbt-mcp is not loaded, skip this step. Step 9 (Cleanup) still runs.
 
 ### 8.1 Load structured proposals from the JSON sidecar
 
-Read `/tmp/sqlscout-proposals-$(id -u).json` (written by Step 6). If it's missing or malformed: print the error, skip Step 8, proceed to Step 9. Do not parse the markdown.
+Read `/tmp/einblick-proposals-$(id -u).json` (written by Step 6). If it's missing or malformed: print the error, skip Step 8, proceed to Step 9. Do not parse the markdown.
 
 Filter to actionable proposals (`new_model` and `modify_existing`). Skip `access_pattern` -- those stay surface-only.
 
@@ -433,10 +433,10 @@ If the user picks zero, skip to Step 9.
 Step 8 must operate inside the user's dbt project, not the current working directory.
 
 1. Check `$DBT_PROJECT_DIR` env var. If set, use it.
-2. Else read `~/.sqlscout.yml` for `dbt_project_dir:`.
+2. Else read `~/.einblick.yml` for `dbt_project_dir:`.
 3. Else AskUserQuestion: "Where is your dbt project? (absolute path)"
 4. Verify the path exists and contains `dbt_project.yml`. If not, AskUserQuestion again with a hint.
-5. Persist via the Write tool: add `dbt_project_dir: <path>` to `~/.sqlscout.yml`.
+5. Persist via the Write tool: add `dbt_project_dir: <path>` to `~/.einblick.yml`.
 
 Use Bash to `cd "$DBT_PROJECT_DIR"` once at the start of Step 8.4 -- all subsequent git, file, and dbt commands run from there.
 
@@ -444,10 +444,10 @@ Use Bash to `cd "$DBT_PROJECT_DIR"` once at the start of Step 8.4 -- all subsequ
 
 Before running any `dbt::run`:
 
-1. Check `~/.sqlscout.yml` for `dbt_target:`. If present, use it.
+1. Check `~/.einblick.yml` for `dbt_target:`. If present, use it.
 2. Otherwise, read `~/.dbt/profiles.yml` via the Read tool to enumerate targets for the active profile (the project's `dbt_project.yml` names the profile via `profile:`).
-3. AskUserQuestion: "Which dbt target should sqlscout use for dev runs?" with one option per detected target.
-4. Persist via the Write tool: add `dbt_target: <name>` to `~/.sqlscout.yml`.
+3. AskUserQuestion: "Which dbt target should einblick use for dev runs?" with one option per detected target.
+4. Persist via the Write tool: add `dbt_target: <name>` to `~/.einblick.yml`.
 
 Never assume a target is called `dev`.
 
@@ -522,7 +522,7 @@ CRITICAL: this workflow MODIFIES an existing tracked file. Rollback MUST use `gi
 8. dbt::test --select <name>
    -> on failure: ROLL BACK with `git checkout -- <path>`. Tests caught a
       regression. Do NOT proceed to 8.7 for this proposal.
-9. Capture: perf_before (from Phase 1's /tmp/sqlscout-dbt-context.json),
+9. Capture: perf_before (from Phase 1's /tmp/einblick-dbt-context.json),
    perf_after (dbt::get_model_performance), target_model, change description
    for the PR body.
 ```
@@ -534,11 +534,11 @@ After all picked proposals are processed (and at least one succeeded -- if all r
 Before substituting any field into a shell command, verify it matches `[A-Za-z0-9_-]{1,50}`. Refuse to proceed if a proposal's `name` or `target_model` would generate an unsafe slug. Compute the `BRANCH` from sanitized fields only.
 
 ```bash
-cd "$DBT_PROJECT_DIR"   # must be inside the dbt project, not the cwd /sqlscout was invoked from
-BRANCH="sqlscout/$(short-slug)-$(date +%Y%m%d)"
+cd "$DBT_PROJECT_DIR"   # must be inside the dbt project, not the cwd /einblick was invoked from
+BRANCH="einblick/$(short-slug)-$(date +%Y%m%d)"
 git checkout "$BRANCH" 2>/dev/null || git checkout -b "$BRANCH"
 git add models/
-git commit -F /tmp/sqlscout-commit-message-$$.txt
+git commit -F /tmp/einblick-commit-message-$$.txt
 git push -u origin "$BRANCH"
 ```
 
@@ -559,13 +559,13 @@ If `gh` is not installed (`which gh` returns nothing):
 On successful push, run `gh pr create` with this body template (filled from captured data in 8.5/8.6):
 
 ```markdown
-Applied by sqlscout from report `sqlscout_results_<platform>_<timestamp>.md`.
+Applied by einblick from report `einblick_results_<platform>_<timestamp>.md`.
 
 ## Changes in this PR
 
 ### 1. <type>: <name or target>
 - Rationale: <rationale from proposal>
-- Fingerprints addressed: <sqlscout fingerprints>
+- Fingerprints addressed: <einblick fingerprints>
 - Before: <perf_before if modify_existing>
 - After: <perf_after>
 
@@ -574,8 +574,8 @@ Applied by sqlscout from report `sqlscout_results_<platform>_<timestamp>.md`.
 ## Context
 
 - dbt target used: `<resolved_target>`
-- sqlscout analysis depth: `<quick|standard|deep>`
-- Full report: `<sqlscout_results_latest.md>`
+- einblick analysis depth: `<quick|standard|deep>`
+- Full report: `<einblick_results_latest.md>`
 ```
 
 No LLM prose in the PR body -- it's assembled from structured data.
@@ -583,8 +583,8 @@ No LLM prose in the PR body -- it's assembled from structured data.
 ### 8.8 Branch-naming rules
 
 Short slug comes from the proposal names joined with `-plus-`, hyphen-kebab, max 50 chars. Examples:
-- One proposal: `sqlscout/revenue-incremental-20260424`
-- Two proposals: `sqlscout/revenue-incremental-plus-stg-customer-events-20260424`
+- One proposal: `einblick/revenue-incremental-20260424`
+- Two proposals: `einblick/revenue-incremental-plus-stg-customer-events-20260424`
 - Many: truncate to the two highest-impact proposals and append `-plus-<N>-more-20260424`
 
 If the same branch already exists (same slug, same day), append `-<HHMMSS>`.
@@ -603,11 +603,11 @@ If the same branch already exists (same slug, same day), append `-<HHMMSS>`.
 ```bash
 TMP="${TMPDIR:-/tmp}"
 TMP="${TMP%/}"
-rm -f "$TMP/sqlscout-results-$(id -u).json"
-rm -f "$TMP/sqlscout-proposals-$(id -u).json"
-rm -f "$TMP"/sqlscout-dbt-context-*.json
-rm -f "$TMP"/sqlscout-dbt-context.json
-rm -f "$TMP"/sqlscout-commit-message-*.txt
+rm -f "$TMP/einblick-results-$(id -u).json"
+rm -f "$TMP/einblick-proposals-$(id -u).json"
+rm -f "$TMP"/einblick-dbt-context-*.json
+rm -f "$TMP"/einblick-dbt-context.json
+rm -f "$TMP"/einblick-commit-message-*.txt
 ```
 
 `${TMPDIR:-/tmp}` covers macOS (where Python's `tempfile.gettempdir()` resolves to a per-user `/var/folders/.../T` path) AND Linux (where it falls back to `/tmp`).

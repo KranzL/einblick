@@ -6,13 +6,13 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from sqlscout.models import (
+from einblick.models import (
     AnalysisResult,
     ExtractionMetadata,
     Offenders,
     QueryCluster,
 )
-from sqlscout.slack import (
+from einblick.slack import (
     ALERT_COST_DELTA_PCT,
     ALERT_NEW_PATTERN_COUNT,
     RunDiff,
@@ -109,12 +109,12 @@ class TestShouldPost:
 
 class TestComputeDiff:
     def test_returns_none_when_only_one_run(self, tmp_path, monkeypatch):
-        monkeypatch.setenv("SQLSCOUT_HISTORY_DIR", str(tmp_path))
+        monkeypatch.setenv("EINBLICK_HISTORY_DIR", str(tmp_path))
         result = _result()
         assert compute_diff_against_previous(result) is None
 
     def test_diffs_against_prior_run(self, tmp_path, monkeypatch):
-        monkeypatch.setenv("SQLSCOUT_HISTORY_DIR", str(tmp_path))
+        monkeypatch.setenv("EINBLICK_HISTORY_DIR", str(tmp_path))
         snowflake_dir = tmp_path / "snowflake"
         snowflake_dir.mkdir(parents=True)
 
@@ -138,7 +138,7 @@ class TestComputeDiff:
         assert abs(diff.cost_delta_pct - 50.0) < 1e-6
 
     def test_handles_zero_prior_cost(self, tmp_path, monkeypatch):
-        monkeypatch.setenv("SQLSCOUT_HISTORY_DIR", str(tmp_path))
+        monkeypatch.setenv("EINBLICK_HISTORY_DIR", str(tmp_path))
         snowflake_dir = tmp_path / "snowflake"
         snowflake_dir.mkdir(parents=True)
         (snowflake_dir / "20260424_100000.json").write_text(json.dumps({
@@ -151,7 +151,7 @@ class TestComputeDiff:
         assert diff.cost_delta_pct == 0.0
 
     def test_returns_none_on_corrupt_prior(self, tmp_path, monkeypatch):
-        monkeypatch.setenv("SQLSCOUT_HISTORY_DIR", str(tmp_path))
+        monkeypatch.setenv("EINBLICK_HISTORY_DIR", str(tmp_path))
         snowflake_dir = tmp_path / "snowflake"
         snowflake_dir.mkdir(parents=True)
         (snowflake_dir / "20260424_100000.json").write_text("{not json")

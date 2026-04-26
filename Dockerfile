@@ -32,20 +32,20 @@ FROM python:3.12-slim AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/venv/bin:${PATH}" \
-    SQLSCOUT_SAMPLE_DATA_DIR=/opt/sqlscout/sample_data \
-    SQLSCOUT_PROMPTS_DIR=/opt/sqlscout/skills/sqlscout-analysis/references
+    EINBLICK_SAMPLE_DATA_DIR=/opt/einblick/sample_data \
+    EINBLICK_PROMPTS_DIR=/opt/einblick/skills/einblick-analysis/references
 
-RUN groupadd --system sqlscout \
-    && useradd --system --gid sqlscout --create-home --home-dir /home/sqlscout sqlscout
+RUN groupadd --system einblick \
+    && useradd --system --gid einblick --create-home --home-dir /home/einblick einblick
 
 COPY --from=builder /venv /venv
-COPY sample_data /opt/sqlscout/sample_data
-COPY skills /opt/sqlscout/skills
+COPY sample_data /opt/einblick/sample_data
+COPY skills /opt/einblick/skills
 
 WORKDIR /workspace
-RUN chown -R sqlscout:sqlscout /workspace /home/sqlscout
+RUN chown -R einblick:einblick /workspace /home/einblick
 
-USER sqlscout
+USER einblick
 
-ENTRYPOINT ["sqlscout"]
+ENTRYPOINT ["einblick"]
 CMD ["--help"]

@@ -1,4 +1,4 @@
-# SqlScout Analysis (Snowflake)
+# Einblick Analysis (Snowflake)
 
 - Platform: Snowflake
 - Time window: 7 days

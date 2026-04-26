@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from sqlscout.dbt_discovery import (
+from einblick.dbt_discovery import (
     DbtAuthError,
     DbtConfigError,
     DbtDiscoveryClient,
@@ -151,7 +151,7 @@ class TestDbtDiscoveryClient:
         headers = kwargs["headers"]
         assert headers["Authorization"] == "Bearer tok-abc"
         assert headers["Content-Type"] == "application/json"
-        assert headers["x-dbt-partner-source"] == "sqlscout"
+        assert headers["x-dbt-partner-source"] == "einblick"
         body = kwargs["json"]
         assert body["query"] == "query GetX { x }"
         assert body["variables"] == {"foo": "bar"}

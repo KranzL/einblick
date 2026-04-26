@@ -6,8 +6,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts" / "src"))
 
-from sqlscout.aggregator import aggregate, export_json, export_markdown_summary
-from sqlscout.models import RawQuery, SqlscoutConfig
+from einblick.aggregator import aggregate, export_json, export_markdown_summary
+from einblick.models import RawQuery, EinblickConfig
 
 
 USERS = {
@@ -656,7 +656,7 @@ if __name__ == "__main__":
     print(f"  -> {raw_path}")
 
     print("Running pipeline...")
-    config = SqlscoutConfig(days=7, top_n=25)
+    config = EinblickConfig(days=7, top_n=25)
     result = aggregate(iter(queries), config)
 
     json_path = out_dir / "analysis_output.json"

@@ -72,12 +72,12 @@ Distinct patterns identified: {{DISTINCT_PATTERNS}}
    - Dependencies between recommendations (e.g., "build the staging table before the dynamic table that references it")
    - What to validate after each implementation (queries to confirm the optimization is working)
 
-5. **Emit structured proposals via the `emit_dbt_proposals` tool** (tool call, not prose). After you write the report text above, call the `emit_dbt_proposals` tool exactly once with machine-readable versions of your Top Recommendations. sqlscout uses these downstream to optionally create dbt model files and open a PR on the user's behalf. The rendered output of your tool call will be appended to the report as a "Proposed dbt Changes" section -- do not duplicate that section in your prose.
+5. **Emit structured proposals via the `emit_dbt_proposals` tool** (tool call, not prose). After you write the report text above, call the `emit_dbt_proposals` tool exactly once with machine-readable versions of your Top Recommendations. einblick uses these downstream to optionally create dbt model files and open a PR on the user's behalf. The rendered output of your tool call will be appended to the report as a "Proposed dbt Changes" section -- do not duplicate that section in your prose.
 
    Rules for the tool call:
    - Use `new_model` for brand-new models you're proposing.
    - Use `modify_existing` ONLY if you know the target model exists in the user's dbt project (you'll know from context passed in). Do not guess at names.
    - Use `access_pattern` ONLY if you know a model exists that users should be querying instead. This also requires dbt context. Skip it otherwise.
-   - Populate `metrics_addressed` / `patterns_affected` with the fingerprints of the sqlscout patterns each proposal would cover. This is what lets the user's diff tool mark the pattern as "addressed" after implementation.
+   - Populate `metrics_addressed` / `patterns_affected` with the fingerprints of the einblick patterns each proposal would cover. This is what lets the user's diff tool mark the pattern as "addressed" after implementation.
    - If no concrete proposals fit (small run, nothing worth proposing), call the tool with an empty `proposals: []` array, or skip the tool call entirely.
    - Keep the prose Top Recommendations section as the human-readable narrative. The tool call is the structured data for automation.

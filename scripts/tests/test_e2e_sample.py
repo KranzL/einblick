@@ -2,8 +2,8 @@ import json
 import random
 from datetime import datetime, timedelta
 
-from sqlscout.aggregator import aggregate, export_json, export_markdown_summary
-from sqlscout.models import RawQuery, SqlscoutConfig
+from einblick.aggregator import aggregate, export_json, export_markdown_summary
+from einblick.models import RawQuery, EinblickConfig
 
 USERS = ["ALICE_ANALYST", "BOB_ENGINEER", "CAROL_DS", "DAVE_MANAGER", "EVE_INTERN",
          "FRANK_BI", "GRACE_ANALYST", "HANK_ENGINEER", "IVY_DS", "JACK_INTERN"]
@@ -188,7 +188,7 @@ def _generate_sample_queries(n=100, seed=42):
 class TestE2ESample:
     def test_pipeline_produces_clusters(self):
         queries = _generate_sample_queries(100)
-        config = SqlscoutConfig(days=7, top_n=20)
+        config = EinblickConfig(days=7, top_n=20)
         result = aggregate(iter(queries), config)
 
         assert result.metadata.total_queries_processed == 100
@@ -204,7 +204,7 @@ class TestE2ESample:
 
     def test_offenders_populated(self):
         queries = _generate_sample_queries(100)
-        config = SqlscoutConfig(days=7, top_n=20)
+        config = EinblickConfig(days=7, top_n=20)
         result = aggregate(iter(queries), config)
 
         assert len(result.offenders.top_users_by_cost) > 0
@@ -216,7 +216,7 @@ class TestE2ESample:
 
     def test_similar_queries_cluster_together(self):
         queries = _generate_sample_queries(100)
-        config = SqlscoutConfig(days=7, top_n=50)
+        config = EinblickConfig(days=7, top_n=50)
         result = aggregate(iter(queries), config)
 
         assert result.metadata.distinct_fingerprints < 100
@@ -226,7 +226,7 @@ class TestE2ESample:
 
     def test_json_export_valid(self, tmp_path):
         queries = _generate_sample_queries(100)
-        config = SqlscoutConfig(days=7, top_n=15)
+        config = EinblickConfig(days=7, top_n=15)
         result = aggregate(iter(queries), config)
 
         path = str(tmp_path / "sample_output.json")
@@ -248,7 +248,7 @@ class TestE2ESample:
 
     def test_markdown_export_readable(self, tmp_path):
         queries = _generate_sample_queries(100)
-        config = SqlscoutConfig(days=7, top_n=15)
+        config = EinblickConfig(days=7, top_n=15)
         result = aggregate(iter(queries), config)
 
         path = str(tmp_path / "sample_output.md")
@@ -257,7 +257,7 @@ class TestE2ESample:
         with open(path) as f:
             content = f.read()
 
-        assert "SqlScout Analysis" in content
+        assert "Einblick Analysis" in content
         assert "Biggest Offenders" in content
         assert "Top Query Patterns by Impact" in content
         assert "```sql" in content
@@ -266,7 +266,7 @@ class TestE2ESample:
 
     def test_impact_score_ordering(self):
         queries = _generate_sample_queries(100)
-        config = SqlscoutConfig(days=7, top_n=20)
+        config = EinblickConfig(days=7, top_n=20)
         result = aggregate(iter(queries), config)
 
         for i in range(len(result.clusters) - 1):
@@ -274,7 +274,7 @@ class TestE2ESample:
 
     def test_metadata_totals_match(self):
         queries = _generate_sample_queries(100)
-        config = SqlscoutConfig(days=7, top_n=50)
+        config = EinblickConfig(days=7, top_n=50)
         result = aggregate(iter(queries), config)
 
         assert result.metadata.total_credits > 0
@@ -283,7 +283,7 @@ class TestE2ESample:
 
     def test_tables_extracted_from_clusters(self):
         queries = _generate_sample_queries(100)
-        config = SqlscoutConfig(days=7, top_n=20)
+        config = EinblickConfig(days=7, top_n=20)
         result = aggregate(iter(queries), config)
 
         clusters_with_tables = [c for c in result.clusters if len(c.tables_referenced) > 0]

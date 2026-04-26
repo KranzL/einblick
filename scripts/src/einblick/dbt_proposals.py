@@ -27,7 +27,7 @@ class ProposedTest(BaseModel):
 
 class NewModelProposal(BaseModel):
     type: Literal["new_model"]
-    sqlscout_schema_version: Literal["1"] = SCHEMA_VERSION
+    einblick_schema_version: Literal["1"] = SCHEMA_VERSION
     name: Identifier = Field(
         description="Model name without layer prefix, e.g. 'orders' for stg_orders",
     )
@@ -39,13 +39,13 @@ class NewModelProposal(BaseModel):
     rationale: str
     metrics_addressed: list[Fingerprint] = Field(
         default_factory=list,
-        description="sqlscout pattern fingerprints this model would absorb",
+        description="einblick pattern fingerprints this model would absorb",
     )
 
 
 class ModifyExistingProposal(BaseModel):
     type: Literal["modify_existing"]
-    sqlscout_schema_version: Literal["1"] = SCHEMA_VERSION
+    einblick_schema_version: Literal["1"] = SCHEMA_VERSION
     target_model: str = Field(
         pattern=_QUALIFIED_IDENT_PATTERN,
         description="Existing dbt model to change, e.g. 'mart.fct_revenue'",
@@ -64,14 +64,14 @@ class ModifyExistingProposal(BaseModel):
 
 class AccessPatternProposal(BaseModel):
     type: Literal["access_pattern"]
-    sqlscout_schema_version: Literal["1"] = SCHEMA_VERSION
+    einblick_schema_version: Literal["1"] = SCHEMA_VERSION
     issue: str = Field(description="One-sentence description of the problematic access pattern")
     redirect_to: Optional[str] = Field(
         default=None,
         pattern=_QUALIFIED_IDENT_PATTERN,
         description="Existing model that users should query instead, if one exists",
     )
-    patterns_affected: list[Fingerprint] = Field(description="sqlscout pattern fingerprints")
+    patterns_affected: list[Fingerprint] = Field(description="einblick pattern fingerprints")
     suggested_fix: str
 
 
@@ -105,7 +105,7 @@ EMIT_DBT_PROPOSALS_TOOL = {
                             "type": "object",
                             "properties": {
                                 "type": {"const": "new_model"},
-                                "sqlscout_schema_version": {"const": "1"},
+                                "einblick_schema_version": {"const": "1"},
                                 "name": {"type": "string"},
                                 "layer": {"enum": ["staging", "intermediate", "mart"]},
                                 "materialization": {"enum": ["view", "table", "incremental", "ephemeral"]},
@@ -134,7 +134,7 @@ EMIT_DBT_PROPOSALS_TOOL = {
                             "type": "object",
                             "properties": {
                                 "type": {"const": "modify_existing"},
-                                "sqlscout_schema_version": {"const": "1"},
+                                "einblick_schema_version": {"const": "1"},
                                 "target_model": {"type": "string"},
                                 "change": {"enum": ["materialization", "add_clustering", "add_unique_key", "change_schema", "other"]},
                                 "from": {"type": "string"},
@@ -151,7 +151,7 @@ EMIT_DBT_PROPOSALS_TOOL = {
                             "type": "object",
                             "properties": {
                                 "type": {"const": "access_pattern"},
-                                "sqlscout_schema_version": {"const": "1"},
+                                "einblick_schema_version": {"const": "1"},
                                 "issue": {"type": "string"},
                                 "redirect_to": {"type": "string"},
                                 "patterns_affected": {"type": "array", "items": {"type": "string"}},
@@ -257,6 +257,6 @@ def _render_access_pattern(i: int, p: AccessPatternProposal) -> list[str]:
     out.append(f"- **Patterns affected:** {', '.join(p.patterns_affected)}")
     out.append(f"- **Suggested fix:** {p.suggested_fix}")
     out.append("")
-    out.append("> Surface-only recommendation -- sqlscout will not auto-apply governance changes.")
+    out.append("> Surface-only recommendation -- einblick will not auto-apply governance changes.")
     out.append("")
     return out

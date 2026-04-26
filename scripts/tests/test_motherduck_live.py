@@ -13,7 +13,7 @@ MotherDuck account:
    by adding a third platform branch.
 
 To run:
-    SQLSCOUT_LIVE_MOTHERDUCK=1 \
+    EINBLICK_LIVE_MOTHERDUCK=1 \
     MOTHERDUCK_TOKEN=eyJ... \
         pytest scripts/tests/test_motherduck_live.py -v
 
@@ -27,19 +27,19 @@ import os
 import pytest
 
 LIVE = (
-    os.environ.get("SQLSCOUT_LIVE_MOTHERDUCK") == "1"
+    os.environ.get("EINBLICK_LIVE_MOTHERDUCK") == "1"
     and os.environ.get("MOTHERDUCK_TOKEN")
 )
 
 
 pytestmark = pytest.mark.skipif(
     not LIVE,
-    reason="Live MotherDuck tests opt-in: set SQLSCOUT_LIVE_MOTHERDUCK=1 plus MOTHERDUCK_TOKEN",
+    reason="Live MotherDuck tests opt-in: set EINBLICK_LIVE_MOTHERDUCK=1 plus MOTHERDUCK_TOKEN",
 )
 
 
 def _config(**overrides):
-    from sqlscout.config import load_config
+    from einblick.config import load_config
     return load_config(cli_overrides={
         "platform": "motherduck",
         "days": 1,
@@ -49,7 +49,7 @@ def _config(**overrides):
 
 
 def test_validate_access_succeeds():
-    from sqlscout.connector import connect, validate_access
+    from einblick.connector import connect, validate_access
 
     config = _config()
     with connect(config) as conn:
@@ -57,8 +57,8 @@ def test_validate_access_succeeds():
 
 
 def test_count_queries_runs_without_sql_error():
-    from sqlscout.connector import connect
-    from sqlscout.extractor import count_queries
+    from einblick.connector import connect
+    from einblick.extractor import count_queries
 
     config = _config(hours=24)
     with connect(config) as conn:
@@ -68,8 +68,8 @@ def test_count_queries_runs_without_sql_error():
 
 
 def test_extract_queries_returns_well_formed_rows():
-    from sqlscout.connector import connect
-    from sqlscout.extractor import extract_queries
+    from einblick.connector import connect
+    from einblick.extractor import extract_queries
 
     config = _config(hours=24)
     with connect(config) as conn:
@@ -82,8 +82,8 @@ def test_extract_queries_returns_well_formed_rows():
 
 
 def test_list_users_includes_executor_metadata():
-    from sqlscout.connector import connect
-    from sqlscout.extractor import list_users
+    from einblick.connector import connect
+    from einblick.extractor import list_users
 
     config = _config(hours=24)
     with connect(config) as conn:
@@ -98,9 +98,9 @@ def test_list_users_includes_executor_metadata():
 
 
 def test_full_pipeline_through_aggregate():
-    from sqlscout.aggregator import aggregate
-    from sqlscout.connector import connect
-    from sqlscout.extractor import extract_queries
+    from einblick.aggregator import aggregate
+    from einblick.connector import connect
+    from einblick.extractor import extract_queries
 
     config = _config(hours=24)
     with connect(config) as conn:

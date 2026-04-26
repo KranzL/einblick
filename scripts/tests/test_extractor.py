@@ -1,14 +1,14 @@
 from datetime import datetime
 from unittest.mock import MagicMock
 
-from sqlscout.extractor import (
+from einblick.extractor import (
     _extract_snowflake,
     _extract_databricks,
     _is_likely_service_account,
     _stream_rows,
     effective_hours,
 )
-from sqlscout.models import SqlscoutConfig
+from einblick.models import EinblickConfig
 
 
 def _mock_cursor(rows, chunk_size=None):
@@ -138,7 +138,7 @@ class TestStreamRows:
 
 class TestNoiseFilter:
     def test_snowflake_noise_filter_in_sql_by_default(self):
-        config = SqlscoutConfig(days=1)
+        config = EinblickConfig(days=1)
         conn = MagicMock()
         cursor = _mock_cursor([])
         conn.cursor.return_value = cursor
@@ -152,7 +152,7 @@ class TestNoiseFilter:
         assert "LENGTH(TRIM(QUERY_TEXT)) > 20" in sql
 
     def test_include_trivial_disables_noise_filter(self):
-        config = SqlscoutConfig(days=1, include_trivial=True)
+        config = EinblickConfig(days=1, include_trivial=True)
         conn = MagicMock()
         cursor = _mock_cursor([])
         conn.cursor.return_value = cursor
@@ -163,7 +163,7 @@ class TestNoiseFilter:
         assert "SYSTEM$" not in sql
 
     def test_custom_min_duration(self):
-        config = SqlscoutConfig(days=1, min_duration_ms=500)
+        config = EinblickConfig(days=1, min_duration_ms=500)
         conn = MagicMock()
         cursor = _mock_cursor([])
         conn.cursor.return_value = cursor
@@ -173,7 +173,7 @@ class TestNoiseFilter:
         assert "TOTAL_ELAPSED_TIME >= 500" in sql
 
     def test_databricks_noise_filter(self):
-        config = SqlscoutConfig(platform="databricks", days=1)
+        config = EinblickConfig(platform="databricks", days=1)
         conn = MagicMock()
         cursor = _mock_cursor([])
         conn.cursor.return_value = cursor
@@ -187,7 +187,7 @@ class TestNoiseFilter:
 
 class TestSnowflakeExtraction:
     def test_builds_correct_sql_with_excludes(self):
-        config = SqlscoutConfig(
+        config = EinblickConfig(
             days=7,
             exclude_users=["FIVETRAN", "DBT_CLOUD"],
             exclude_roles=["SYSADMIN"],
@@ -212,7 +212,7 @@ class TestSnowflakeExtraction:
         assert "SYSADMIN" in params
 
     def test_hours_overrides_days(self):
-        config = SqlscoutConfig(days=7, hours=6)
+        config = EinblickConfig(days=7, hours=6)
         conn = MagicMock()
         cursor = _mock_cursor([])
         conn.cursor.return_value = cursor
@@ -222,7 +222,7 @@ class TestSnowflakeExtraction:
         assert params[0] == 6
 
     def test_no_excludes_no_user_or_role_filter(self):
-        config = SqlscoutConfig(days=1)
+        config = EinblickConfig(days=1)
         conn = MagicMock()
         cursor = _mock_cursor([])
         conn.cursor.return_value = cursor
@@ -236,7 +236,7 @@ class TestSnowflakeExtraction:
 
 class TestDatabricksExtraction:
     def test_builds_correct_sql(self):
-        config = SqlscoutConfig(platform="databricks", days=14)
+        config = EinblickConfig(platform="databricks", days=14)
         conn = MagicMock()
         cursor = _mock_cursor([])
         conn.cursor.return_value = cursor
@@ -259,7 +259,7 @@ class TestDatabricksExtraction:
     def test_databricks_sql_parses_in_databricks_dialect(self):
         import sqlglot
 
-        config = SqlscoutConfig(platform="databricks", days=7)
+        config = EinblickConfig(platform="databricks", days=7)
         conn = MagicMock()
         cursor = _mock_cursor([])
         conn.cursor.return_value = cursor
@@ -269,7 +269,7 @@ class TestDatabricksExtraction:
         sqlglot.parse_one(sql, dialect="databricks")
 
     def test_databricks_sql_uses_struct_warehouse_id_not_compute_resource_id(self):
-        config = SqlscoutConfig(platform="databricks", days=7)
+        config = EinblickConfig(platform="databricks", days=7)
         conn = MagicMock()
         cursor = _mock_cursor([])
         conn.cursor.return_value = cursor
@@ -280,7 +280,7 @@ class TestDatabricksExtraction:
         assert "q.compute_resource_id" not in sql
 
     def test_databricks_sql_uses_interval_subtraction_not_date_sub_with_interval(self):
-        config = SqlscoutConfig(platform="databricks", days=7)
+        config = EinblickConfig(platform="databricks", days=7)
         conn = MagicMock()
         cursor = _mock_cursor([])
         conn.cursor.return_value = cursor
@@ -291,7 +291,7 @@ class TestDatabricksExtraction:
         assert "current_timestamp() - INTERVAL" in sql
 
     def test_excludes_use_parameterized_queries(self):
-        config = SqlscoutConfig(
+        config = EinblickConfig(
             platform="databricks", days=7,
             exclude_users=["svc_fivetran@company.com"],
         )
@@ -307,7 +307,7 @@ class TestDatabricksExtraction:
         assert "svc_fivetran@company.com" not in sql
 
     def test_exclude_cache_hits_filter(self):
-        config = SqlscoutConfig(platform="databricks", days=1, exclude_cache_hits=True)
+        config = EinblickConfig(platform="databricks", days=1, exclude_cache_hits=True)
         conn = MagicMock()
         cursor = _mock_cursor([])
         conn.cursor.return_value = cursor
@@ -318,7 +318,7 @@ class TestDatabricksExtraction:
         assert "= FALSE" in sql
 
     def test_cache_hits_not_excluded_by_default(self):
-        config = SqlscoutConfig(platform="databricks", days=1)
+        config = EinblickConfig(platform="databricks", days=1)
         conn = MagicMock()
         cursor = _mock_cursor([])
         conn.cursor.return_value = cursor
@@ -350,15 +350,15 @@ class TestServicePrincipalDetection:
 
 class TestEffectiveHours:
     def test_default_days_to_hours(self):
-        config = SqlscoutConfig(days=7)
+        config = EinblickConfig(days=7)
         assert effective_hours(config) == 7 * 24
 
     def test_hours_overrides(self):
-        config = SqlscoutConfig(days=7, hours=1)
+        config = EinblickConfig(days=7, hours=1)
         assert effective_hours(config) == 1
 
     def test_hours_of_zero_falls_back(self):
-        config = SqlscoutConfig(days=30, hours=None)
+        config = EinblickConfig(days=30, hours=None)
         assert effective_hours(config) == 30 * 24
 
 

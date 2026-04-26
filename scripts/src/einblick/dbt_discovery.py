@@ -6,10 +6,10 @@ from typing import Any, Optional
 
 import requests
 
-from sqlscout.redact import redact_secrets as _redact
+from einblick.redact import redact_secrets as _redact
 
 DEFAULT_HOST = "cloud.getdbt.com"
-PARTNER_HEADER = "sqlscout"
+PARTNER_HEADER = "einblick"
 MAX_PAGES = 100
 
 
@@ -257,7 +257,7 @@ class DbtDiscoveryClient:
                 return
             previous_after = after
         import logging
-        logging.getLogger("sqlscout.dbt_discovery").warning(
+        logging.getLogger("einblick.dbt_discovery").warning(
             "pagination cap (%d pages) hit; truncating results", MAX_PAGES
         )
 

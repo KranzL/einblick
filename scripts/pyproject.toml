@@ -3,7 +3,7 @@ requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "sqlscout"
+name = "einblick"
 version = "0.1.0"
 description = "Analyze Snowflake, Databricks, and MotherDuck query history and recommend data modeling improvements"
 readme = {text = "Analyze query history and recommend data modeling improvements", content-type = "text/plain"}
@@ -47,11 +47,11 @@ dev = [
     "pytest-mock>=3.0,<4",
 ]
 all = [
-    "sqlscout[snowflake,databricks,llm,dev]",
+    "einblick[snowflake,databricks,llm,dev]",
 ]
 
 [project.scripts]
-sqlscout = "sqlscout.cli:main"
+einblick = "einblick.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

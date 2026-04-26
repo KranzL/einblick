@@ -5,8 +5,8 @@
       "canonical_sql": "SELECT * FROM RAW.STRIPE.PAYMENTS WHERE CREATED_AT >= DATEADD(DAY, -?, CURRENT_DATE)",
       "execution_count": 50,
       "distinct_users": [
-        "alex.kumar@company.com",
-        "jordan.lee@company.com"
+        "jordan.lee@company.com",
+        "alex.kumar@company.com"
       ],
       "distinct_roles": [
         "DATA_ENGINEER"
@@ -25,8 +25,8 @@
       "impact_score": 3526.5369
     },
     {
-      "fingerprint": "4bcbda3cbc240f999072b2b279669bbb",
-      "canonical_sql": "SELECT R.REGION_NAME, DATE_TRUNC('DAY', O.ORDER_DATE), SUM(O.TOTAL_AMOUNT), COUNT(DISTINCT O.CUSTOMER_ID), COUNT(*) FROM ANALYTICS.SALES.FACT_ORDERS AS O JOIN ANALYTICS.SALES.DIM_REGIONS AS R ON O.REGION_ID = R.REGION_ID WHERE O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) AND O.ORDER_STATUS = '?' GROUP BY R.REGION_NAME, DATE_TRUNC('DAY', O.ORDER_DATE) ORDER BY DAY DESC, DAILY_REVENUE DESC",
+      "fingerprint": "d1c5c07cb9d16f757bbd97d9018a52a2",
+      "canonical_sql": "SELECT T1.REGION_NAME, DATE_TRUNC('DAY', T0.ORDER_DATE), SUM(T0.TOTAL_AMOUNT), COUNT(DISTINCT T0.CUSTOMER_ID), COUNT(*) FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_REGIONS AS T1 ON T0.REGION_ID = T1.REGION_ID WHERE T0.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) AND T0.ORDER_STATUS = '?' GROUP BY T1.REGION_NAME, DATE_TRUNC('DAY', T0.ORDER_DATE) ORDER BY DAY DESC, DAILY_REVENUE DESC",
       "execution_count": 155,
       "distinct_users": [
         "LOOKER_SERVICE",
@@ -37,8 +37,8 @@
         "LOOKER_ROLE"
       ],
       "warehouses": [
-        "WH_LOOKER",
-        "WH_TABLEAU"
+        "WH_TABLEAU",
+        "WH_LOOKER"
       ],
       "total_credits": 11.587596,
       "avg_execution_time_ms": 4581.47,
@@ -52,8 +52,8 @@
       "impact_score": 1796.0774
     },
     {
-      "fingerprint": "d20fa52ece04edbd35c5a50e78ba6269",
-      "canonical_sql": "SELECT O.ORDER_ID, O.ORDER_DATE, O.ORDER_STATUS, O.TOTAL_AMOUNT, C.CUSTOMER_NAME, C.EMAIL, C.CUSTOMER_SEGMENT, R.REGION_NAME, OI.PRODUCT_ID, OI.QUANTITY, OI.UNIT_PRICE, OI.DISCOUNT_AMOUNT, P.PRODUCT_NAME, P.PRODUCT_CATEGORY FROM ANALYTICS.SALES.FACT_ORDERS AS O JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS C ON O.CUSTOMER_ID = C.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS R ON O.REGION_ID = R.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS OI ON O.ORDER_ID = OI.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS P ON OI.PRODUCT_ID = P.PRODUCT_ID WHERE O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE)",
+      "fingerprint": "936c1922a4758f274829d0b431b2b93e",
+      "canonical_sql": "SELECT T0.ORDER_ID, T0.ORDER_DATE, T0.ORDER_STATUS, T0.TOTAL_AMOUNT, T1.CUSTOMER_NAME, T1.EMAIL, T1.CUSTOMER_SEGMENT, T2.REGION_NAME, T3.PRODUCT_ID, T3.QUANTITY, T3.UNIT_PRICE, T3.DISCOUNT_AMOUNT, T4.PRODUCT_NAME, T4.PRODUCT_CATEGORY FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE)",
       "execution_count": 55,
       "distinct_users": [
         "TABLEAU_SERVICE"
@@ -79,20 +79,20 @@
       "impact_score": 1698.3623
     },
     {
-      "fingerprint": "07aef86a1330b894e352996214eb74fe",
-      "canonical_sql": "SELECT DATE_TRUNC('WEEK', O.ORDER_DATE), COUNT(DISTINCT O.ORDER_ID), COUNT(DISTINCT O.CUSTOMER_ID), SUM(O.TOTAL_AMOUNT), SUM(O.TOTAL_AMOUNT) / NULLIF(COUNT(DISTINCT O.CUSTOMER_ID), ?) FROM ANALYTICS.SALES.FACT_ORDERS AS O WHERE O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) AND O.ORDER_STATUS = '?' GROUP BY DATE_TRUNC('WEEK', O.ORDER_DATE) ORDER BY WEEK DESC",
+      "fingerprint": "5297d5b1a62377b3d515c39877acc441",
+      "canonical_sql": "SELECT DATE_TRUNC('WEEK', T0.ORDER_DATE), COUNT(DISTINCT T0.ORDER_ID), COUNT(DISTINCT T0.CUSTOMER_ID), SUM(T0.TOTAL_AMOUNT), SUM(T0.TOTAL_AMOUNT) / NULLIF(COUNT(DISTINCT T0.CUSTOMER_ID), ?) FROM ANALYTICS.SALES.FACT_ORDERS AS T0 WHERE T0.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) AND T0.ORDER_STATUS = '?' GROUP BY DATE_TRUNC('WEEK', T0.ORDER_DATE) ORDER BY WEEK DESC",
       "execution_count": 95,
       "distinct_users": [
-        "TABLEAU_SERVICE",
-        "LOOKER_SERVICE"
+        "LOOKER_SERVICE",
+        "TABLEAU_SERVICE"
       ],
       "distinct_roles": [
-        "LOOKER_ROLE",
-        "TABLEAU_ROLE"
+        "TABLEAU_ROLE",
+        "LOOKER_ROLE"
       ],
       "warehouses": [
-        "WH_TABLEAU",
-        "WH_LOOKER"
+        "WH_LOOKER",
+        "WH_TABLEAU"
       ],
       "total_credits": 9.332495,
       "avg_execution_time_ms": 5539.36,
@@ -105,8 +105,8 @@
       "impact_score": 886.587
     },
     {
-      "fingerprint": "2256f9bc51ab6164b77c9526e87943c5",
-      "canonical_sql": "SELECT P.PRODUCT_CATEGORY, P.PRODUCT_SUBCATEGORY, DATE_TRUNC('MONTH', O.ORDER_DATE), SUM(OI.QUANTITY), SUM(OI.QUANTITY * OI.UNIT_PRICE), SUM(OI.QUANTITY * (OI.UNIT_PRICE - P.COST_PRICE)), COUNT(DISTINCT O.CUSTOMER_ID) FROM ANALYTICS.SALES.FACT_ORDER_ITEMS AS OI JOIN ANALYTICS.SALES.FACT_ORDERS AS O ON OI.ORDER_ID = O.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS P ON OI.PRODUCT_ID = P.PRODUCT_ID WHERE O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY P.PRODUCT_CATEGORY, P.PRODUCT_SUBCATEGORY, DATE_TRUNC('MONTH', O.ORDER_DATE) ORDER BY GROSS_REVENUE DESC",
+      "fingerprint": "f928d548758c0dd60573c76cc5603109",
+      "canonical_sql": "SELECT T2.PRODUCT_CATEGORY, T2.PRODUCT_SUBCATEGORY, DATE_TRUNC('MONTH', T1.ORDER_DATE), SUM(T0.QUANTITY), SUM(T0.QUANTITY * T0.UNIT_PRICE), SUM(T0.QUANTITY * (T0.UNIT_PRICE - T2.COST_PRICE)), COUNT(DISTINCT T1.CUSTOMER_ID) FROM ANALYTICS.SALES.FACT_ORDER_ITEMS AS T0 JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.ORDER_ID = T1.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T2 ON T0.PRODUCT_ID = T2.PRODUCT_ID WHERE T1.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY T2.PRODUCT_CATEGORY, T2.PRODUCT_SUBCATEGORY, DATE_TRUNC('MONTH', T1.ORDER_DATE) ORDER BY GROSS_REVENUE DESC",
       "execution_count": 60,
       "distinct_users": [
         "LOOKER_SERVICE"
@@ -130,12 +130,12 @@
       "impact_score": 618.8361
     },
     {
-      "fingerprint": "d02632acc075ffcf4b720a3b772af144",
-      "canonical_sql": "SELECT C.CUSTOMER_ID, C.CUSTOMER_NAME, C.EMAIL, C.SIGNUP_DATE, C.CUSTOMER_SEGMENT, COUNT(O.ORDER_ID), SUM(O.TOTAL_AMOUNT), AVG(O.TOTAL_AMOUNT), MAX(O.ORDER_DATE), DATEDIFF(DAY, MAX(O.ORDER_DATE), CURRENT_DATE) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS C LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS O ON C.CUSTOMER_ID = O.CUSTOMER_ID GROUP BY C.CUSTOMER_ID, C.CUSTOMER_NAME, C.EMAIL, C.SIGNUP_DATE, C.CUSTOMER_SEGMENT ORDER BY LIFETIME_VALUE DESC LIMIT ?",
+      "fingerprint": "dc42cc755b956919df94235f7e53faab",
+      "canonical_sql": "SELECT T0.CUSTOMER_ID, T0.CUSTOMER_NAME, T0.EMAIL, T0.SIGNUP_DATE, T0.CUSTOMER_SEGMENT, COUNT(T1.ORDER_ID), SUM(T1.TOTAL_AMOUNT), AVG(T1.TOTAL_AMOUNT), MAX(T1.ORDER_DATE), DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID GROUP BY T0.CUSTOMER_ID, T0.CUSTOMER_NAME, T0.EMAIL, T0.SIGNUP_DATE, T0.CUSTOMER_SEGMENT ORDER BY LIFETIME_VALUE DESC LIMIT ?",
       "execution_count": 43,
       "distinct_users": [
-        "mike.johnson@company.com",
-        "sarah.chen@company.com"
+        "sarah.chen@company.com",
+        "mike.johnson@company.com"
       ],
       "distinct_roles": [
         "ANALYST"
@@ -178,8 +178,8 @@
       "impact_score": 191.226
     },
     {
-      "fingerprint": "20db487df422a37ef6f58697add2bc0a",
-      "canonical_sql": "SELECT S.UTM_SOURCE, S.UTM_MEDIUM, S.UTM_CAMPAIGN, COUNT(DISTINCT S.SESSION_ID), COUNT(DISTINCT S.USER_ID), SUM(CASE WHEN S.CONVERTED THEN ? ELSE ? END), CAST(SUM(CASE WHEN S.CONVERTED THEN ? ELSE ? END) AS DOUBLE) / NULLIF(COUNT(DISTINCT S.USER_ID), ?), SUM(O.TOTAL_AMOUNT) FROM MARKETING.PUBLIC.SESSIONS AS S LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS O ON S.USER_ID = O.CUSTOMER_ID AND O.ORDER_DATE = S.SESSION_DATE WHERE S.SESSION_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY S.UTM_SOURCE, S.UTM_MEDIUM, S.UTM_CAMPAIGN ORDER BY ATTRIBUTED_REVENUE DESC NULLS LAST",
+      "fingerprint": "af75d0d642d828cf92cabebd242b65a9",
+      "canonical_sql": "SELECT T0.UTM_SOURCE, T0.UTM_MEDIUM, T0.UTM_CAMPAIGN, COUNT(DISTINCT T0.SESSION_ID), COUNT(DISTINCT T0.USER_ID), SUM(CASE WHEN T0.CONVERTED THEN ? ELSE ? END), CAST(SUM(CASE WHEN T0.CONVERTED THEN ? ELSE ? END) AS FLOAT) / NULLIF(COUNT(DISTINCT T0.USER_ID), ?), SUM(T1.TOTAL_AMOUNT) FROM MARKETING.PUBLIC.SESSIONS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.USER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE = T0.SESSION_DATE WHERE T0.SESSION_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY T0.UTM_SOURCE, T0.UTM_MEDIUM, T0.UTM_CAMPAIGN ORDER BY ATTRIBUTED_REVENUE DESC NULLS LAST",
       "execution_count": 27,
       "distinct_users": [
         "sarah.chen@company.com",
@@ -208,9 +208,9 @@
       "execution_count": 4,
       "distinct_users": [
         "rachel.thompson@company.com",
+        "jordan.lee@company.com",
         "mike.johnson@company.com",
-        "DBT_PROD",
-        "jordan.lee@company.com"
+        "DBT_PROD"
       ],
       "distinct_roles": [
         "DBT_ROLE",
@@ -219,10 +219,10 @@
         "DATA_ENGINEER"
       ],
       "warehouses": [
-        "WH_ANALYTICS_S",
-        "WH_ANALYTICS_M",
         "WH_ETL_L",
-        "WH_DBT"
+        "WH_DBT",
+        "WH_ANALYTICS_M",
+        "WH_ANALYTICS_S"
       ],
       "total_credits": 3.230011,
       "avg_execution_time_ms": 9938.25,
@@ -235,8 +235,8 @@
       "impact_score": 12.92
     },
     {
-      "fingerprint": "cbde4da74e13d4f827386efeb1886811",
-      "canonical_sql": "SELECT MIN(O.TOTAL_AMOUNT), COUNT(O.ORDER_ID), C.CUSTOMER_ID, STDDEV(O.TOTAL_AMOUNT), AVG(O.TOTAL_AMOUNT), C.CUSTOMER_SEGMENT FROM ANALYTICS.SALES.DIM_CUSTOMERS AS C LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS O ON C.CUSTOMER_ID = O.CUSTOMER_ID AND O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY C.CUSTOMER_ID, C.CUSTOMER_SEGMENT",
+      "fingerprint": "c21df823d9ef7a85661d6451d6e2abb6",
+      "canonical_sql": "SELECT MIN(T1.TOTAL_AMOUNT), COUNT(T1.ORDER_ID), T0.CUSTOMER_ID, STDDEV(T1.TOTAL_AMOUNT), AVG(T1.TOTAL_AMOUNT), T0.CUSTOMER_SEGMENT FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY T0.CUSTOMER_ID, T0.CUSTOMER_SEGMENT",
       "execution_count": 1,
       "distinct_users": [
         "emma.davis@company.com"
@@ -259,8 +259,8 @@
       "impact_score": 7.461
     },
     {
-      "fingerprint": "6897ee239d382927173c76d7d8bff8b3",
-      "canonical_sql": "SELECT C.CUSTOMER_SEGMENT, DATEDIFF(DAY, C.SIGNUP_DATE, CURRENT_DATE), C.CUSTOMER_ID, SUM(O.TOTAL_AMOUNT), SUM(CASE WHEN O.ORDER_STATUS = '?' THEN ? ELSE ? END), AVG(O.TOTAL_AMOUNT), MAX(O.TOTAL_AMOUNT), MIN(O.TOTAL_AMOUNT), COUNT(DISTINCT DATE_TRUNC('WEEK', O.ORDER_DATE)), COUNT(DISTINCT O.REGION_ID), STDDEV(O.TOTAL_AMOUNT) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS C LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS O ON C.CUSTOMER_ID = O.CUSTOMER_ID AND O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY C.CUSTOMER_SEGMENT, C.CUSTOMER_ID",
+      "fingerprint": "ed82b68fd6b116c6f1d87a987f3386fa",
+      "canonical_sql": "SELECT T0.CUSTOMER_SEGMENT, DATEDIFF(DAY, T0.SIGNUP_DATE, CURRENT_DATE), T0.CUSTOMER_ID, SUM(T1.TOTAL_AMOUNT), SUM(CASE WHEN T1.ORDER_STATUS = '?' THEN ? ELSE ? END), AVG(T1.TOTAL_AMOUNT), MAX(T1.TOTAL_AMOUNT), MIN(T1.TOTAL_AMOUNT), COUNT(DISTINCT DATE_TRUNC('WEEK', T1.ORDER_DATE)), COUNT(DISTINCT T1.REGION_ID), STDDEV(T1.TOTAL_AMOUNT) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY T0.CUSTOMER_SEGMENT, T0.CUSTOMER_ID",
       "execution_count": 1,
       "distinct_users": [
         "noah.martinez@company.com"
@@ -283,8 +283,8 @@
       "impact_score": 7.2117
     },
     {
-      "fingerprint": "78dc3723cea6a6a57b9c552e8c10b1a1",
-      "canonical_sql": "SELECT STDDEV(O.TOTAL_AMOUNT), C.CUSTOMER_ID, MAX(O.TOTAL_AMOUNT), COUNT(DISTINCT DATE_TRUNC('WEEK', O.ORDER_DATE)), AVG(O.TOTAL_AMOUNT), C.CUSTOMER_SEGMENT FROM ANALYTICS.SALES.DIM_CUSTOMERS AS C LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS O ON C.CUSTOMER_ID = O.CUSTOMER_ID AND O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY C.CUSTOMER_ID, C.CUSTOMER_SEGMENT",
+      "fingerprint": "1e7b3391f44403174b96645f104f426a",
+      "canonical_sql": "SELECT STDDEV(T1.TOTAL_AMOUNT), T0.CUSTOMER_ID, MAX(T1.TOTAL_AMOUNT), COUNT(DISTINCT DATE_TRUNC('WEEK', T1.ORDER_DATE)), AVG(T1.TOTAL_AMOUNT), T0.CUSTOMER_SEGMENT FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY T0.CUSTOMER_ID, T0.CUSTOMER_SEGMENT",
       "execution_count": 1,
       "distinct_users": [
         "emma.davis@company.com"
@@ -307,8 +307,8 @@
       "impact_score": 6.259
     },
     {
-      "fingerprint": "5c2b1530b182e33ec870c37fb3fd1731",
-      "canonical_sql": "SELECT COUNT(DISTINCT DATE_TRUNC('WEEK', O.ORDER_DATE)), MIN(O.TOTAL_AMOUNT), COUNT(DISTINCT O.REGION_ID), C.CUSTOMER_ID, SUM(CASE WHEN O.ORDER_STATUS = '?' THEN ? ELSE ? END), COUNT(O.ORDER_ID), C.CUSTOMER_SEGMENT, STDDEV(O.TOTAL_AMOUNT), AVG(O.TOTAL_AMOUNT), SUM(O.TOTAL_AMOUNT), DATEDIFF(DAY, C.SIGNUP_DATE, CURRENT_DATE) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS C LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS O ON C.CUSTOMER_ID = O.CUSTOMER_ID AND O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY C.CUSTOMER_ID, C.CUSTOMER_SEGMENT",
+      "fingerprint": "f8d3dc6bd81f96c03bb8d5f423c99c8f",
+      "canonical_sql": "SELECT COUNT(DISTINCT DATE_TRUNC('WEEK', T1.ORDER_DATE)), MIN(T1.TOTAL_AMOUNT), COUNT(DISTINCT T1.REGION_ID), T0.CUSTOMER_ID, SUM(CASE WHEN T1.ORDER_STATUS = '?' THEN ? ELSE ? END), COUNT(T1.ORDER_ID), T0.CUSTOMER_SEGMENT, STDDEV(T1.TOTAL_AMOUNT), AVG(T1.TOTAL_AMOUNT), SUM(T1.TOTAL_AMOUNT), DATEDIFF(DAY, T0.SIGNUP_DATE, CURRENT_DATE) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY T0.CUSTOMER_ID, T0.CUSTOMER_SEGMENT",
       "execution_count": 1,
       "distinct_users": [
         "noah.martinez@company.com"
@@ -331,8 +331,8 @@
       "impact_score": 5.5013
     },
     {
-      "fingerprint": "cb50993433859c376bda1edf694f6ebb",
-      "canonical_sql": "SELECT SUM(O.TOTAL_AMOUNT), AVG(O.TOTAL_AMOUNT), COUNT(DISTINCT O.REGION_ID), MAX(O.TOTAL_AMOUNT), COUNT(DISTINCT DATE_TRUNC('WEEK', O.ORDER_DATE)), STDDEV(O.TOTAL_AMOUNT), MIN(O.TOTAL_AMOUNT), COUNT(O.ORDER_ID), C.CUSTOMER_ID, C.CUSTOMER_SEGMENT, DATEDIFF(DAY, C.SIGNUP_DATE, CURRENT_DATE), SUM(CASE WHEN O.ORDER_STATUS = '?' THEN ? ELSE ? END) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS C LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS O ON C.CUSTOMER_ID = O.CUSTOMER_ID AND O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY C.CUSTOMER_ID, C.CUSTOMER_SEGMENT",
+      "fingerprint": "c99971e884870953c7ca3529849cfe41",
+      "canonical_sql": "SELECT SUM(T1.TOTAL_AMOUNT), AVG(T1.TOTAL_AMOUNT), COUNT(DISTINCT T1.REGION_ID), MAX(T1.TOTAL_AMOUNT), COUNT(DISTINCT DATE_TRUNC('WEEK', T1.ORDER_DATE)), STDDEV(T1.TOTAL_AMOUNT), MIN(T1.TOTAL_AMOUNT), COUNT(T1.ORDER_ID), T0.CUSTOMER_ID, T0.CUSTOMER_SEGMENT, DATEDIFF(DAY, T0.SIGNUP_DATE, CURRENT_DATE), SUM(CASE WHEN T1.ORDER_STATUS = '?' THEN ? ELSE ? END) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY T0.CUSTOMER_ID, T0.CUSTOMER_SEGMENT",
       "execution_count": 1,
       "distinct_users": [
         "emma.davis@company.com"
@@ -367,8 +367,8 @@
         "ANALYST"
       ],
       "warehouses": [
-        "WH_ETL_XL",
-        "WH_ANALYTICS_M"
+        "WH_ANALYTICS_M",
+        "WH_ETL_XL"
       ],
       "total_credits": 2.426231,
       "avg_execution_time_ms": 25272.5,
@@ -381,8 +381,8 @@
       "impact_score": 4.8525
     },
     {
-      "fingerprint": "75c88fc4505645b96315b415292b7f73",
-      "canonical_sql": "SELECT MIN(O.TOTAL_AMOUNT), SUM(CASE WHEN O.ORDER_STATUS = '?' THEN ? ELSE ? END), COUNT(DISTINCT DATE_TRUNC('WEEK', O.ORDER_DATE)), AVG(O.TOTAL_AMOUNT), C.CUSTOMER_SEGMENT, STDDEV(O.TOTAL_AMOUNT) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS C LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS O ON C.CUSTOMER_ID = O.CUSTOMER_ID AND O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY C.CUSTOMER_SEGMENT",
+      "fingerprint": "6e6913d7fa7730a73b2e3c5fae7e27c8",
+      "canonical_sql": "SELECT MIN(T1.TOTAL_AMOUNT), SUM(CASE WHEN T1.ORDER_STATUS = '?' THEN ? ELSE ? END), COUNT(DISTINCT DATE_TRUNC('WEEK', T1.ORDER_DATE)), AVG(T1.TOTAL_AMOUNT), T0.CUSTOMER_SEGMENT, STDDEV(T1.TOTAL_AMOUNT) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY T0.CUSTOMER_SEGMENT",
       "execution_count": 1,
       "distinct_users": [
         "emma.davis@company.com"
@@ -405,8 +405,8 @@
       "impact_score": 3.7552
     },
     {
-      "fingerprint": "4efba2d371e6170e8530ef681e6b2dce",
-      "canonical_sql": "SELECT C.CUSTOMER_SEGMENT, COUNT(DISTINCT DATE_TRUNC('WEEK', O.ORDER_DATE)), MAX(O.TOTAL_AMOUNT), COUNT(O.ORDER_ID), MIN(O.TOTAL_AMOUNT), SUM(CASE WHEN O.ORDER_STATUS = '?' THEN ? ELSE ? END), STDDEV(O.TOTAL_AMOUNT), C.CUSTOMER_ID, SUM(O.TOTAL_AMOUNT) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS C LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS O ON C.CUSTOMER_ID = O.CUSTOMER_ID AND O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY C.CUSTOMER_SEGMENT, C.CUSTOMER_ID",
+      "fingerprint": "cc4d10334686b31688bea4ab87532cd8",
+      "canonical_sql": "SELECT T0.CUSTOMER_SEGMENT, COUNT(DISTINCT DATE_TRUNC('WEEK', T1.ORDER_DATE)), MAX(T1.TOTAL_AMOUNT), COUNT(T1.ORDER_ID), MIN(T1.TOTAL_AMOUNT), SUM(CASE WHEN T1.ORDER_STATUS = '?' THEN ? ELSE ? END), STDDEV(T1.TOTAL_AMOUNT), T0.CUSTOMER_ID, SUM(T1.TOTAL_AMOUNT) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY T0.CUSTOMER_SEGMENT, T0.CUSTOMER_ID",
       "execution_count": 1,
       "distinct_users": [
         "noah.martinez@company.com"
@@ -452,8 +452,8 @@
       "impact_score": 3.3116
     },
     {
-      "fingerprint": "9425f0802ac3c63a89204e7039879562",
-      "canonical_sql": "SELECT SUM(CASE WHEN O.ORDER_STATUS = '?' THEN ? ELSE ? END), AVG(O.TOTAL_AMOUNT), C.CUSTOMER_SEGMENT, MAX(O.TOTAL_AMOUNT), COUNT(DISTINCT O.REGION_ID), STDDEV(O.TOTAL_AMOUNT), MIN(O.TOTAL_AMOUNT), C.CUSTOMER_ID, COUNT(DISTINCT DATE_TRUNC('WEEK', O.ORDER_DATE)), DATEDIFF(DAY, C.SIGNUP_DATE, CURRENT_DATE), COUNT(O.ORDER_ID) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS C LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS O ON C.CUSTOMER_ID = O.CUSTOMER_ID AND O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY C.CUSTOMER_SEGMENT, C.CUSTOMER_ID",
+      "fingerprint": "ead3c45b8f14d34fcc374e09c623d0dd",
+      "canonical_sql": "SELECT SUM(CASE WHEN T1.ORDER_STATUS = '?' THEN ? ELSE ? END), AVG(T1.TOTAL_AMOUNT), T0.CUSTOMER_SEGMENT, MAX(T1.TOTAL_AMOUNT), COUNT(DISTINCT T1.REGION_ID), STDDEV(T1.TOTAL_AMOUNT), MIN(T1.TOTAL_AMOUNT), T0.CUSTOMER_ID, COUNT(DISTINCT DATE_TRUNC('WEEK', T1.ORDER_DATE)), DATEDIFF(DAY, T0.SIGNUP_DATE, CURRENT_DATE), COUNT(T1.ORDER_ID) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY T0.CUSTOMER_SEGMENT, T0.CUSTOMER_ID",
       "execution_count": 1,
       "distinct_users": [
         "noah.martinez@company.com"
@@ -612,6 +612,1842 @@
       "first_seen": "2026-04-14T18:14:16",
       "last_seen": "2026-04-14T18:14:16",
       "impact_score": 1.7432
+    },
+    {
+      "fingerprint": "39849af10364dddd75e2324024bb060a",
+      "canonical_sql": "SELECT PAYMENT_ID, CURRENCY, FAILURE_CODE, METADATA, UPDATED_AT, PAYMENT_METHOD, PAYMENT_STATUS, STRIPE_CHARGE_ID, AMOUNT, RECEIPT_URL FROM RAW.STRIPE.PAYMENTS WHERE CREATED_AT >= '?' AND PAYMENT_STATUS = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "taylor.smith@company.com"
+      ],
+      "distinct_roles": [
+        "DATA_ENGINEER"
+      ],
+      "warehouses": [
+        "WH_ETL_XL"
+      ],
+      "total_credits": 1.704628,
+      "avg_execution_time_ms": 35513.0,
+      "total_bytes_scanned": 3887810291,
+      "tables_referenced": [
+        "raw.stripe.payments"
+      ],
+      "first_seen": "2026-04-11T13:08:51",
+      "last_seen": "2026-04-11T13:08:51",
+      "impact_score": 1.7046
+    },
+    {
+      "fingerprint": "c10c61c2234d86031070cdd39c8827b0",
+      "canonical_sql": "SELECT FAILURE_MESSAGE, FAILURE_CODE, PAYMENT_ID, CURRENCY, STRIPE_CHARGE_ID, DESCRIPTION, CREATED_AT, RECEIPT_URL, FEE_AMOUNT, PAYMENT_STATUS, PAYMENT_METHOD FROM RAW.STRIPE.PAYMENTS WHERE CREATED_AT >= '?' AND AMOUNT > ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "taylor.smith@company.com"
+      ],
+      "distinct_roles": [
+        "DATA_ENGINEER"
+      ],
+      "warehouses": [
+        "WH_ETL_XL"
+      ],
+      "total_credits": 1.649649,
+      "avg_execution_time_ms": 34367.0,
+      "total_bytes_scanned": 2035958642,
+      "tables_referenced": [
+        "raw.stripe.payments"
+      ],
+      "first_seen": "2026-04-11T15:39:58",
+      "last_seen": "2026-04-11T15:39:58",
+      "impact_score": 1.6496
+    },
+    {
+      "fingerprint": "3b24c8aed6fc5dde86ba311a0e1fd7be",
+      "canonical_sql": "SELECT FEE_AMOUNT, CUSTOMER_ID, AMOUNT, FAILURE_MESSAGE, NET_AMOUNT, STRIPE_CHARGE_ID, FAILURE_CODE, PAYMENT_ID, UPDATED_AT, DESCRIPTION, METADATA FROM RAW.STRIPE.PAYMENTS WHERE CREATED_AT >= '?' AND PAYMENT_STATUS = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "jordan.lee@company.com"
+      ],
+      "distinct_roles": [
+        "DATA_ENGINEER"
+      ],
+      "warehouses": [
+        "WH_ETL_L"
+      ],
+      "total_credits": 1.610297,
+      "avg_execution_time_ms": 33547.0,
+      "total_bytes_scanned": 1473586089,
+      "tables_referenced": [
+        "raw.stripe.payments"
+      ],
+      "first_seen": "2026-04-11T07:23:33",
+      "last_seen": "2026-04-11T07:23:33",
+      "impact_score": 1.6103
+    },
+    {
+      "fingerprint": "d3eb71daa739fc8bce50e0683b5e4677",
+      "canonical_sql": "SELECT CUSTOMER_ID, ACCOUNT_STATUS, CUSTOMER_SEGMENT, UPDATED_AT, EMAIL, PREFERRED_CHANNEL, CUSTOMER_NAME, SHIPPING_ADDRESS, PHONE_NUMBER, BILLING_ADDRESS, CREATED_AT, LOYALTY_TIER, SIGNUP_DATE FROM ANALYTICS.SALES.DIM_CUSTOMERS WHERE CUSTOMER_ID = ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "priya.patel@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_M"
+      ],
+      "total_credits": 1.608697,
+      "avg_execution_time_ms": 19799.0,
+      "total_bytes_scanned": 1773775222,
+      "tables_referenced": [
+        "analytics.sales.dim_customers"
+      ],
+      "first_seen": "2026-04-10T10:16:57",
+      "last_seen": "2026-04-10T10:16:57",
+      "impact_score": 1.6087
+    },
+    {
+      "fingerprint": "c11ef8300e52526a09f21203a9b3faa2",
+      "canonical_sql": "SELECT UPDATED_AT, LOYALTY_TIER, CUSTOMER_NAME, BILLING_ADDRESS, SIGNUP_DATE, PHONE_NUMBER, EMAIL, ACCOUNT_STATUS, CREATED_AT, CUSTOMER_SEGMENT FROM ANALYTICS.SALES.DIM_CUSTOMERS WHERE CUSTOMER_ID = ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "ceo@company.com"
+      ],
+      "distinct_roles": [
+        "EXECUTIVE"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_S"
+      ],
+      "total_credits": 1.572433,
+      "avg_execution_time_ms": 19353.0,
+      "total_bytes_scanned": 2777162921,
+      "tables_referenced": [
+        "analytics.sales.dim_customers"
+      ],
+      "first_seen": "2026-04-14T08:19:53",
+      "last_seen": "2026-04-14T08:19:53",
+      "impact_score": 1.5724
+    },
+    {
+      "fingerprint": "5ad9da0b9d9e6bfc091057cca9854715",
+      "canonical_sql": "SELECT T0.TOTAL_AMOUNT, T0.ORDER_DATE, T0.ORDER_ID, T0.ORDER_STATUS, T1.CUSTOMER_NAME, T1.PHONE_NUMBER, T1.EMAIL, T3.QUANTITY, T3.PRODUCT_ID, T3.UNIT_PRICE, T3.DISCOUNT_AMOUNT, (T3.QUANTITY * T3.UNIT_PRICE) - T3.DISCOUNT_AMOUNT, T4.BRAND, T4.PRODUCT_CATEGORY, T2.COUNTRY, T2.REGION_NAME FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?' AND T2.REGION_NAME = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "james.wilson@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_L"
+      ],
+      "total_credits": 1.563777,
+      "avg_execution_time_ms": 51178.0,
+      "total_bytes_scanned": 1139438058,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-13T20:14:38",
+      "last_seen": "2026-04-13T20:14:38",
+      "impact_score": 1.5638
+    },
+    {
+      "fingerprint": "bc253b40d6bde2b0d502a83870c9f9ac",
+      "canonical_sql": "SELECT T0.ORDER_ID, T0.ORDER_DATE, T0.ORDER_STATUS, T1.EMAIL, T1.PHONE_NUMBER, T3.DISCOUNT_AMOUNT, (T3.QUANTITY * T3.UNIT_PRICE) - T3.DISCOUNT_AMOUNT, T3.UNIT_PRICE, T4.PRODUCT_CATEGORY, T4.PRODUCT_NAME, T2.COUNTRY FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "sarah.chen@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_L"
+      ],
+      "total_credits": 1.537345,
+      "avg_execution_time_ms": 50313.0,
+      "total_bytes_scanned": 432367730,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-10T12:20:22",
+      "last_seen": "2026-04-10T12:20:22",
+      "impact_score": 1.5373
+    },
+    {
+      "fingerprint": "11e2c4226804486f0367d87f404d2877",
+      "canonical_sql": "SELECT PAYMENT_ID, CUSTOMER_ID, UPDATED_AT, PAYMENT_METHOD, CURRENCY, FAILURE_CODE, RECEIPT_URL, DESCRIPTION, FEE_AMOUNT, CREATED_AT, AMOUNT, METADATA, FAILURE_MESSAGE, NET_AMOUNT, STRIPE_CHARGE_ID, PAYMENT_STATUS FROM RAW.STRIPE.PAYMENTS WHERE CREATED_AT >= '?' AND PAYMENT_STATUS = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "sarah.chen@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_L"
+      ],
+      "total_credits": 1.536117,
+      "avg_execution_time_ms": 32002.0,
+      "total_bytes_scanned": 1900311240,
+      "tables_referenced": [
+        "raw.stripe.payments"
+      ],
+      "first_seen": "2026-04-14T18:07:55",
+      "last_seen": "2026-04-14T18:07:55",
+      "impact_score": 1.5361
+    },
+    {
+      "fingerprint": "561312936572e370697a81f160892d13",
+      "canonical_sql": "SELECT T0.TOTAL_AMOUNT, T0.ORDER_STATUS, T1.EMAIL, T1.CUSTOMER_NAME, T1.PHONE_NUMBER, T1.CUSTOMER_SEGMENT, T3.UNIT_PRICE, T3.QUANTITY, T4.PRODUCT_CATEGORY, T2.REGION_NAME, T2.COUNTRY FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?' AND T2.REGION_NAME = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "james.wilson@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_L"
+      ],
+      "total_credits": 1.502982,
+      "avg_execution_time_ms": 49188.0,
+      "total_bytes_scanned": 647350003,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-08T19:31:35",
+      "last_seen": "2026-04-08T19:31:35",
+      "impact_score": 1.503
+    },
+    {
+      "fingerprint": "c091cd3a91ad2c6cbd36064c87835b54",
+      "canonical_sql": "SELECT T0.ORDER_DATE, T0.ORDER_STATUS, T0.TOTAL_AMOUNT, T0.ORDER_ID, T1.PHONE_NUMBER, T1.CUSTOMER_SEGMENT, T1.CUSTOMER_NAME, T1.EMAIL, (T3.QUANTITY * T3.UNIT_PRICE) - T3.DISCOUNT_AMOUNT, T3.UNIT_PRICE, T3.QUANTITY, T4.PRODUCT_NAME, T4.PRODUCT_CATEGORY, T2.REGION_NAME, T2.COUNTRY FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "james.wilson@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_M"
+      ],
+      "total_credits": 1.478247,
+      "avg_execution_time_ms": 48378.0,
+      "total_bytes_scanned": 842440885,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-11T12:16:44",
+      "last_seen": "2026-04-11T12:16:44",
+      "impact_score": 1.4782
+    },
+    {
+      "fingerprint": "46af20a0f711862c8761bba4c9fb23ec",
+      "canonical_sql": "SELECT PAYMENT_STATUS, RECEIPT_URL, PAYMENT_METHOD, NET_AMOUNT, PAYMENT_ID, STRIPE_CHARGE_ID, CREATED_AT, FAILURE_MESSAGE, DESCRIPTION FROM RAW.STRIPE.PAYMENTS WHERE CREATED_AT >= '?' AND PAYMENT_STATUS = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "jordan.lee@company.com"
+      ],
+      "distinct_roles": [
+        "DATA_ENGINEER"
+      ],
+      "warehouses": [
+        "WH_ETL_L"
+      ],
+      "total_credits": 1.47044,
+      "avg_execution_time_ms": 30634.0,
+      "total_bytes_scanned": 1473159380,
+      "tables_referenced": [
+        "raw.stripe.payments"
+      ],
+      "first_seen": "2026-04-12T18:33:20",
+      "last_seen": "2026-04-12T18:33:20",
+      "impact_score": 1.4704
+    },
+    {
+      "fingerprint": "7277715306cc0352ed21903178a19130",
+      "canonical_sql": "SELECT T0.ORDER_STATUS, T0.ORDER_DATE, T0.TOTAL_AMOUNT, T1.EMAIL, T3.PRODUCT_ID, (T3.QUANTITY * T3.UNIT_PRICE) - T3.DISCOUNT_AMOUNT, T3.QUANTITY, T3.DISCOUNT_AMOUNT, T3.UNIT_PRICE, T4.PRODUCT_NAME, T2.COUNTRY FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?' AND T2.REGION_NAME = '?' AND T4.PRODUCT_CATEGORY = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "lisa.nguyen@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_S"
+      ],
+      "total_credits": 1.464365,
+      "avg_execution_time_ms": 47924.0,
+      "total_bytes_scanned": 1742890423,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-13T10:30:22",
+      "last_seen": "2026-04-13T10:30:22",
+      "impact_score": 1.4644
+    },
+    {
+      "fingerprint": "a23bd197924a9a06036b00fe4ddbc408",
+      "canonical_sql": "SELECT T0.ORDER_DATE, T0.TOTAL_AMOUNT, T1.EMAIL, T1.CUSTOMER_NAME, T3.DISCOUNT_AMOUNT, T3.PRODUCT_ID, T4.BRAND, T2.REGION_NAME FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?' AND T2.REGION_NAME = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "lisa.nguyen@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_S"
+      ],
+      "total_credits": 1.348432,
+      "avg_execution_time_ms": 44130.0,
+      "total_bytes_scanned": 2684570025,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-11T09:52:20",
+      "last_seen": "2026-04-11T09:52:20",
+      "impact_score": 1.3484
+    },
+    {
+      "fingerprint": "6b83a662cb9addd4515ca0aebf020610",
+      "canonical_sql": "SELECT T0.ORDER_STATUS, T0.ORDER_DATE, T1.CUSTOMER_NAME, T1.CUSTOMER_SEGMENT, T3.UNIT_PRICE, T3.DISCOUNT_AMOUNT, (T3.QUANTITY * T3.UNIT_PRICE) - T3.DISCOUNT_AMOUNT, T3.PRODUCT_ID, T4.PRODUCT_NAME, T4.SKU, T2.COUNTRY FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "james.wilson@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_L"
+      ],
+      "total_credits": 1.335454,
+      "avg_execution_time_ms": 43705.0,
+      "total_bytes_scanned": 2308689148,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-12T17:59:08",
+      "last_seen": "2026-04-12T17:59:08",
+      "impact_score": 1.3355
+    },
+    {
+      "fingerprint": "8f2476264bfcad3677c0f398fdaaf447",
+      "canonical_sql": "SELECT DESCRIPTION, FEE_AMOUNT, AMOUNT, CREATED_AT, NET_AMOUNT, METADATA, CUSTOMER_ID, PAYMENT_ID, PAYMENT_METHOD, CURRENCY, UPDATED_AT, FAILURE_MESSAGE, PAYMENT_STATUS, RECEIPT_URL, STRIPE_CHARGE_ID, FAILURE_CODE FROM RAW.STRIPE.PAYMENTS WHERE CREATED_AT >= '?' AND PAYMENT_STATUS = '?' AND AMOUNT > ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "sarah.chen@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_L"
+      ],
+      "total_credits": 1.333274,
+      "avg_execution_time_ms": 27776.0,
+      "total_bytes_scanned": 5909861528,
+      "tables_referenced": [
+        "raw.stripe.payments"
+      ],
+      "first_seen": "2026-04-11T15:36:03",
+      "last_seen": "2026-04-11T15:36:03",
+      "impact_score": 1.3333
+    },
+    {
+      "fingerprint": "74e4daef5bf0de70329039ffdb96557e",
+      "canonical_sql": "SELECT DESCRIPTION, CUSTOMER_ID, PAYMENT_METHOD, NET_AMOUNT, CURRENCY, STRIPE_CHARGE_ID FROM RAW.STRIPE.PAYMENTS WHERE CREATED_AT >= '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "jordan.lee@company.com"
+      ],
+      "distinct_roles": [
+        "DATA_ENGINEER"
+      ],
+      "warehouses": [
+        "WH_ETL_L"
+      ],
+      "total_credits": 1.29981,
+      "avg_execution_time_ms": 27079.0,
+      "total_bytes_scanned": 3053810693,
+      "tables_referenced": [
+        "raw.stripe.payments"
+      ],
+      "first_seen": "2026-04-13T18:13:59",
+      "last_seen": "2026-04-13T18:13:59",
+      "impact_score": 1.2998
+    },
+    {
+      "fingerprint": "8405fc469be2260c7fbd8ac3bba230a1",
+      "canonical_sql": "SELECT T0.ORDER_STATUS, T0.ORDER_ID, T0.ORDER_DATE, T0.TOTAL_AMOUNT, T1.PHONE_NUMBER, T1.CUSTOMER_SEGMENT, T1.CUSTOMER_NAME, (T3.QUANTITY * T3.UNIT_PRICE) - T3.DISCOUNT_AMOUNT, T3.QUANTITY, T4.PRODUCT_CATEGORY, T4.BRAND, T4.SKU, T4.PRODUCT_NAME, T2.REGION_NAME, T2.COUNTRY FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?' AND T2.REGION_NAME = '?' AND T4.PRODUCT_CATEGORY = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "sarah.chen@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_L"
+      ],
+      "total_credits": 1.273454,
+      "avg_execution_time_ms": 41676.0,
+      "total_bytes_scanned": 2487211448,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-14T08:40:13",
+      "last_seen": "2026-04-14T08:40:13",
+      "impact_score": 1.2735
+    },
+    {
+      "fingerprint": "04ce77096bc811e8e8fa88f6f4d150e3",
+      "canonical_sql": "SELECT DESCRIPTION, PAYMENT_ID, CUSTOMER_ID, FAILURE_CODE, METADATA, RECEIPT_URL, UPDATED_AT, STRIPE_CHARGE_ID, CURRENCY, FAILURE_MESSAGE, PAYMENT_STATUS FROM RAW.STRIPE.PAYMENTS WHERE CREATED_AT >= '?' AND PAYMENT_STATUS = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "alex.kumar@company.com"
+      ],
+      "distinct_roles": [
+        "DATA_ENGINEER"
+      ],
+      "warehouses": [
+        "WH_ETL_XL"
+      ],
+      "total_credits": 1.246868,
+      "avg_execution_time_ms": 25976.0,
+      "total_bytes_scanned": 4548547980,
+      "tables_referenced": [
+        "raw.stripe.payments"
+      ],
+      "first_seen": "2026-04-13T19:19:36",
+      "last_seen": "2026-04-13T19:19:36",
+      "impact_score": 1.2469
+    },
+    {
+      "fingerprint": "6e386abe50e4634c4418c6d4a777f74c",
+      "canonical_sql": "SELECT MAX(T1.TOTAL_AMOUNT), T0.CUSTOMER_SEGMENT, SUM(T1.TOTAL_AMOUNT), COUNT(DISTINCT DATE_TRUNC('WEEK', T1.ORDER_DATE)), COUNT(T1.ORDER_ID), SUM(CASE WHEN T1.ORDER_STATUS = '?' THEN ? ELSE ? END), DATEDIFF(DAY, T0.SIGNUP_DATE, CURRENT_DATE), STDDEV(T1.TOTAL_AMOUNT) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY T0.CUSTOMER_SEGMENT",
+      "execution_count": 1,
+      "distinct_users": [
+        "emma.davis@company.com"
+      ],
+      "distinct_roles": [
+        "DATA_SCIENTIST"
+      ],
+      "warehouses": [
+        "WH_DS_2XL"
+      ],
+      "total_credits": 1.146985,
+      "avg_execution_time_ms": 16057.0,
+      "total_bytes_scanned": 6557597355,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-13T07:59:55",
+      "last_seen": "2026-04-13T07:59:55",
+      "impact_score": 1.147
+    },
+    {
+      "fingerprint": "e24972a22c438f352abc88222c6bdc1c",
+      "canonical_sql": "SELECT METADATA, PAYMENT_METHOD, NET_AMOUNT, CREATED_AT, RECEIPT_URL, FEE_AMOUNT, CURRENCY, STRIPE_CHARGE_ID, PAYMENT_ID, FAILURE_MESSAGE, DESCRIPTION, UPDATED_AT, PAYMENT_STATUS, AMOUNT, CUSTOMER_ID, FAILURE_CODE FROM RAW.STRIPE.PAYMENTS WHERE CREATED_AT >= '?' AND PAYMENT_STATUS = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "jordan.lee@company.com"
+      ],
+      "distinct_roles": [
+        "DATA_ENGINEER"
+      ],
+      "warehouses": [
+        "WH_ETL_L"
+      ],
+      "total_credits": 1.093197,
+      "avg_execution_time_ms": 22774.0,
+      "total_bytes_scanned": 5789425695,
+      "tables_referenced": [
+        "raw.stripe.payments"
+      ],
+      "first_seen": "2026-04-10T11:26:32",
+      "last_seen": "2026-04-10T11:26:32",
+      "impact_score": 1.0932
+    },
+    {
+      "fingerprint": "f52a383d746062a6c4be41b0f33b818d",
+      "canonical_sql": "SELECT T0.ORDER_ID, T0.ORDER_DATE, T0.TOTAL_AMOUNT, T1.EMAIL, T1.CUSTOMER_SEGMENT, (T3.QUANTITY * T3.UNIT_PRICE) - T3.DISCOUNT_AMOUNT, T3.DISCOUNT_AMOUNT, T3.UNIT_PRICE, T3.PRODUCT_ID, T4.SKU, T2.COUNTRY FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?' AND T2.REGION_NAME = '?' AND T4.PRODUCT_CATEGORY = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "sarah.chen@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_L"
+      ],
+      "total_credits": 1.082678,
+      "avg_execution_time_ms": 35433.0,
+      "total_bytes_scanned": 321379155,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-13T14:42:54",
+      "last_seen": "2026-04-13T14:42:54",
+      "impact_score": 1.0827
+    },
+    {
+      "fingerprint": "d6f02718d26eb41a5295a51df940e777",
+      "canonical_sql": "SELECT T0.ORDER_ID, T0.ORDER_STATUS, T1.CUSTOMER_SEGMENT, T1.CUSTOMER_NAME, T3.UNIT_PRICE, T3.QUANTITY, T3.DISCOUNT_AMOUNT, T4.PRODUCT_CATEGORY, T2.REGION_NAME FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?' AND T2.REGION_NAME = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "TABLEAU_SERVICE"
+      ],
+      "distinct_roles": [
+        "TABLEAU_ROLE"
+      ],
+      "warehouses": [
+        "WH_TABLEAU"
+      ],
+      "total_credits": 1.063662,
+      "avg_execution_time_ms": 34810.0,
+      "total_bytes_scanned": 1282094892,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-13T10:26:57",
+      "last_seen": "2026-04-13T10:26:57",
+      "impact_score": 1.0637
+    },
+    {
+      "fingerprint": "c7abd6830141eafd0d06fb63544968f9",
+      "canonical_sql": "SELECT SHIPPING_ADDRESS, BILLING_ADDRESS, CUSTOMER_SEGMENT, LIFETIME_VALUE, PHONE_NUMBER, UPDATED_AT, CUSTOMER_ID, ACCOUNT_STATUS, EMAIL, PREFERRED_CHANNEL, CUSTOMER_NAME, CREATED_AT, LOYALTY_TIER, SIGNUP_DATE FROM ANALYTICS.SALES.DIM_CUSTOMERS WHERE CUSTOMER_ID = ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "sarah.chen@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_M"
+      ],
+      "total_credits": 1.004682,
+      "avg_execution_time_ms": 12365.0,
+      "total_bytes_scanned": 488000553,
+      "tables_referenced": [
+        "analytics.sales.dim_customers"
+      ],
+      "first_seen": "2026-04-11T14:53:10",
+      "last_seen": "2026-04-11T14:53:10",
+      "impact_score": 1.0047
+    },
+    {
+      "fingerprint": "76866bf137a7f545365f451d20c3871e",
+      "canonical_sql": "SELECT LOYALTY_TIER, PREFERRED_CHANNEL, SIGNUP_DATE, CUSTOMER_SEGMENT, EMAIL, CUSTOMER_NAME, CREATED_AT, LIFETIME_VALUE, UPDATED_AT, CUSTOMER_ID FROM ANALYTICS.SALES.DIM_CUSTOMERS WHERE CUSTOMER_ID = ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "FIVETRAN_PROD"
+      ],
+      "distinct_roles": [
+        "FIVETRAN_ROLE"
+      ],
+      "warehouses": [
+        "WH_FIVETRAN"
+      ],
+      "total_credits": 1.001192,
+      "avg_execution_time_ms": 12322.0,
+      "total_bytes_scanned": 2766375379,
+      "tables_referenced": [
+        "analytics.sales.dim_customers"
+      ],
+      "first_seen": "2026-04-10T07:43:54",
+      "last_seen": "2026-04-10T07:43:54",
+      "impact_score": 1.0012
+    },
+    {
+      "fingerprint": "1c69754cd07f59586c6b532028c1ca65",
+      "canonical_sql": "SELECT T0.ORDER_DATE, T0.TOTAL_AMOUNT, T0.ORDER_ID, T0.ORDER_STATUS, T1.PHONE_NUMBER, T1.EMAIL, T1.CUSTOMER_NAME, T1.CUSTOMER_SEGMENT, T3.PRODUCT_ID, T3.QUANTITY, (T3.QUANTITY * T3.UNIT_PRICE) - T3.DISCOUNT_AMOUNT, T3.DISCOUNT_AMOUNT, T3.UNIT_PRICE, T4.PRODUCT_CATEGORY, T2.COUNTRY, T2.REGION_NAME FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?' AND T4.PRODUCT_CATEGORY = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "TABLEAU_SERVICE"
+      ],
+      "distinct_roles": [
+        "TABLEAU_ROLE"
+      ],
+      "warehouses": [
+        "WH_TABLEAU"
+      ],
+      "total_credits": 0.914026,
+      "avg_execution_time_ms": 29913.0,
+      "total_bytes_scanned": 2529712351,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-10T12:32:02",
+      "last_seen": "2026-04-10T12:32:02",
+      "impact_score": 0.914
+    },
+    {
+      "fingerprint": "acedd80845d9499458f40ab42dc6d029",
+      "canonical_sql": "SELECT T0.ORDER_ID, T0.TOTAL_AMOUNT, T1.PHONE_NUMBER, T1.CUSTOMER_SEGMENT, (T3.QUANTITY * T3.UNIT_PRICE) - T3.DISCOUNT_AMOUNT, T3.UNIT_PRICE, T3.QUANTITY, T3.DISCOUNT_AMOUNT, T4.SKU, T2.COUNTRY FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?' AND T2.REGION_NAME = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "james.wilson@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_L"
+      ],
+      "total_credits": 0.913246,
+      "avg_execution_time_ms": 29888.0,
+      "total_bytes_scanned": 226499691,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-08T07:50:44",
+      "last_seen": "2026-04-08T07:50:44",
+      "impact_score": 0.9132
+    },
+    {
+      "fingerprint": "443f5b7525f6d58ea3e7a8c1ad696384",
+      "canonical_sql": "SELECT T0.ORDER_STATUS, T0.ORDER_DATE, T0.ORDER_ID, T0.TOTAL_AMOUNT, T1.CUSTOMER_NAME, T1.CUSTOMER_SEGMENT, T1.PHONE_NUMBER, (T3.QUANTITY * T3.UNIT_PRICE) - T3.DISCOUNT_AMOUNT, T3.DISCOUNT_AMOUNT, T4.PRODUCT_NAME, T2.COUNTRY FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "TABLEAU_SERVICE"
+      ],
+      "distinct_roles": [
+        "TABLEAU_ROLE"
+      ],
+      "warehouses": [
+        "WH_TABLEAU"
+      ],
+      "total_credits": 0.89113,
+      "avg_execution_time_ms": 29164.0,
+      "total_bytes_scanned": 1354084887,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-08T20:43:07",
+      "last_seen": "2026-04-08T20:43:07",
+      "impact_score": 0.8911
+    },
+    {
+      "fingerprint": "f1bbc3b906fc2383185333a85b4d1d73",
+      "canonical_sql": "SELECT STDDEV(T1.TOTAL_AMOUNT), MAX(T1.ORDER_DATE), AVG(T1.TOTAL_AMOUNT), T0.SIGNUP_DATE, COUNT(T1.ORDER_ID), DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE), SUM(T1.TOTAL_AMOUNT), T0.CUSTOMER_SEGMENT, T0.CUSTOMER_NAME, T0.CUSTOMER_ID, T0.EMAIL FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID GROUP BY T0.SIGNUP_DATE, T0.CUSTOMER_SEGMENT, T0.CUSTOMER_NAME, T0.CUSTOMER_ID, T0.EMAIL HAVING DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE) > ? ORDER BY TOTAL_SPEND DESC LIMIT ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "noah.martinez@company.com"
+      ],
+      "distinct_roles": [
+        "DATA_SCIENTIST"
+      ],
+      "warehouses": [
+        "WH_DS_XL"
+      ],
+      "total_credits": 0.836937,
+      "avg_execution_time_ms": 41846.0,
+      "total_bytes_scanned": 313610684,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-09T18:04:34",
+      "last_seen": "2026-04-09T18:04:34",
+      "impact_score": 0.8369
+    },
+    {
+      "fingerprint": "465fdb9462a0e245381fdac512bcfa36",
+      "canonical_sql": "SELECT MIN(T1.TOTAL_AMOUNT), COUNT(DISTINCT DATE_TRUNC('WEEK', T1.ORDER_DATE)), DATEDIFF(DAY, T0.SIGNUP_DATE, CURRENT_DATE), SUM(T1.TOTAL_AMOUNT), COUNT(T1.ORDER_ID), MAX(T1.TOTAL_AMOUNT), STDDEV(T1.TOTAL_AMOUNT), T0.CUSTOMER_SEGMENT FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY T0.CUSTOMER_SEGMENT",
+      "execution_count": 1,
+      "distinct_users": [
+        "emma.davis@company.com"
+      ],
+      "distinct_roles": [
+        "DATA_SCIENTIST"
+      ],
+      "warehouses": [
+        "WH_DS_XL"
+      ],
+      "total_credits": 0.833277,
+      "avg_execution_time_ms": 11665.0,
+      "total_bytes_scanned": 6259388609,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-12T12:56:27",
+      "last_seen": "2026-04-12T12:56:27",
+      "impact_score": 0.8333
+    },
+    {
+      "fingerprint": "980c235d340e53db0d13bbec4060ddde",
+      "canonical_sql": "SELECT STDDEV(T1.TOTAL_AMOUNT), SUM(CASE WHEN T1.ORDER_STATUS = '?' THEN ? ELSE ? END), T0.CUSTOMER_SEGMENT, COUNT(DISTINCT T1.REGION_ID), COUNT(T1.ORDER_ID), MAX(T1.TOTAL_AMOUNT), SUM(T1.TOTAL_AMOUNT), AVG(T1.TOTAL_AMOUNT) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY T0.CUSTOMER_SEGMENT",
+      "execution_count": 1,
+      "distinct_users": [
+        "emma.davis@company.com"
+      ],
+      "distinct_roles": [
+        "DATA_SCIENTIST"
+      ],
+      "warehouses": [
+        "WH_DS_XL"
+      ],
+      "total_credits": 0.821594,
+      "avg_execution_time_ms": 11502.0,
+      "total_bytes_scanned": 3317792188,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-13T06:29:33",
+      "last_seen": "2026-04-13T06:29:33",
+      "impact_score": 0.8216
+    },
+    {
+      "fingerprint": "0f8f497e86e6301c059a8b28b6de8edc",
+      "canonical_sql": "SELECT COUNT(DISTINCT T1.REGION_ID), T0.CUSTOMER_SEGMENT, AVG(T1.TOTAL_AMOUNT), MIN(T1.TOTAL_AMOUNT), SUM(T1.TOTAL_AMOUNT), SUM(CASE WHEN T1.ORDER_STATUS = '?' THEN ? ELSE ? END), STDDEV(T1.TOTAL_AMOUNT), DATEDIFF(DAY, T0.SIGNUP_DATE, CURRENT_DATE) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY T0.CUSTOMER_SEGMENT",
+      "execution_count": 1,
+      "distinct_users": [
+        "noah.martinez@company.com"
+      ],
+      "distinct_roles": [
+        "DATA_SCIENTIST"
+      ],
+      "warehouses": [
+        "WH_DS_XL"
+      ],
+      "total_credits": 0.816577,
+      "avg_execution_time_ms": 11432.0,
+      "total_bytes_scanned": 3266385461,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-14T09:11:33",
+      "last_seen": "2026-04-14T09:11:33",
+      "impact_score": 0.8166
+    },
+    {
+      "fingerprint": "4f77a6e8de1a988eac2aad4f92717483",
+      "canonical_sql": "SELECT T0.TOTAL_AMOUNT, T0.ORDER_STATUS, T1.EMAIL, T1.CUSTOMER_SEGMENT, T1.PHONE_NUMBER, T1.CUSTOMER_NAME, T3.PRODUCT_ID, T3.DISCOUNT_AMOUNT, T3.UNIT_PRICE, (T3.QUANTITY * T3.UNIT_PRICE) - T3.DISCOUNT_AMOUNT, T4.BRAND, T4.PRODUCT_CATEGORY, T2.REGION_NAME FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "LOOKER_SERVICE"
+      ],
+      "distinct_roles": [
+        "LOOKER_ROLE"
+      ],
+      "warehouses": [
+        "WH_LOOKER"
+      ],
+      "total_credits": 0.785391,
+      "avg_execution_time_ms": 25703.0,
+      "total_bytes_scanned": 294441554,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-11T18:30:51",
+      "last_seen": "2026-04-11T18:30:51",
+      "impact_score": 0.7854
+    },
+    {
+      "fingerprint": "f44741d39581cc8b5181fe7d525dc7c9",
+      "canonical_sql": "SELECT CUSTOMER_SEGMENT, UPDATED_AT, LOYALTY_TIER, BILLING_ADDRESS, EMAIL, ACCOUNT_STATUS, CREATED_AT, PREFERRED_CHANNEL, LIFETIME_VALUE, SHIPPING_ADDRESS, PHONE_NUMBER, CUSTOMER_ID FROM ANALYTICS.SALES.DIM_CUSTOMERS WHERE CUSTOMER_ID = ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "james.wilson@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_M"
+      ],
+      "total_credits": 0.78311,
+      "avg_execution_time_ms": 9638.0,
+      "total_bytes_scanned": 2386805292,
+      "tables_referenced": [
+        "analytics.sales.dim_customers"
+      ],
+      "first_seen": "2026-04-13T13:32:37",
+      "last_seen": "2026-04-13T13:32:37",
+      "impact_score": 0.7831
+    },
+    {
+      "fingerprint": "2c8600fdde0e1604ee56c7b5bfe8fc2f",
+      "canonical_sql": "SELECT LOYALTY_TIER, PREFERRED_CHANNEL, LIFETIME_VALUE FROM ANALYTICS.SALES.DIM_CUSTOMERS WHERE CUSTOMER_ID = ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "lisa.nguyen@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_S"
+      ],
+      "total_credits": 0.776398,
+      "avg_execution_time_ms": 9555.0,
+      "total_bytes_scanned": 2736679397,
+      "tables_referenced": [
+        "analytics.sales.dim_customers"
+      ],
+      "first_seen": "2026-04-14T20:21:44",
+      "last_seen": "2026-04-14T20:21:44",
+      "impact_score": 0.7764
+    },
+    {
+      "fingerprint": "b846f68b73be12ff80148fc633f316d2",
+      "canonical_sql": "SELECT T0.ORDER_DATE, T0.ORDER_ID, T0.TOTAL_AMOUNT, T0.ORDER_STATUS, T1.EMAIL, T1.CUSTOMER_SEGMENT, T1.CUSTOMER_NAME, T1.PHONE_NUMBER, (T3.QUANTITY * T3.UNIT_PRICE) - T3.DISCOUNT_AMOUNT, T3.PRODUCT_ID, T4.BRAND, T4.PRODUCT_NAME, T2.COUNTRY FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "lisa.nguyen@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_S"
+      ],
+      "total_credits": 0.775709,
+      "avg_execution_time_ms": 25386.0,
+      "total_bytes_scanned": 1506733640,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-08T10:11:01",
+      "last_seen": "2026-04-08T10:11:01",
+      "impact_score": 0.7757
+    },
+    {
+      "fingerprint": "d1e54a5773c5043ffa069dfa66ce7000",
+      "canonical_sql": "SELECT T0.ORDER_ID, T0.ORDER_STATUS, T0.ORDER_DATE, T1.CUSTOMER_SEGMENT, T1.EMAIL, T1.CUSTOMER_NAME, T3.UNIT_PRICE, T3.QUANTITY, T4.BRAND, T4.PRODUCT_NAME, T4.SKU, T4.PRODUCT_CATEGORY, T2.REGION_NAME, T2.COUNTRY FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "TABLEAU_SERVICE"
+      ],
+      "distinct_roles": [
+        "TABLEAU_ROLE"
+      ],
+      "warehouses": [
+        "WH_TABLEAU"
+      ],
+      "total_credits": 0.774918,
+      "avg_execution_time_ms": 25360.0,
+      "total_bytes_scanned": 2935851701,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-09T21:25:23",
+      "last_seen": "2026-04-09T21:25:23",
+      "impact_score": 0.7749
+    },
+    {
+      "fingerprint": "bcc94c38431621527dc86e6b036b1aa1",
+      "canonical_sql": "SELECT AVG(T1.TOTAL_AMOUNT), T0.CUSTOMER_SEGMENT, MIN(T1.TOTAL_AMOUNT), T0.CUSTOMER_ID, STDDEV(T1.TOTAL_AMOUNT), COUNT(DISTINCT DATE_TRUNC('WEEK', T1.ORDER_DATE)), COUNT(DISTINCT T1.REGION_ID), DATEDIFF(DAY, T0.SIGNUP_DATE, CURRENT_DATE), MAX(T1.TOTAL_AMOUNT), SUM(CASE WHEN T1.ORDER_STATUS = '?' THEN ? ELSE ? END), COUNT(T1.ORDER_ID) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY T0.CUSTOMER_SEGMENT, T0.CUSTOMER_ID",
+      "execution_count": 1,
+      "distinct_users": [
+        "noah.martinez@company.com"
+      ],
+      "distinct_roles": [
+        "DATA_SCIENTIST"
+      ],
+      "warehouses": [
+        "WH_DS_XL"
+      ],
+      "total_credits": 0.755692,
+      "avg_execution_time_ms": 10579.0,
+      "total_bytes_scanned": 4656229959,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-14T06:15:27",
+      "last_seen": "2026-04-14T06:15:27",
+      "impact_score": 0.7557
+    },
+    {
+      "fingerprint": "4acaaced43e32250b85f07834efa327e",
+      "canonical_sql": "SELECT T0.EMAIL, T0.CUSTOMER_ID, T0.CUSTOMER_NAME, T0.PREFERRED_CHANNEL, T0.CUSTOMER_SEGMENT, T0.PHONE_NUMBER, T0.BILLING_ADDRESS, T0.SIGNUP_DATE, SUM(T1.TOTAL_AMOUNT), COUNT(T1.ORDER_ID), AVG(T1.TOTAL_AMOUNT), COUNT(DISTINCT DATE_TRUNC('MONTH', T1.ORDER_DATE)) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID WHERE T0.CUSTOMER_SEGMENT = '?' GROUP BY T0.EMAIL, T0.CUSTOMER_ID, T0.CUSTOMER_NAME, T0.PREFERRED_CHANNEL, T0.CUSTOMER_SEGMENT, T0.PHONE_NUMBER, T0.BILLING_ADDRESS, T0.SIGNUP_DATE ORDER BY LIFETIME_VALUE DESC LIMIT ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "emma.davis@company.com"
+      ],
+      "distinct_roles": [
+        "DATA_SCIENTIST"
+      ],
+      "warehouses": [
+        "WH_DS_2XL"
+      ],
+      "total_credits": 0.728659,
+      "avg_execution_time_ms": 34975.0,
+      "total_bytes_scanned": 1248159602,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-14T08:10:32",
+      "last_seen": "2026-04-14T08:10:32",
+      "impact_score": 0.7287
+    },
+    {
+      "fingerprint": "3d7f6a86e2d0e8895fd2abe8092e2ffc",
+      "canonical_sql": "SELECT T0.CUSTOMER_ID, T0.EMAIL, T0.CUSTOMER_NAME, T0.PREFERRED_CHANNEL, T0.SIGNUP_DATE, DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE), MIN(T1.ORDER_DATE) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID WHERE T0.CUSTOMER_SEGMENT = '?' GROUP BY T0.CUSTOMER_ID, T0.EMAIL, T0.CUSTOMER_NAME, T0.PREFERRED_CHANNEL, T0.SIGNUP_DATE ORDER BY LIFETIME_VALUE DESC LIMIT ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "sarah.chen@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_L"
+      ],
+      "total_credits": 0.695993,
+      "avg_execution_time_ms": 33407.0,
+      "total_bytes_scanned": 673431460,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-13T12:12:55",
+      "last_seen": "2026-04-13T12:12:55",
+      "impact_score": 0.696
+    },
+    {
+      "fingerprint": "81df60f24113d678c012f2ac33e8a9b3",
+      "canonical_sql": "SELECT T0.SIGNUP_DATE, T0.EMAIL, COUNT(T1.ORDER_ID), T0.CUSTOMER_NAME, STDDEV(T1.TOTAL_AMOUNT) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID GROUP BY T0.SIGNUP_DATE, T0.EMAIL, T0.CUSTOMER_NAME HAVING DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE) > ? ORDER BY TOTAL_SPEND DESC LIMIT ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "emma.davis@company.com"
+      ],
+      "distinct_roles": [
+        "DATA_SCIENTIST"
+      ],
+      "warehouses": [
+        "WH_DS_2XL"
+      ],
+      "total_credits": 0.693121,
+      "avg_execution_time_ms": 34656.0,
+      "total_bytes_scanned": 474849065,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-08T19:07:22",
+      "last_seen": "2026-04-08T19:07:22",
+      "impact_score": 0.6931
+    },
+    {
+      "fingerprint": "45616d5d4538a55d3782c12bb61d17e9",
+      "canonical_sql": "SELECT CUSTOMER_SEGMENT, SHIPPING_ADDRESS, CUSTOMER_NAME, BILLING_ADDRESS FROM ANALYTICS.SALES.DIM_CUSTOMERS WHERE CUSTOMER_ID = ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "david.brown@company.com"
+      ],
+      "distinct_roles": [
+        "MANAGER"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_S"
+      ],
+      "total_credits": 0.692738,
+      "avg_execution_time_ms": 8526.0,
+      "total_bytes_scanned": 2357406125,
+      "tables_referenced": [
+        "analytics.sales.dim_customers"
+      ],
+      "first_seen": "2026-04-12T19:18:54",
+      "last_seen": "2026-04-12T19:18:54",
+      "impact_score": 0.6927
+    },
+    {
+      "fingerprint": "2749e689a987ef5ecf5f945d5102a6b4",
+      "canonical_sql": "SELECT T0.ORDER_DATE, T0.ORDER_ID, T0.TOTAL_AMOUNT, T0.ORDER_STATUS, T1.CUSTOMER_SEGMENT, T1.PHONE_NUMBER, T1.EMAIL, T1.CUSTOMER_NAME, T3.QUANTITY, (T3.QUANTITY * T3.UNIT_PRICE) - T3.DISCOUNT_AMOUNT, T3.UNIT_PRICE, T4.BRAND, T4.PRODUCT_CATEGORY, T4.PRODUCT_NAME, T2.COUNTRY, T2.REGION_NAME FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?' AND T2.REGION_NAME = '?' AND T4.PRODUCT_CATEGORY = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "james.wilson@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_M"
+      ],
+      "total_credits": 0.68689,
+      "avg_execution_time_ms": 22480.0,
+      "total_bytes_scanned": 1562174718,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-12T10:32:06",
+      "last_seen": "2026-04-12T10:32:06",
+      "impact_score": 0.6869
+    },
+    {
+      "fingerprint": "e0d1406d7b5b96b6303230f64446a9c8",
+      "canonical_sql": "SELECT T0.CUSTOMER_NAME, T0.CUSTOMER_ID, T0.BILLING_ADDRESS, T0.CUSTOMER_SEGMENT, T0.SIGNUP_DATE, T0.PHONE_NUMBER, T0.PREFERRED_CHANNEL, MAX(T1.ORDER_DATE), AVG(T1.TOTAL_AMOUNT), SUM(T1.TOTAL_AMOUNT) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID WHERE T0.CUSTOMER_SEGMENT = '?' GROUP BY T0.CUSTOMER_NAME, T0.CUSTOMER_ID, T0.BILLING_ADDRESS, T0.CUSTOMER_SEGMENT, T0.SIGNUP_DATE, T0.PHONE_NUMBER, T0.PREFERRED_CHANNEL HAVING LIFETIME_VALUE > ? ORDER BY LIFETIME_VALUE DESC LIMIT ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "rachel.thompson@company.com"
+      ],
+      "distinct_roles": [
+        "MANAGER"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_S"
+      ],
+      "total_credits": 0.677564,
+      "avg_execution_time_ms": 32523.0,
+      "total_bytes_scanned": 777957410,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-13T09:24:44",
+      "last_seen": "2026-04-13T09:24:44",
+      "impact_score": 0.6776
+    },
+    {
+      "fingerprint": "b4cda758588bd3afb8e4460675824aea",
+      "canonical_sql": "SELECT T0.CUSTOMER_ID, T0.EMAIL, T0.BILLING_ADDRESS, AVG(T1.TOTAL_AMOUNT), DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE), COUNT(DISTINCT DATE_TRUNC('MONTH', T1.ORDER_DATE)), SUM(T1.TOTAL_AMOUNT) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID WHERE T0.CUSTOMER_SEGMENT = '?' GROUP BY T0.CUSTOMER_ID, T0.EMAIL, T0.BILLING_ADDRESS ORDER BY LIFETIME_VALUE DESC LIMIT ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "rachel.thompson@company.com"
+      ],
+      "distinct_roles": [
+        "MANAGER"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_S"
+      ],
+      "total_credits": 0.675565,
+      "avg_execution_time_ms": 32427.0,
+      "total_bytes_scanned": 864872690,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-08T09:14:08",
+      "last_seen": "2026-04-08T09:14:08",
+      "impact_score": 0.6756
+    },
+    {
+      "fingerprint": "efaea462d74ab0a51807a423d8543e6b",
+      "canonical_sql": "SELECT T0.CUSTOMER_ID, T0.CUSTOMER_NAME, T0.BILLING_ADDRESS, T0.PREFERRED_CHANNEL, T0.CUSTOMER_SEGMENT, T0.PHONE_NUMBER, T0.SIGNUP_DATE, COUNT(T1.ORDER_ID), SUM(T1.TOTAL_AMOUNT), MIN(T1.ORDER_DATE) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID WHERE T0.CUSTOMER_SEGMENT = '?' GROUP BY T0.CUSTOMER_ID, T0.CUSTOMER_NAME, T0.BILLING_ADDRESS, T0.PREFERRED_CHANNEL, T0.CUSTOMER_SEGMENT, T0.PHONE_NUMBER, T0.SIGNUP_DATE HAVING LIFETIME_VALUE > ? ORDER BY LIFETIME_VALUE DESC LIMIT ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "noah.martinez@company.com"
+      ],
+      "distinct_roles": [
+        "DATA_SCIENTIST"
+      ],
+      "warehouses": [
+        "WH_DS_XL"
+      ],
+      "total_credits": 0.66843,
+      "avg_execution_time_ms": 32084.0,
+      "total_bytes_scanned": 1121560346,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-10T15:54:14",
+      "last_seen": "2026-04-10T15:54:14",
+      "impact_score": 0.6684
+    },
+    {
+      "fingerprint": "4c233e97e2f1b8303a9d110f9a687a97",
+      "canonical_sql": "SELECT COUNT(DISTINCT T0.SESSION_ID), SUM(CASE WHEN T0.CONVERTED THEN ? ELSE ? END), COUNT(DISTINCT T0.USER_ID), SUM(T1.TOTAL_AMOUNT), CAST(SUM(CASE WHEN T0.CONVERTED THEN ? ELSE ? END) AS FLOAT) / NULLIF(COUNT(DISTINCT T0.USER_ID), ?), T0.UTM_MEDIUM, AVG(T1.TOTAL_AMOUNT), T0.UTM_SOURCE, T0.UTM_CAMPAIGN FROM MARKETING.PUBLIC.SESSIONS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.USER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE = T0.SESSION_DATE WHERE T0.SESSION_DATE >= '?' GROUP BY T0.UTM_MEDIUM, T0.UTM_SOURCE, T0.UTM_CAMPAIGN ORDER BY ATTRIBUTED_REVENUE DESC NULLS LAST",
+      "execution_count": 1,
+      "distinct_users": [
+        "mike.johnson@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_M"
+      ],
+      "total_credits": 0.655515,
+      "avg_execution_time_ms": 28306.0,
+      "total_bytes_scanned": 517379267,
+      "tables_referenced": [
+        "analytics.sales.fact_orders",
+        "marketing.public.sessions"
+      ],
+      "first_seen": "2026-04-10T09:34:07",
+      "last_seen": "2026-04-10T09:34:07",
+      "impact_score": 0.6555
+    },
+    {
+      "fingerprint": "fea7d1da83f4e1c4aa937d267ce4a4ca",
+      "canonical_sql": "SELECT T0.CUSTOMER_NAME, T0.EMAIL, AVG(T1.TOTAL_AMOUNT), MAX(T1.ORDER_DATE), DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE), T0.CUSTOMER_ID, COUNT(T1.ORDER_ID) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID GROUP BY T0.CUSTOMER_NAME, T0.EMAIL, T0.CUSTOMER_ID HAVING DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE) > ? ORDER BY TOTAL_SPEND DESC LIMIT ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "noah.martinez@company.com"
+      ],
+      "distinct_roles": [
+        "DATA_SCIENTIST"
+      ],
+      "warehouses": [
+        "WH_DS_XL"
+      ],
+      "total_credits": 0.645527,
+      "avg_execution_time_ms": 32276.0,
+      "total_bytes_scanned": 598869609,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-10T16:59:43",
+      "last_seen": "2026-04-10T16:59:43",
+      "impact_score": 0.6455
+    },
+    {
+      "fingerprint": "2ff93c862d4894d06108c3127055efb8",
+      "canonical_sql": "SELECT T0.CUSTOMER_ID, T0.EMAIL, T0.CUSTOMER_SEGMENT, T0.PREFERRED_CHANNEL, SUM(T1.TOTAL_AMOUNT), MIN(T1.ORDER_DATE) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID WHERE T0.CUSTOMER_SEGMENT = '?' GROUP BY T0.CUSTOMER_ID, T0.EMAIL, T0.CUSTOMER_SEGMENT, T0.PREFERRED_CHANNEL ORDER BY LIFETIME_VALUE DESC LIMIT ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "james.wilson@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_M"
+      ],
+      "total_credits": 0.611782,
+      "avg_execution_time_ms": 29365.0,
+      "total_bytes_scanned": 341816531,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-13T20:19:10",
+      "last_seen": "2026-04-13T20:19:10",
+      "impact_score": 0.6118
+    },
+    {
+      "fingerprint": "69094dad0875fcf118577fbc9e25c3a5",
+      "canonical_sql": "SELECT T0.CUSTOMER_ID, T0.CUSTOMER_NAME, T0.EMAIL, T0.PHONE_NUMBER, T0.BILLING_ADDRESS, T0.SIGNUP_DATE, T0.PREFERRED_CHANNEL, AVG(T1.TOTAL_AMOUNT), MIN(T1.ORDER_DATE), COUNT(T1.ORDER_ID), COUNT(DISTINCT DATE_TRUNC('MONTH', T1.ORDER_DATE)), SUM(T1.TOTAL_AMOUNT), MAX(T1.ORDER_DATE), DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID WHERE T0.CUSTOMER_SEGMENT = '?' GROUP BY T0.CUSTOMER_ID, T0.CUSTOMER_NAME, T0.EMAIL, T0.PHONE_NUMBER, T0.BILLING_ADDRESS, T0.SIGNUP_DATE, T0.PREFERRED_CHANNEL ORDER BY LIFETIME_VALUE DESC LIMIT ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "james.wilson@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_L"
+      ],
+      "total_credits": 0.589333,
+      "avg_execution_time_ms": 28288.0,
+      "total_bytes_scanned": 923025820,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-08T18:12:40",
+      "last_seen": "2026-04-08T18:12:40",
+      "impact_score": 0.5893
+    },
+    {
+      "fingerprint": "f41d7cb759620b575e1e1df94a22b58b",
+      "canonical_sql": "SELECT T0.CUSTOMER_ID, T0.CUSTOMER_SEGMENT, COUNT(T1.ORDER_ID), T0.CUSTOMER_NAME, DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE), T0.SIGNUP_DATE FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID GROUP BY T0.CUSTOMER_ID, T0.CUSTOMER_SEGMENT, T0.CUSTOMER_NAME, T0.SIGNUP_DATE HAVING DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE) > ? ORDER BY TOTAL_SPEND DESC LIMIT ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "sarah.chen@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_M"
+      ],
+      "total_credits": 0.579927,
+      "avg_execution_time_ms": 28996.0,
+      "total_bytes_scanned": 455196987,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-11T07:47:05",
+      "last_seen": "2026-04-11T07:47:05",
+      "impact_score": 0.5799
+    },
+    {
+      "fingerprint": "4eea6877418270c1ad8ca570a22e76e1",
+      "canonical_sql": "SELECT T0.ORDER_ID, T0.TOTAL_AMOUNT, T0.ORDER_STATUS, T1.CUSTOMER_SEGMENT, T3.QUANTITY, T3.PRODUCT_ID, (T3.QUANTITY * T3.UNIT_PRICE) - T3.DISCOUNT_AMOUNT, T3.UNIT_PRICE, T4.SKU, T2.COUNTRY FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?' AND T2.REGION_NAME = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "LOOKER_SERVICE"
+      ],
+      "distinct_roles": [
+        "LOOKER_ROLE"
+      ],
+      "warehouses": [
+        "WH_LOOKER"
+      ],
+      "total_credits": 0.57851,
+      "avg_execution_time_ms": 18933.0,
+      "total_bytes_scanned": 2056684558,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-11T15:49:38",
+      "last_seen": "2026-04-11T15:49:38",
+      "impact_score": 0.5785
+    },
+    {
+      "fingerprint": "eaca6276d7ef2886b2b96f665d01bd2e",
+      "canonical_sql": "SELECT T0.ORDER_DATE, T0.ORDER_ID, T1.CUSTOMER_NAME, T1.EMAIL, T1.CUSTOMER_SEGMENT, (T3.QUANTITY * T3.UNIT_PRICE) - T3.DISCOUNT_AMOUNT, T3.PRODUCT_ID, T3.UNIT_PRICE, T3.QUANTITY, T3.DISCOUNT_AMOUNT, T4.SKU, T4.PRODUCT_CATEGORY, T2.COUNTRY, T2.REGION_NAME FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?' AND T4.PRODUCT_CATEGORY = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "TABLEAU_SERVICE"
+      ],
+      "distinct_roles": [
+        "TABLEAU_ROLE"
+      ],
+      "warehouses": [
+        "WH_TABLEAU"
+      ],
+      "total_credits": 0.577998,
+      "avg_execution_time_ms": 18916.0,
+      "total_bytes_scanned": 2071051693,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-09T07:41:22",
+      "last_seen": "2026-04-09T07:41:22",
+      "impact_score": 0.578
+    },
+    {
+      "fingerprint": "3727f75104b10865e0df7aeb93f39085",
+      "canonical_sql": "SELECT T0.ORDER_STATUS, T0.ORDER_ID, T0.ORDER_DATE, T0.TOTAL_AMOUNT, T1.CUSTOMER_SEGMENT, T3.UNIT_PRICE, T3.DISCOUNT_AMOUNT, T4.PRODUCT_CATEGORY, T2.COUNTRY FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?' AND T2.REGION_NAME = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "james.wilson@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_M"
+      ],
+      "total_credits": 0.573697,
+      "avg_execution_time_ms": 18775.0,
+      "total_bytes_scanned": 941145390,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-13T20:23:51",
+      "last_seen": "2026-04-13T20:23:51",
+      "impact_score": 0.5737
+    },
+    {
+      "fingerprint": "1d1e76db804bec594cd9eb34cc838fb2",
+      "canonical_sql": "SELECT T0.UTM_SOURCE, CAST(SUM(CASE WHEN T0.CONVERTED THEN ? ELSE ? END) AS FLOAT) / NULLIF(COUNT(DISTINCT T0.USER_ID), ?), SUM(CASE WHEN T0.CONVERTED THEN ? ELSE ? END), SUM(T1.TOTAL_AMOUNT), AVG(T1.TOTAL_AMOUNT), T0.UTM_CAMPAIGN, T0.UTM_MEDIUM FROM MARKETING.PUBLIC.SESSIONS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.USER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE = T0.SESSION_DATE WHERE T0.SESSION_DATE >= '?' GROUP BY T0.UTM_SOURCE, T0.UTM_CAMPAIGN, T0.UTM_MEDIUM ORDER BY ATTRIBUTED_REVENUE DESC NULLS LAST",
+      "execution_count": 1,
+      "distinct_users": [
+        "LOOKER_SERVICE"
+      ],
+      "distinct_roles": [
+        "LOOKER_ROLE"
+      ],
+      "warehouses": [
+        "WH_LOOKER"
+      ],
+      "total_credits": 0.567539,
+      "avg_execution_time_ms": 24507.0,
+      "total_bytes_scanned": 488915952,
+      "tables_referenced": [
+        "analytics.sales.fact_orders",
+        "marketing.public.sessions"
+      ],
+      "first_seen": "2026-04-11T17:33:48",
+      "last_seen": "2026-04-11T17:33:48",
+      "impact_score": 0.5675
+    },
+    {
+      "fingerprint": "9f721a957fcb869ab469d855eead5247",
+      "canonical_sql": "SELECT DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE), T0.CUSTOMER_NAME, AVG(T1.TOTAL_AMOUNT), T0.CUSTOMER_SEGMENT, MAX(T1.ORDER_DATE), STDDEV(T1.TOTAL_AMOUNT), T0.EMAIL, T0.CUSTOMER_ID, T0.SIGNUP_DATE FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID GROUP BY T0.CUSTOMER_NAME, T0.CUSTOMER_SEGMENT, T0.EMAIL, T0.CUSTOMER_ID, T0.SIGNUP_DATE HAVING DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE) > ? ORDER BY TOTAL_SPEND DESC LIMIT ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "sarah.chen@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_M"
+      ],
+      "total_credits": 0.565115,
+      "avg_execution_time_ms": 28255.0,
+      "total_bytes_scanned": 1466508784,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-08T08:34:39",
+      "last_seen": "2026-04-08T08:34:39",
+      "impact_score": 0.5651
+    },
+    {
+      "fingerprint": "fe3ce0a3c9f02d56aaaf07e0138ffe2c",
+      "canonical_sql": "SELECT CAST(SUM(CASE WHEN T0.CONVERTED THEN ? ELSE ? END) AS FLOAT) / NULLIF(COUNT(DISTINCT T0.USER_ID), ?), COUNT(DISTINCT T0.USER_ID), SUM(T1.TOTAL_AMOUNT), COUNT(DISTINCT T0.SESSION_ID), T0.UTM_SOURCE FROM MARKETING.PUBLIC.SESSIONS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.USER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE = T0.SESSION_DATE WHERE T0.SESSION_DATE >= '?' GROUP BY T0.UTM_SOURCE ORDER BY ATTRIBUTED_REVENUE DESC NULLS LAST",
+      "execution_count": 1,
+      "distinct_users": [
+        "david.brown@company.com"
+      ],
+      "distinct_roles": [
+        "MANAGER"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_S"
+      ],
+      "total_credits": 0.554743,
+      "avg_execution_time_ms": 23954.0,
+      "total_bytes_scanned": 377320445,
+      "tables_referenced": [
+        "analytics.sales.fact_orders",
+        "marketing.public.sessions"
+      ],
+      "first_seen": "2026-04-09T06:50:00",
+      "last_seen": "2026-04-09T06:50:00",
+      "impact_score": 0.5547
+    },
+    {
+      "fingerprint": "79d0caf14ee9bc2808000279e75f1e08",
+      "canonical_sql": "SELECT T0.CUSTOMER_NAME, T0.CUSTOMER_ID, T0.PREFERRED_CHANNEL, T0.BILLING_ADDRESS, T0.SIGNUP_DATE, T0.PHONE_NUMBER, DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE), COUNT(T1.ORDER_ID), SUM(T1.TOTAL_AMOUNT) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID WHERE T0.CUSTOMER_SEGMENT = '?' GROUP BY T0.CUSTOMER_NAME, T0.CUSTOMER_ID, T0.PREFERRED_CHANNEL, T0.BILLING_ADDRESS, T0.SIGNUP_DATE, T0.PHONE_NUMBER ORDER BY LIFETIME_VALUE DESC LIMIT ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "sarah.chen@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_L"
+      ],
+      "total_credits": 0.544271,
+      "avg_execution_time_ms": 26124.0,
+      "total_bytes_scanned": 77080923,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-08T10:36:13",
+      "last_seen": "2026-04-08T10:36:13",
+      "impact_score": 0.5443
+    },
+    {
+      "fingerprint": "21fd2f6c393f4d01cac5816f76dcc8cc",
+      "canonical_sql": "SELECT T0.EMAIL, DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE), T0.SIGNUP_DATE, AVG(T1.TOTAL_AMOUNT), STDDEV(T1.TOTAL_AMOUNT), COUNT(T1.ORDER_ID), SUM(T1.TOTAL_AMOUNT), T0.CUSTOMER_NAME, MAX(T1.ORDER_DATE) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID GROUP BY T0.EMAIL, T0.SIGNUP_DATE, T0.CUSTOMER_NAME HAVING DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE) > ? ORDER BY TOTAL_SPEND DESC LIMIT ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "sarah.chen@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_L"
+      ],
+      "total_credits": 0.542866,
+      "avg_execution_time_ms": 27143.0,
+      "total_bytes_scanned": 815315439,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-13T10:54:55",
+      "last_seen": "2026-04-13T10:54:55",
+      "impact_score": 0.5429
+    },
+    {
+      "fingerprint": "d38540b0321fbac6ca965bfbf64e9608",
+      "canonical_sql": "SELECT T0.TOTAL_AMOUNT, T0.ORDER_ID, T1.EMAIL, T1.CUSTOMER_SEGMENT, T1.PHONE_NUMBER, T1.CUSTOMER_NAME, (T3.QUANTITY * T3.UNIT_PRICE) - T3.DISCOUNT_AMOUNT, T3.DISCOUNT_AMOUNT, T3.PRODUCT_ID, T4.SKU, T2.REGION_NAME, T2.COUNTRY FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?' AND T2.REGION_NAME = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "sarah.chen@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_L"
+      ],
+      "total_credits": 0.537136,
+      "avg_execution_time_ms": 17578.0,
+      "total_bytes_scanned": 1515481439,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-08T18:17:09",
+      "last_seen": "2026-04-08T18:17:09",
+      "impact_score": 0.5371
+    },
+    {
+      "fingerprint": "c319a6a7dbb2c74f6f32fa86e3b26f5e",
+      "canonical_sql": "SELECT P.BRAND, SUM(OI.DISCOUNT_AMOUNT) AS TOTAL_DISCOUNTS, AVG(OI.UNIT_PRICE) AS AVG_SELLING_PRICE, P.PRODUCT_CATEGORY, SUM(OI.QUANTITY * (OI.UNIT_PRICE - P.COST_PRICE)) AS GROSS_MARGIN, COUNT(DISTINCT O.CUSTOMER_ID) AS UNIQUE_BUYERS, SUM(OI.QUANTITY) AS UNITS_SOLD, P.PRODUCT_SUBCATEGORY, DATE_TRUNC('?', O.ORDER_DATE) AS MONTH FROM ANALYTICS.SALES.FACT_ORDER_ITEMS OI JOIN ANALYTICS.SALES.FACT_ORDERS O ON OI.ORDER_ID = O.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS P ON OI.PRODUCT_ID = P.PRODUCT_ID WHERE O.ORDER_DATE >= '?' GROUP BY P.BRAND, P.PRODUCT_CATEGORY, P.PRODUCT_SUBCATEGORY, DATE_TRUNC('?', O.ORDER_DATE) AS MONTH ORDER BY GROSS_REVENUE DESC",
+      "execution_count": 1,
+      "distinct_users": [
+        "rachel.thompson@company.com"
+      ],
+      "distinct_roles": [
+        "MANAGER"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_S"
+      ],
+      "total_credits": 0.527841,
+      "avg_execution_time_ms": 24925.0,
+      "total_bytes_scanned": 495928358,
+      "tables_referenced": [],
+      "first_seen": "2026-04-09T11:37:38",
+      "last_seen": "2026-04-09T11:37:38",
+      "impact_score": 0.5278
+    },
+    {
+      "fingerprint": "bb5450c63df56dd4d75498bc088e713e",
+      "canonical_sql": "SELECT SUM(T0.QUANTITY), SUM(T0.QUANTITY * (T0.UNIT_PRICE - T2.COST_PRICE)), AVG(T0.UNIT_PRICE), SUM(T0.DISCOUNT_AMOUNT), T2.PRODUCT_SUBCATEGORY FROM ANALYTICS.SALES.FACT_ORDER_ITEMS AS T0 JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.ORDER_ID = T1.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T2 ON T0.PRODUCT_ID = T2.PRODUCT_ID WHERE T1.ORDER_DATE >= '?' GROUP BY T2.PRODUCT_SUBCATEGORY ORDER BY GROSS_REVENUE DESC",
+      "execution_count": 1,
+      "distinct_users": [
+        "LOOKER_SERVICE"
+      ],
+      "distinct_roles": [
+        "LOOKER_ROLE"
+      ],
+      "warehouses": [
+        "WH_LOOKER"
+      ],
+      "total_credits": 0.508652,
+      "avg_execution_time_ms": 24019.0,
+      "total_bytes_scanned": 356753749,
+      "tables_referenced": [
+        "analytics.sales.dim_products",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-10T20:33:22",
+      "last_seen": "2026-04-10T20:33:22",
+      "impact_score": 0.5087
+    },
+    {
+      "fingerprint": "0596d2fe60ead57a86a1b8c8a2cb5fe7",
+      "canonical_sql": "SELECT DATE_TRUNC('?', O.ORDER_DATE) AS MONTH, P.BRAND, P.PRODUCT_SUBCATEGORY, SUM(OI.QUANTITY) AS UNITS_SOLD, COUNT(DISTINCT O.CUSTOMER_ID) AS UNIQUE_BUYERS, P.PRODUCT_CATEGORY, SUM(OI.QUANTITY * OI.UNIT_PRICE) AS GROSS_REVENUE, SUM(OI.DISCOUNT_AMOUNT) AS TOTAL_DISCOUNTS FROM ANALYTICS.SALES.FACT_ORDER_ITEMS OI JOIN ANALYTICS.SALES.FACT_ORDERS O ON OI.ORDER_ID = O.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS P ON OI.PRODUCT_ID = P.PRODUCT_ID WHERE O.ORDER_DATE >= '?' GROUP BY DATE_TRUNC('?', O.ORDER_DATE) AS MONTH, P.BRAND, P.PRODUCT_SUBCATEGORY, P.PRODUCT_CATEGORY ORDER BY GROSS_REVENUE DESC",
+      "execution_count": 1,
+      "distinct_users": [
+        "TABLEAU_SERVICE"
+      ],
+      "distinct_roles": [
+        "TABLEAU_ROLE"
+      ],
+      "warehouses": [
+        "WH_TABLEAU"
+      ],
+      "total_credits": 0.507712,
+      "avg_execution_time_ms": 23975.0,
+      "total_bytes_scanned": 759180409,
+      "tables_referenced": [],
+      "first_seen": "2026-04-14T06:44:43",
+      "last_seen": "2026-04-14T06:44:43",
+      "impact_score": 0.5077
+    },
+    {
+      "fingerprint": "16c14dc01214c2933dd9c14e96e4ce53",
+      "canonical_sql": "SELECT T0.CUSTOMER_NAME, T0.CUSTOMER_ID, T0.PREFERRED_CHANNEL, T0.CUSTOMER_SEGMENT, COUNT(DISTINCT DATE_TRUNC('MONTH', T1.ORDER_DATE)), MAX(T1.ORDER_DATE), DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE), SUM(T1.TOTAL_AMOUNT), AVG(T1.TOTAL_AMOUNT) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID WHERE T0.CUSTOMER_SEGMENT = '?' GROUP BY T0.CUSTOMER_NAME, T0.CUSTOMER_ID, T0.PREFERRED_CHANNEL, T0.CUSTOMER_SEGMENT ORDER BY LIFETIME_VALUE DESC LIMIT ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "priya.patel@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_S"
+      ],
+      "total_credits": 0.505363,
+      "avg_execution_time_ms": 24257.0,
+      "total_bytes_scanned": 350439474,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-14T09:03:10",
+      "last_seen": "2026-04-14T09:03:10",
+      "impact_score": 0.5054
+    },
+    {
+      "fingerprint": "bf8748fc96da4e418968b845e6a4bda4",
+      "canonical_sql": "SELECT AVG(OI.UNIT_PRICE) AS AVG_SELLING_PRICE, SUM(OI.QUANTITY * OI.UNIT_PRICE) AS GROSS_REVENUE, COUNT(DISTINCT O.CUSTOMER_ID) AS UNIQUE_BUYERS, DATE_TRUNC('?', O.ORDER_DATE) AS MONTH FROM ANALYTICS.SALES.FACT_ORDER_ITEMS OI JOIN ANALYTICS.SALES.FACT_ORDERS O ON OI.ORDER_ID = O.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS P ON OI.PRODUCT_ID = P.PRODUCT_ID WHERE O.ORDER_DATE >= '?' GROUP BY DATE_TRUNC('?', O.ORDER_DATE) AS MONTH ORDER BY GROSS_REVENUE DESC",
+      "execution_count": 1,
+      "distinct_users": [
+        "mike.johnson@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_M"
+      ],
+      "total_credits": 0.503886,
+      "avg_execution_time_ms": 23794.0,
+      "total_bytes_scanned": 830078247,
+      "tables_referenced": [],
+      "first_seen": "2026-04-10T08:26:56",
+      "last_seen": "2026-04-10T08:26:56",
+      "impact_score": 0.5039
+    },
+    {
+      "fingerprint": "36db21c87b493bc7330c84330903a0ff",
+      "canonical_sql": "SELECT T0.UTM_SOURCE, COUNT(DISTINCT T0.USER_ID), T0.UTM_MEDIUM, T0.UTM_CAMPAIGN FROM MARKETING.PUBLIC.SESSIONS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.USER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE = T0.SESSION_DATE WHERE T0.SESSION_DATE >= '?' GROUP BY T0.UTM_SOURCE, T0.UTM_MEDIUM, T0.UTM_CAMPAIGN ORDER BY ATTRIBUTED_REVENUE DESC NULLS LAST",
+      "execution_count": 1,
+      "distinct_users": [
+        "rachel.thompson@company.com"
+      ],
+      "distinct_roles": [
+        "MANAGER"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_S"
+      ],
+      "total_credits": 0.497546,
+      "avg_execution_time_ms": 21484.0,
+      "total_bytes_scanned": 1106119801,
+      "tables_referenced": [
+        "analytics.sales.fact_orders",
+        "marketing.public.sessions"
+      ],
+      "first_seen": "2026-04-10T17:07:03",
+      "last_seen": "2026-04-10T17:07:03",
+      "impact_score": 0.4975
+    },
+    {
+      "fingerprint": "02abbb31b0050c67b24b653f5e1eec55",
+      "canonical_sql": "SELECT AVG(T1.TOTAL_AMOUNT), CAST(SUM(CASE WHEN T0.CONVERTED THEN ? ELSE ? END) AS FLOAT) / NULLIF(COUNT(DISTINCT T0.USER_ID), ?), SUM(CASE WHEN T0.CONVERTED THEN ? ELSE ? END), T0.UTM_MEDIUM, T0.UTM_SOURCE, T0.UTM_CAMPAIGN, COUNT(DISTINCT T0.SESSION_ID), COUNT(DISTINCT T0.USER_ID), SUM(T1.TOTAL_AMOUNT) FROM MARKETING.PUBLIC.SESSIONS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.USER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE = T0.SESSION_DATE WHERE T0.SESSION_DATE >= '?' GROUP BY T0.UTM_MEDIUM, T0.UTM_SOURCE, T0.UTM_CAMPAIGN ORDER BY ATTRIBUTED_REVENUE DESC NULLS LAST",
+      "execution_count": 1,
+      "distinct_users": [
+        "rachel.thompson@company.com"
+      ],
+      "distinct_roles": [
+        "MANAGER"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_S"
+      ],
+      "total_credits": 0.494276,
+      "avg_execution_time_ms": 21343.0,
+      "total_bytes_scanned": 756419940,
+      "tables_referenced": [
+        "analytics.sales.fact_orders",
+        "marketing.public.sessions"
+      ],
+      "first_seen": "2026-04-12T21:49:35",
+      "last_seen": "2026-04-12T21:49:35",
+      "impact_score": 0.4943
+    },
+    {
+      "fingerprint": "645ea168919c4520bef896fdcf782630",
+      "canonical_sql": "SELECT T0.TOTAL_AMOUNT, T0.ORDER_STATUS, T1.CUSTOMER_SEGMENT, T1.PHONE_NUMBER, T1.CUSTOMER_NAME, T1.EMAIL, T3.QUANTITY, T3.DISCOUNT_AMOUNT, (T3.QUANTITY * T3.UNIT_PRICE) - T3.DISCOUNT_AMOUNT, T3.UNIT_PRICE, T3.PRODUCT_ID, T4.PRODUCT_NAME, T4.BRAND, T4.SKU, T4.PRODUCT_CATEGORY, T2.REGION_NAME FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE BETWEEN '?' AND '?' AND T2.REGION_NAME = '?'",
+      "execution_count": 1,
+      "distinct_users": [
+        "sarah.chen@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_L"
+      ],
+      "total_credits": 0.479103,
+      "avg_execution_time_ms": 15679.0,
+      "total_bytes_scanned": 728193254,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.dim_products",
+        "analytics.sales.dim_regions",
+        "analytics.sales.fact_order_items",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-11T16:46:07",
+      "last_seen": "2026-04-11T16:46:07",
+      "impact_score": 0.4791
+    },
+    {
+      "fingerprint": "f3966d5b614c719d3f0b01a385047991",
+      "canonical_sql": "SELECT T0.CUSTOMER_NAME, T0.EMAIL, T0.PREFERRED_CHANNEL, MIN(T1.ORDER_DATE), SUM(T1.TOTAL_AMOUNT), COUNT(T1.ORDER_ID), AVG(T1.TOTAL_AMOUNT), DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID WHERE T0.CUSTOMER_SEGMENT = '?' GROUP BY T0.CUSTOMER_NAME, T0.EMAIL, T0.PREFERRED_CHANNEL HAVING LIFETIME_VALUE > ? ORDER BY LIFETIME_VALUE DESC LIMIT ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "priya.patel@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_M"
+      ],
+      "total_credits": 0.476781,
+      "avg_execution_time_ms": 22885.0,
+      "total_bytes_scanned": 469523027,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-14T16:22:56",
+      "last_seen": "2026-04-14T16:22:56",
+      "impact_score": 0.4768
+    },
+    {
+      "fingerprint": "0094be869edd2e2dce4a310495c07fd9",
+      "canonical_sql": "SELECT COUNT(DISTINCT T0.USER_ID), T0.UTM_MEDIUM, SUM(T1.TOTAL_AMOUNT), T0.UTM_CAMPAIGN, COUNT(DISTINCT T0.SESSION_ID) FROM MARKETING.PUBLIC.SESSIONS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.USER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE = T0.SESSION_DATE WHERE T0.SESSION_DATE >= '?' GROUP BY T0.UTM_MEDIUM, T0.UTM_CAMPAIGN ORDER BY ATTRIBUTED_REVENUE DESC NULLS LAST",
+      "execution_count": 1,
+      "distinct_users": [
+        "mike.johnson@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_M"
+      ],
+      "total_credits": 0.469093,
+      "avg_execution_time_ms": 20256.0,
+      "total_bytes_scanned": 118684213,
+      "tables_referenced": [
+        "analytics.sales.fact_orders",
+        "marketing.public.sessions"
+      ],
+      "first_seen": "2026-04-13T07:19:24",
+      "last_seen": "2026-04-13T07:19:24",
+      "impact_score": 0.4691
+    },
+    {
+      "fingerprint": "ee12f0386c817cebe7605763775fec1c",
+      "canonical_sql": "SELECT T0.CUSTOMER_NAME, T0.CUSTOMER_ID, T0.EMAIL, T0.PREFERRED_CHANNEL, T0.PHONE_NUMBER, SUM(T1.TOTAL_AMOUNT), MAX(T1.ORDER_DATE), DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE), COUNT(DISTINCT DATE_TRUNC('MONTH', T1.ORDER_DATE)), MIN(T1.ORDER_DATE), AVG(T1.TOTAL_AMOUNT), COUNT(T1.ORDER_ID) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID WHERE T0.CUSTOMER_SEGMENT = '?' GROUP BY T0.CUSTOMER_NAME, T0.CUSTOMER_ID, T0.EMAIL, T0.PREFERRED_CHANNEL, T0.PHONE_NUMBER ORDER BY LIFETIME_VALUE DESC LIMIT ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "james.wilson@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_L"
+      ],
+      "total_credits": 0.458977,
+      "avg_execution_time_ms": 22030.0,
+      "total_bytes_scanned": 722436436,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-12T11:32:03",
+      "last_seen": "2026-04-12T11:32:03",
+      "impact_score": 0.459
+    },
+    {
+      "fingerprint": "7a8e009cc5adf379a4d67f33e1226e2e",
+      "canonical_sql": "SELECT T0.CUSTOMER_NAME, T0.CUSTOMER_ID, T0.EMAIL, T0.SIGNUP_DATE, T0.PREFERRED_CHANNEL, MAX(T1.ORDER_DATE), COUNT(T1.ORDER_ID), MIN(T1.ORDER_DATE), AVG(T1.TOTAL_AMOUNT) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID WHERE T0.CUSTOMER_SEGMENT = '?' GROUP BY T0.CUSTOMER_NAME, T0.CUSTOMER_ID, T0.EMAIL, T0.SIGNUP_DATE, T0.PREFERRED_CHANNEL ORDER BY LIFETIME_VALUE DESC LIMIT ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "priya.patel@company.com"
+      ],
+      "distinct_roles": [
+        "ANALYST"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_M"
+      ],
+      "total_credits": 0.456763,
+      "avg_execution_time_ms": 21924.0,
+      "total_bytes_scanned": 1224900071,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-12T06:54:16",
+      "last_seen": "2026-04-12T06:54:16",
+      "impact_score": 0.4568
+    },
+    {
+      "fingerprint": "05f3e67c5cc4058ecdb98605e07dc0ef",
+      "canonical_sql": "SELECT SUM(OI.DISCOUNT_AMOUNT) AS TOTAL_DISCOUNTS, SUM(OI.QUANTITY * OI.UNIT_PRICE) AS GROSS_REVENUE, SUM(OI.QUANTITY * (OI.UNIT_PRICE - P.COST_PRICE)) AS GROSS_MARGIN, DATE_TRUNC('?', O.ORDER_DATE) AS MONTH, COUNT(DISTINCT O.CUSTOMER_ID) AS UNIQUE_BUYERS, AVG(OI.UNIT_PRICE) AS AVG_SELLING_PRICE, SUM(OI.QUANTITY) AS UNITS_SOLD, P.PRODUCT_SUBCATEGORY FROM ANALYTICS.SALES.FACT_ORDER_ITEMS OI JOIN ANALYTICS.SALES.FACT_ORDERS O ON OI.ORDER_ID = O.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS P ON OI.PRODUCT_ID = P.PRODUCT_ID WHERE O.ORDER_DATE >= '?' GROUP BY DATE_TRUNC('?', O.ORDER_DATE) AS MONTH, P.PRODUCT_SUBCATEGORY ORDER BY GROSS_REVENUE DESC",
+      "execution_count": 1,
+      "distinct_users": [
+        "TABLEAU_SERVICE"
+      ],
+      "distinct_roles": [
+        "TABLEAU_ROLE"
+      ],
+      "warehouses": [
+        "WH_TABLEAU"
+      ],
+      "total_credits": 0.444989,
+      "avg_execution_time_ms": 21013.0,
+      "total_bytes_scanned": 309029075,
+      "tables_referenced": [],
+      "first_seen": "2026-04-11T13:16:41",
+      "last_seen": "2026-04-11T13:16:41",
+      "impact_score": 0.445
+    },
+    {
+      "fingerprint": "676abcba323fceef5173c8f7f0a3d0fd",
+      "canonical_sql": "SELECT T0.CURRENT_STOCK, T0.WAREHOUSE_LOCATION, S.AVG_DAILY_UNITS, T0.REORDER_POINT, ROUND(T0.CURRENT_STOCK / NULLIF(S.AVG_DAILY_UNITS, ?), ?) FROM OPERATIONS.INVENTORY.STOCK_LEVELS AS T0 JOIN (SELECT PRODUCT_ID, AVG(QUANTITY) FROM ANALYTICS.SALES.FACT_ORDER_ITEMS WHERE ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY PRODUCT_ID) AS S ON T0.PRODUCT_ID = S.PRODUCT_ID WHERE T0.CURRENT_STOCK <= T0.REORDER_POINT * ? ORDER BY DAYS_OF_STOCK ASC",
+      "execution_count": 1,
+      "distinct_users": [
+        "rachel.thompson@company.com"
+      ],
+      "distinct_roles": [
+        "MANAGER"
+      ],
+      "warehouses": [
+        "WH_ANALYTICS_S"
+      ],
+      "total_credits": 0.436929,
+      "avg_execution_time_ms": 20390.0,
+      "total_bytes_scanned": 193064763,
+      "tables_referenced": [
+        "analytics.sales.fact_order_items",
+        "operations.inventory.stock_levels"
+      ],
+      "first_seen": "2026-04-11T18:10:30",
+      "last_seen": "2026-04-11T18:10:30",
+      "impact_score": 0.4369
+    },
+    {
+      "fingerprint": "5e0cc067f006ff4dd5df32f680539e86",
+      "canonical_sql": "SELECT T0.CUSTOMER_ID, T0.CUSTOMER_NAME, T0.SIGNUP_DATE, MAX(T1.ORDER_DATE), MIN(T1.ORDER_DATE) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID WHERE T0.CUSTOMER_SEGMENT = '?' GROUP BY T0.CUSTOMER_ID, T0.CUSTOMER_NAME, T0.SIGNUP_DATE HAVING LIFETIME_VALUE > ? ORDER BY LIFETIME_VALUE DESC LIMIT ?",
+      "execution_count": 1,
+      "distinct_users": [
+        "noah.martinez@company.com"
+      ],
+      "distinct_roles": [
+        "DATA_SCIENTIST"
+      ],
+      "warehouses": [
+        "WH_DS_XL"
+      ],
+      "total_credits": 0.428688,
+      "avg_execution_time_ms": 20577.0,
+      "total_bytes_scanned": 1394698262,
+      "tables_referenced": [
+        "analytics.sales.dim_customers",
+        "analytics.sales.fact_orders"
+      ],
+      "first_seen": "2026-04-08T18:19:14",
+      "last_seen": "2026-04-08T18:19:14",
+      "impact_score": 0.4287
+    },
+    {
+      "fingerprint": "ff38b9e944b0ff2cde5c8ae1a012795b",
+      "canonical_sql": "SELECT AVG(OI.UNIT_PRICE) AS AVG_SELLING_PRICE, COUNT(DISTINCT O.CUSTOMER_ID) AS UNIQUE_BUYERS, SUM(OI.DISCOUNT_AMOUNT) AS TOTAL_DISCOUNTS, P.BRAND, P.PRODUCT_CATEGORY, SUM(OI.QUANTITY * (OI.UNIT_PRICE - P.COST_PRICE)) AS GROSS_MARGIN, P.PRODUCT_SUBCATEGORY, DATE_TRUNC('?', O.ORDER_DATE) AS MONTH FROM ANALYTICS.SALES.FACT_ORDER_ITEMS OI JOIN ANALYTICS.SALES.FACT_ORDERS O ON OI.ORDER_ID = O.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS P ON OI.PRODUCT_ID = P.PRODUCT_ID WHERE O.ORDER_DATE >= '?' GROUP BY P.BRAND, P.PRODUCT_CATEGORY, P.PRODUCT_SUBCATEGORY, DATE_TRUNC('?', O.ORDER_DATE) AS MONTH ORDER BY GROSS_REVENUE DESC",
+      "execution_count": 1,
+      "distinct_users": [
+        "LOOKER_SERVICE"
+      ],
+      "distinct_roles": [
+        "LOOKER_ROLE"
+      ],
+      "warehouses": [
+        "WH_LOOKER"
+      ],
+      "total_credits": 0.428284,
+      "avg_execution_time_ms": 20224.0,
+      "total_bytes_scanned": 627478900,
+      "tables_referenced": [],
+      "first_seen": "2026-04-14T06:23:08",
+      "last_seen": "2026-04-14T06:23:08",
+      "impact_score": 0.4283
     }
   ],
   "offenders": {
@@ -1083,13 +2919,13 @@
           "raw.stripe.payments"
         ],
         "distinct_users": [
-          "jordan.lee@company.com",
-          "alex.kumar@company.com"
+          "alex.kumar@company.com",
+          "jordan.lee@company.com"
         ]
       },
       {
-        "fingerprint": "d20fa52ece04edbd35c5a50e78ba6269",
-        "canonical_sql": "SELECT O.ORDER_ID, O.ORDER_DATE, O.ORDER_STATUS, O.TOTAL_AMOUNT, C.CUSTOMER_NAME, C.EMAIL, C.CUSTOMER_SEGMENT, R.REGION_NAME, OI.PRODUCT_ID, OI.QUANTITY, OI.UNIT_PRICE, OI.DISCOUNT_AMOUNT, P.PRODUCT_NAME, P.PRODUCT_CATEGORY FROM ANALYTICS.SALES.FACT_ORDERS AS O JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS C ON O.CUSTOMER_ID = C.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS R ON O.REGION_ID = R.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS OI ON O.ORDER_ID = OI.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS P ON OI.PRODUCT_ID = P.PRODUCT_ID WHERE O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE)",
+        "fingerprint": "936c1922a4758f274829d0b431b2b93e",
+        "canonical_sql": "SELECT T0.ORDER_ID, T0.ORDER_DATE, T0.ORDER_STATUS, T0.TOTAL_AMOUNT, T1.CUSTOMER_NAME, T1.EMAIL, T1.CUSTOMER_SEGMENT, T2.REGION_NAME, T3.PRODUCT_ID, T3.QUANTITY, T3.UNIT_PRICE, T3.DISCOUNT_AMOUNT, T4.PRODUCT_NAME, T4.PRODUCT_CATEGORY FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE)",
         "avg_execution_time_ms": 18894.16,
         "max_execution_time_ms": 24354,
         "execution_count": 55,
@@ -1106,8 +2942,8 @@
         ]
       },
       {
-        "fingerprint": "d02632acc075ffcf4b720a3b772af144",
-        "canonical_sql": "SELECT C.CUSTOMER_ID, C.CUSTOMER_NAME, C.EMAIL, C.SIGNUP_DATE, C.CUSTOMER_SEGMENT, COUNT(O.ORDER_ID), SUM(O.TOTAL_AMOUNT), AVG(O.TOTAL_AMOUNT), MAX(O.ORDER_DATE), DATEDIFF(DAY, MAX(O.ORDER_DATE), CURRENT_DATE) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS C LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS O ON C.CUSTOMER_ID = O.CUSTOMER_ID GROUP BY C.CUSTOMER_ID, C.CUSTOMER_NAME, C.EMAIL, C.SIGNUP_DATE, C.CUSTOMER_SEGMENT ORDER BY LIFETIME_VALUE DESC LIMIT ?",
+        "fingerprint": "dc42cc755b956919df94235f7e53faab",
+        "canonical_sql": "SELECT T0.CUSTOMER_ID, T0.CUSTOMER_NAME, T0.EMAIL, T0.SIGNUP_DATE, T0.CUSTOMER_SEGMENT, COUNT(T1.ORDER_ID), SUM(T1.TOTAL_AMOUNT), AVG(T1.TOTAL_AMOUNT), MAX(T1.ORDER_DATE), DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID GROUP BY T0.CUSTOMER_ID, T0.CUSTOMER_NAME, T0.EMAIL, T0.SIGNUP_DATE, T0.CUSTOMER_SEGMENT ORDER BY LIFETIME_VALUE DESC LIMIT ?",
         "avg_execution_time_ms": 11907.33,
         "max_execution_time_ms": 16079,
         "execution_count": 43,
@@ -1117,8 +2953,8 @@
           "analytics.sales.fact_orders"
         ],
         "distinct_users": [
-          "mike.johnson@company.com",
-          "sarah.chen@company.com"
+          "sarah.chen@company.com",
+          "mike.johnson@company.com"
         ]
       },
       {
@@ -1132,15 +2968,15 @@
           "analytics.sales.dim_customers"
         ],
         "distinct_users": [
-          "rachel.thompson@company.com",
           "jordan.lee@company.com",
+          "rachel.thompson@company.com",
           "mike.johnson@company.com",
           "DBT_PROD"
         ]
       },
       {
-        "fingerprint": "20db487df422a37ef6f58697add2bc0a",
-        "canonical_sql": "SELECT S.UTM_SOURCE, S.UTM_MEDIUM, S.UTM_CAMPAIGN, COUNT(DISTINCT S.SESSION_ID), COUNT(DISTINCT S.USER_ID), SUM(CASE WHEN S.CONVERTED THEN ? ELSE ? END), CAST(SUM(CASE WHEN S.CONVERTED THEN ? ELSE ? END) AS DOUBLE) / NULLIF(COUNT(DISTINCT S.USER_ID), ?), SUM(O.TOTAL_AMOUNT) FROM MARKETING.PUBLIC.SESSIONS AS S LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS O ON S.USER_ID = O.CUSTOMER_ID AND O.ORDER_DATE = S.SESSION_DATE WHERE S.SESSION_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY S.UTM_SOURCE, S.UTM_MEDIUM, S.UTM_CAMPAIGN ORDER BY ATTRIBUTED_REVENUE DESC NULLS LAST",
+        "fingerprint": "af75d0d642d828cf92cabebd242b65a9",
+        "canonical_sql": "SELECT T0.UTM_SOURCE, T0.UTM_MEDIUM, T0.UTM_CAMPAIGN, COUNT(DISTINCT T0.SESSION_ID), COUNT(DISTINCT T0.USER_ID), SUM(CASE WHEN T0.CONVERTED THEN ? ELSE ? END), CAST(SUM(CASE WHEN T0.CONVERTED THEN ? ELSE ? END) AS FLOAT) / NULLIF(COUNT(DISTINCT T0.USER_ID), ?), SUM(T1.TOTAL_AMOUNT) FROM MARKETING.PUBLIC.SESSIONS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.USER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE = T0.SESSION_DATE WHERE T0.SESSION_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY T0.UTM_SOURCE, T0.UTM_MEDIUM, T0.UTM_CAMPAIGN ORDER BY ATTRIBUTED_REVENUE DESC NULLS LAST",
         "avg_execution_time_ms": 9910.78,
         "max_execution_time_ms": 12672,
         "execution_count": 27,
@@ -1150,13 +2986,13 @@
           "marketing.public.sessions"
         ],
         "distinct_users": [
-          "mike.johnson@company.com",
-          "sarah.chen@company.com"
+          "sarah.chen@company.com",
+          "mike.johnson@company.com"
         ]
       },
       {
-        "fingerprint": "2256f9bc51ab6164b77c9526e87943c5",
-        "canonical_sql": "SELECT P.PRODUCT_CATEGORY, P.PRODUCT_SUBCATEGORY, DATE_TRUNC('MONTH', O.ORDER_DATE), SUM(OI.QUANTITY), SUM(OI.QUANTITY * OI.UNIT_PRICE), SUM(OI.QUANTITY * (OI.UNIT_PRICE - P.COST_PRICE)), COUNT(DISTINCT O.CUSTOMER_ID) FROM ANALYTICS.SALES.FACT_ORDER_ITEMS AS OI JOIN ANALYTICS.SALES.FACT_ORDERS AS O ON OI.ORDER_ID = O.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS P ON OI.PRODUCT_ID = P.PRODUCT_ID WHERE O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY P.PRODUCT_CATEGORY, P.PRODUCT_SUBCATEGORY, DATE_TRUNC('MONTH', O.ORDER_DATE) ORDER BY GROSS_REVENUE DESC",
+        "fingerprint": "f928d548758c0dd60573c76cc5603109",
+        "canonical_sql": "SELECT T2.PRODUCT_CATEGORY, T2.PRODUCT_SUBCATEGORY, DATE_TRUNC('MONTH', T1.ORDER_DATE), SUM(T0.QUANTITY), SUM(T0.QUANTITY * T0.UNIT_PRICE), SUM(T0.QUANTITY * (T0.UNIT_PRICE - T2.COST_PRICE)), COUNT(DISTINCT T1.CUSTOMER_ID) FROM ANALYTICS.SALES.FACT_ORDER_ITEMS AS T0 JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.ORDER_ID = T1.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T2 ON T0.PRODUCT_ID = T2.PRODUCT_ID WHERE T1.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY T2.PRODUCT_CATEGORY, T2.PRODUCT_SUBCATEGORY, DATE_TRUNC('MONTH', T1.ORDER_DATE) ORDER BY GROSS_REVENUE DESC",
         "avg_execution_time_ms": 8291.07,
         "max_execution_time_ms": 11448,
         "execution_count": 60,
@@ -1185,8 +3021,8 @@
         ]
       },
       {
-        "fingerprint": "07aef86a1330b894e352996214eb74fe",
-        "canonical_sql": "SELECT DATE_TRUNC('WEEK', O.ORDER_DATE), COUNT(DISTINCT O.ORDER_ID), COUNT(DISTINCT O.CUSTOMER_ID), SUM(O.TOTAL_AMOUNT), SUM(O.TOTAL_AMOUNT) / NULLIF(COUNT(DISTINCT O.CUSTOMER_ID), ?) FROM ANALYTICS.SALES.FACT_ORDERS AS O WHERE O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) AND O.ORDER_STATUS = '?' GROUP BY DATE_TRUNC('WEEK', O.ORDER_DATE) ORDER BY WEEK DESC",
+        "fingerprint": "5297d5b1a62377b3d515c39877acc441",
+        "canonical_sql": "SELECT DATE_TRUNC('WEEK', T0.ORDER_DATE), COUNT(DISTINCT T0.ORDER_ID), COUNT(DISTINCT T0.CUSTOMER_ID), SUM(T0.TOTAL_AMOUNT), SUM(T0.TOTAL_AMOUNT) / NULLIF(COUNT(DISTINCT T0.CUSTOMER_ID), ?) FROM ANALYTICS.SALES.FACT_ORDERS AS T0 WHERE T0.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) AND T0.ORDER_STATUS = '?' GROUP BY DATE_TRUNC('WEEK', T0.ORDER_DATE) ORDER BY WEEK DESC",
         "avg_execution_time_ms": 5539.36,
         "max_execution_time_ms": 7459,
         "execution_count": 95,
@@ -1195,13 +3031,13 @@
           "analytics.sales.fact_orders"
         ],
         "distinct_users": [
-          "TABLEAU_SERVICE",
-          "LOOKER_SERVICE"
+          "LOOKER_SERVICE",
+          "TABLEAU_SERVICE"
         ]
       },
       {
-        "fingerprint": "4bcbda3cbc240f999072b2b279669bbb",
-        "canonical_sql": "SELECT R.REGION_NAME, DATE_TRUNC('DAY', O.ORDER_DATE), SUM(O.TOTAL_AMOUNT), COUNT(DISTINCT O.CUSTOMER_ID), COUNT(*) FROM ANALYTICS.SALES.FACT_ORDERS AS O JOIN ANALYTICS.SALES.DIM_REGIONS AS R ON O.REGION_ID = R.REGION_ID WHERE O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) AND O.ORDER_STATUS = '?' GROUP BY R.REGION_NAME, DATE_TRUNC('DAY', O.ORDER_DATE) ORDER BY DAY DESC, DAILY_REVENUE DESC",
+        "fingerprint": "d1c5c07cb9d16f757bbd97d9018a52a2",
+        "canonical_sql": "SELECT T1.REGION_NAME, DATE_TRUNC('DAY', T0.ORDER_DATE), SUM(T0.TOTAL_AMOUNT), COUNT(DISTINCT T0.CUSTOMER_ID), COUNT(*) FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_REGIONS AS T1 ON T0.REGION_ID = T1.REGION_ID WHERE T0.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) AND T0.ORDER_STATUS = '?' GROUP BY T1.REGION_NAME, DATE_TRUNC('DAY', T0.ORDER_DATE) ORDER BY DAY DESC, DAILY_REVENUE DESC",
         "avg_execution_time_ms": 4581.47,
         "max_execution_time_ms": 6121,
         "execution_count": 155,
@@ -1211,8 +3047,8 @@
           "analytics.sales.fact_orders"
         ],
         "distinct_users": [
-          "TABLEAU_SERVICE",
-          "LOOKER_SERVICE"
+          "LOOKER_SERVICE",
+          "TABLEAU_SERVICE"
         ]
       }
     ],
@@ -1228,13 +3064,13 @@
           "raw.stripe.payments"
         ],
         "distinct_users": [
-          "alex.kumar@company.com",
-          "jordan.lee@company.com"
+          "jordan.lee@company.com",
+          "alex.kumar@company.com"
         ]
       },
       {
-        "fingerprint": "d20fa52ece04edbd35c5a50e78ba6269",
-        "canonical_sql": "SELECT O.ORDER_ID, O.ORDER_DATE, O.ORDER_STATUS, O.TOTAL_AMOUNT, C.CUSTOMER_NAME, C.EMAIL, C.CUSTOMER_SEGMENT, R.REGION_NAME, OI.PRODUCT_ID, OI.QUANTITY, OI.UNIT_PRICE, OI.DISCOUNT_AMOUNT, P.PRODUCT_NAME, P.PRODUCT_CATEGORY FROM ANALYTICS.SALES.FACT_ORDERS AS O JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS C ON O.CUSTOMER_ID = C.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS R ON O.REGION_ID = R.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS OI ON O.ORDER_ID = OI.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS P ON OI.PRODUCT_ID = P.PRODUCT_ID WHERE O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE)",
+        "fingerprint": "936c1922a4758f274829d0b431b2b93e",
+        "canonical_sql": "SELECT T0.ORDER_ID, T0.ORDER_DATE, T0.ORDER_STATUS, T0.TOTAL_AMOUNT, T1.CUSTOMER_NAME, T1.EMAIL, T1.CUSTOMER_SEGMENT, T2.REGION_NAME, T3.PRODUCT_ID, T3.QUANTITY, T3.UNIT_PRICE, T3.DISCOUNT_AMOUNT, T4.PRODUCT_NAME, T4.PRODUCT_CATEGORY FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_CUSTOMERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID JOIN ANALYTICS.SALES.DIM_REGIONS AS T2 ON T0.REGION_ID = T2.REGION_ID JOIN ANALYTICS.SALES.FACT_ORDER_ITEMS AS T3 ON T0.ORDER_ID = T3.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T4 ON T3.PRODUCT_ID = T4.PRODUCT_ID WHERE T0.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE)",
         "avg_execution_time_ms": 18894.16,
         "max_execution_time_ms": 24354,
         "execution_count": 55,
@@ -1251,8 +3087,8 @@
         ]
       },
       {
-        "fingerprint": "d02632acc075ffcf4b720a3b772af144",
-        "canonical_sql": "SELECT C.CUSTOMER_ID, C.CUSTOMER_NAME, C.EMAIL, C.SIGNUP_DATE, C.CUSTOMER_SEGMENT, COUNT(O.ORDER_ID), SUM(O.TOTAL_AMOUNT), AVG(O.TOTAL_AMOUNT), MAX(O.ORDER_DATE), DATEDIFF(DAY, MAX(O.ORDER_DATE), CURRENT_DATE) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS C LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS O ON C.CUSTOMER_ID = O.CUSTOMER_ID GROUP BY C.CUSTOMER_ID, C.CUSTOMER_NAME, C.EMAIL, C.SIGNUP_DATE, C.CUSTOMER_SEGMENT ORDER BY LIFETIME_VALUE DESC LIMIT ?",
+        "fingerprint": "dc42cc755b956919df94235f7e53faab",
+        "canonical_sql": "SELECT T0.CUSTOMER_ID, T0.CUSTOMER_NAME, T0.EMAIL, T0.SIGNUP_DATE, T0.CUSTOMER_SEGMENT, COUNT(T1.ORDER_ID), SUM(T1.TOTAL_AMOUNT), AVG(T1.TOTAL_AMOUNT), MAX(T1.ORDER_DATE), DATEDIFF(DAY, MAX(T1.ORDER_DATE), CURRENT_DATE) FROM ANALYTICS.SALES.DIM_CUSTOMERS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.CUSTOMER_ID = T1.CUSTOMER_ID GROUP BY T0.CUSTOMER_ID, T0.CUSTOMER_NAME, T0.EMAIL, T0.SIGNUP_DATE, T0.CUSTOMER_SEGMENT ORDER BY LIFETIME_VALUE DESC LIMIT ?",
         "avg_execution_time_ms": 11907.33,
         "max_execution_time_ms": 16079,
         "execution_count": 43,
@@ -1267,8 +3103,8 @@
         ]
       },
       {
-        "fingerprint": "4bcbda3cbc240f999072b2b279669bbb",
-        "canonical_sql": "SELECT R.REGION_NAME, DATE_TRUNC('DAY', O.ORDER_DATE), SUM(O.TOTAL_AMOUNT), COUNT(DISTINCT O.CUSTOMER_ID), COUNT(*) FROM ANALYTICS.SALES.FACT_ORDERS AS O JOIN ANALYTICS.SALES.DIM_REGIONS AS R ON O.REGION_ID = R.REGION_ID WHERE O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) AND O.ORDER_STATUS = '?' GROUP BY R.REGION_NAME, DATE_TRUNC('DAY', O.ORDER_DATE) ORDER BY DAY DESC, DAILY_REVENUE DESC",
+        "fingerprint": "d1c5c07cb9d16f757bbd97d9018a52a2",
+        "canonical_sql": "SELECT T1.REGION_NAME, DATE_TRUNC('DAY', T0.ORDER_DATE), SUM(T0.TOTAL_AMOUNT), COUNT(DISTINCT T0.CUSTOMER_ID), COUNT(*) FROM ANALYTICS.SALES.FACT_ORDERS AS T0 JOIN ANALYTICS.SALES.DIM_REGIONS AS T1 ON T0.REGION_ID = T1.REGION_ID WHERE T0.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) AND T0.ORDER_STATUS = '?' GROUP BY T1.REGION_NAME, DATE_TRUNC('DAY', T0.ORDER_DATE) ORDER BY DAY DESC, DAILY_REVENUE DESC",
         "avg_execution_time_ms": 4581.47,
         "max_execution_time_ms": 6121,
         "execution_count": 155,
@@ -1278,13 +3114,13 @@
           "analytics.sales.fact_orders"
         ],
         "distinct_users": [
-          "TABLEAU_SERVICE",
-          "LOOKER_SERVICE"
+          "LOOKER_SERVICE",
+          "TABLEAU_SERVICE"
         ]
       },
       {
-        "fingerprint": "2256f9bc51ab6164b77c9526e87943c5",
-        "canonical_sql": "SELECT P.PRODUCT_CATEGORY, P.PRODUCT_SUBCATEGORY, DATE_TRUNC('MONTH', O.ORDER_DATE), SUM(OI.QUANTITY), SUM(OI.QUANTITY * OI.UNIT_PRICE), SUM(OI.QUANTITY * (OI.UNIT_PRICE - P.COST_PRICE)), COUNT(DISTINCT O.CUSTOMER_ID) FROM ANALYTICS.SALES.FACT_ORDER_ITEMS AS OI JOIN ANALYTICS.SALES.FACT_ORDERS AS O ON OI.ORDER_ID = O.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS P ON OI.PRODUCT_ID = P.PRODUCT_ID WHERE O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY P.PRODUCT_CATEGORY, P.PRODUCT_SUBCATEGORY, DATE_TRUNC('MONTH', O.ORDER_DATE) ORDER BY GROSS_REVENUE DESC",
+        "fingerprint": "f928d548758c0dd60573c76cc5603109",
+        "canonical_sql": "SELECT T2.PRODUCT_CATEGORY, T2.PRODUCT_SUBCATEGORY, DATE_TRUNC('MONTH', T1.ORDER_DATE), SUM(T0.QUANTITY), SUM(T0.QUANTITY * T0.UNIT_PRICE), SUM(T0.QUANTITY * (T0.UNIT_PRICE - T2.COST_PRICE)), COUNT(DISTINCT T1.CUSTOMER_ID) FROM ANALYTICS.SALES.FACT_ORDER_ITEMS AS T0 JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.ORDER_ID = T1.ORDER_ID JOIN ANALYTICS.SALES.DIM_PRODUCTS AS T2 ON T0.PRODUCT_ID = T2.PRODUCT_ID WHERE T1.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY T2.PRODUCT_CATEGORY, T2.PRODUCT_SUBCATEGORY, DATE_TRUNC('MONTH', T1.ORDER_DATE) ORDER BY GROSS_REVENUE DESC",
         "avg_execution_time_ms": 8291.07,
         "max_execution_time_ms": 11448,
         "execution_count": 60,
@@ -1299,8 +3135,8 @@
         ]
       },
       {
-        "fingerprint": "07aef86a1330b894e352996214eb74fe",
-        "canonical_sql": "SELECT DATE_TRUNC('WEEK', O.ORDER_DATE), COUNT(DISTINCT O.ORDER_ID), COUNT(DISTINCT O.CUSTOMER_ID), SUM(O.TOTAL_AMOUNT), SUM(O.TOTAL_AMOUNT) / NULLIF(COUNT(DISTINCT O.CUSTOMER_ID), ?) FROM ANALYTICS.SALES.FACT_ORDERS AS O WHERE O.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) AND O.ORDER_STATUS = '?' GROUP BY DATE_TRUNC('WEEK', O.ORDER_DATE) ORDER BY WEEK DESC",
+        "fingerprint": "5297d5b1a62377b3d515c39877acc441",
+        "canonical_sql": "SELECT DATE_TRUNC('WEEK', T0.ORDER_DATE), COUNT(DISTINCT T0.ORDER_ID), COUNT(DISTINCT T0.CUSTOMER_ID), SUM(T0.TOTAL_AMOUNT), SUM(T0.TOTAL_AMOUNT) / NULLIF(COUNT(DISTINCT T0.CUSTOMER_ID), ?) FROM ANALYTICS.SALES.FACT_ORDERS AS T0 WHERE T0.ORDER_DATE >= DATEADD(DAY, -?, CURRENT_DATE) AND T0.ORDER_STATUS = '?' GROUP BY DATE_TRUNC('WEEK', T0.ORDER_DATE) ORDER BY WEEK DESC",
         "avg_execution_time_ms": 5539.36,
         "max_execution_time_ms": 7459,
         "execution_count": 95,
@@ -1309,8 +3145,8 @@
           "analytics.sales.fact_orders"
         ],
         "distinct_users": [
-          "TABLEAU_SERVICE",
-          "LOOKER_SERVICE"
+          "LOOKER_SERVICE",
+          "TABLEAU_SERVICE"
         ]
       },
       {
@@ -1324,15 +3160,15 @@
           "analytics.sales.dim_customers"
         ],
         "distinct_users": [
-          "jordan.lee@company.com",
-          "rachel.thompson@company.com",
           "mike.johnson@company.com",
-          "DBT_PROD"
+          "DBT_PROD",
+          "jordan.lee@company.com",
+          "rachel.thompson@company.com"
         ]
       },
       {
-        "fingerprint": "20db487df422a37ef6f58697add2bc0a",
-        "canonical_sql": "SELECT S.UTM_SOURCE, S.UTM_MEDIUM, S.UTM_CAMPAIGN, COUNT(DISTINCT S.SESSION_ID), COUNT(DISTINCT S.USER_ID), SUM(CASE WHEN S.CONVERTED THEN ? ELSE ? END), CAST(SUM(CASE WHEN S.CONVERTED THEN ? ELSE ? END) AS DOUBLE) / NULLIF(COUNT(DISTINCT S.USER_ID), ?), SUM(O.TOTAL_AMOUNT) FROM MARKETING.PUBLIC.SESSIONS AS S LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS O ON S.USER_ID = O.CUSTOMER_ID AND O.ORDER_DATE = S.SESSION_DATE WHERE S.SESSION_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY S.UTM_SOURCE, S.UTM_MEDIUM, S.UTM_CAMPAIGN ORDER BY ATTRIBUTED_REVENUE DESC NULLS LAST",
+        "fingerprint": "af75d0d642d828cf92cabebd242b65a9",
+        "canonical_sql": "SELECT T0.UTM_SOURCE, T0.UTM_MEDIUM, T0.UTM_CAMPAIGN, COUNT(DISTINCT T0.SESSION_ID), COUNT(DISTINCT T0.USER_ID), SUM(CASE WHEN T0.CONVERTED THEN ? ELSE ? END), CAST(SUM(CASE WHEN T0.CONVERTED THEN ? ELSE ? END) AS FLOAT) / NULLIF(COUNT(DISTINCT T0.USER_ID), ?), SUM(T1.TOTAL_AMOUNT) FROM MARKETING.PUBLIC.SESSIONS AS T0 LEFT JOIN ANALYTICS.SALES.FACT_ORDERS AS T1 ON T0.USER_ID = T1.CUSTOMER_ID AND T1.ORDER_DATE = T0.SESSION_DATE WHERE T0.SESSION_DATE >= DATEADD(DAY, -?, CURRENT_DATE) GROUP BY T0.UTM_SOURCE, T0.UTM_MEDIUM, T0.UTM_CAMPAIGN ORDER BY ATTRIBUTED_REVENUE DESC NULLS LAST",
         "avg_execution_time_ms": 9910.78,
         "max_execution_time_ms": 12672,
         "execution_count": 27,
@@ -1342,8 +3178,8 @@
           "marketing.public.sessions"
         ],
         "distinct_users": [
-          "mike.johnson@company.com",
-          "sarah.chen@company.com"
+          "sarah.chen@company.com",
+          "mike.johnson@company.com"
         ]
       },
       {
@@ -1365,12 +3201,15 @@
   "metadata": {
     "platform": "snowflake",
     "time_window_days": 7,
+    "time_window_hours": null,
     "total_queries_processed": 775,
     "distinct_fingerprints": 254,
-    "extraction_timestamp": "2026-04-17T11:17:06.313742",
+    "extraction_timestamp": "2026-04-26T03:07:00.954749",
     "excluded_users": [],
     "excluded_roles": [],
     "total_credits": 310.393123,
-    "total_bytes_scanned": 437027332179
+    "total_bytes_scanned": 437027332179,
+    "dbt_aware": false,
+    "analysis_depth": "standard"
   }
 }

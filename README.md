@@ -288,6 +288,8 @@ einblick extract --sample --format markdown --output /tmp/out.md
 
 Ships with 775 realistic Snowflake queries so you can see the output shape before pointing it at prod. `einblick analyze --sample` runs the same data through the full LLM pipeline -- handy for verifying your API key works and your model handles tool-calling correctly.
 
+If you want to read the report without running anything, [`sample_data/analysis_output.md`](./sample_data/analysis_output.md) is a pre-rendered example (Claude Opus against the bundled 775-query dataset) showing the shape of a real run -- biggest offenders, top recommendations with DDL, query rewrites, cost analysis, and structured dbt proposals.
+
 ## Subcommands
 
 ```bash

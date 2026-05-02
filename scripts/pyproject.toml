@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "einblick"
-version = "0.1.0"
+version = "0.2.0"
 description = "Analyze Snowflake, Databricks, and MotherDuck query history and recommend data modeling improvements"
 readme = {text = "Analyze query history and recommend data modeling improvements", content-type = "text/plain"}
 license = "MIT"

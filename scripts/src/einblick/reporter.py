@@ -17,8 +17,8 @@ from einblick.dbt_proposals import (
 from einblick.models import AnalysisResult, EinblickConfig
 
 _DEFAULT_MODELS = {
-    "anthropic": "claude-sonnet-4-20250514",
-    "openai": "gpt-4o",
+    "anthropic": "claude-sonnet-4-6",
+    "openai": "gpt-5",
 }
 
 _SCRIPT_DIR = Path(__file__).resolve().parent
@@ -50,7 +50,7 @@ def generate_report(result: AnalysisResult, config: EinblickConfig) -> str:
     analysis_prompt = analysis_prompt.replace("{{ANALYSIS_DEPTH}}", _build_depth_directive(config.analysis_depth))
     analysis_prompt = analysis_prompt.replace("{{DBT_CONTEXT}}", safe_dbt_context)
 
-    model = config.llm_model or _DEFAULT_MODELS.get(config.llm_provider, "claude-sonnet-4-20250514")
+    model = config.llm_model or _DEFAULT_MODELS.get(config.llm_provider, "claude-sonnet-4-6")
 
     if config.llm_provider == "anthropic":
         prose, proposals = _call_anthropic(
@@ -103,7 +103,7 @@ def _build_data_only_header(result: AnalysisResult, config: EinblickConfig) -> s
     return (
         f"# Einblick Analysis ({md.platform.title()})\n\n"
         f"<!-- LLM emitted proposals via tool_use but no prose. Common on "
-        f"OpenAI-compatible providers; switch to gpt-4o or claude-sonnet for "
+        f"OpenAI-compatible providers; switch to gpt-5 or claude-sonnet-4-6 for "
         f"the full prose report. -->\n\n"
         + _run_summary_lines(result)
         + f"- dbt-aware: {md.dbt_aware}\n"

@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-05-02
+
 ### Changed
 
 - Default Anthropic model bumped from `claude-sonnet-4-20250514` to `claude-sonnet-4-6`.
@@ -13,7 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
-- GitHub Actions workflow (`.github/workflows/test.yml`) runs `pytest` on every push to `main` and every pull request, across Python 3.10 / 3.11 / 3.12. Live warehouse and LLM tests stay skipped without credentials.
+- GitHub Actions workflow (`.github/workflows/test.yml`) runs `pytest` on every push to `main` and every pull request on Python 3.12. Live warehouse and LLM tests stay skipped without credentials.
 
 ## [0.1.0] - 2026-04-26
 
@@ -32,5 +34,6 @@ First public alpha.
 - Run history under `~/.einblick/history/` with atomic writes, mode `0o600` for files and `0o700` for directories. Default retention is the last 12 runs per platform.
 - 341 unit tests plus opt-in live integration tests for each platform.
 
-[Unreleased]: https://github.com/KranzL/einblick/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/KranzL/einblick/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/KranzL/einblick/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/KranzL/einblick/releases/tag/v0.1.0

@@ -353,24 +353,7 @@ pytest
 
 ## Release notes
 
-### v0.1.0 (2026-04-26)
-
-First public alpha. Tag your expectations accordingly: it works, but it's the first release.
-
-**What you get**
-
-- Three platforms: Snowflake (`ACCOUNT_USAGE.QUERY_HISTORY`), Databricks (`system.query.history`), and MotherDuck (`MD_INFORMATION_SCHEMA.QUERY_HISTORY`).
-- Two entry points: the `/einblick` slash command for interactive Claude Code / Codex sessions (no API key needed) and the `einblick analyze` CLI for cron / Airflow / GitHub Actions (Anthropic, OpenAI, or any OpenAI-compatible endpoint via `--llm-base-url`).
-- `--sample` mode: 775 generated queries, runs the full pipeline including the LLM call, no warehouse needed. Useful for evaluating the report quality before connecting a real account.
-- Two dbt integration paths:
-  - **Smarter recommendations (`--dbt-aware`)**: einblick calls the dbt Cloud Discovery API (GraphQL) directly so the LLM prestep can cross-reference each query pattern against the actual models in your dbt project. Recommendations distinguish `new_model`, `modify_existing`, and `access_pattern` from real project state instead of guesses. Needs `DBT_HOST` / `DBT_TOKEN` / `DBT_PROD_ENV_ID`. Works in both `/einblick` and `einblick analyze`.
-  - **Apply the recommendations for me**: in `/einblick` only, if you have `dbt-labs/dbt-mcp` loaded in your Claude Code / Codex session, the agent will pick proposals from the report, create the `.sql` model files in your dbt project, run `dbt parse / compile / run / test`, generate the schema YAML, and open a PR — all from inside the conversation. We don't ship dbt-mcp; install it separately.
-- Slack incoming-webhook delivery (`--slack-mode digest|alert|off`) with run-over-run diff detection — alerts only fire when something interesting changed.
-- Service-account auto-exclusion (`--auto-exclude-service-users`) recognizes Fivetran, dbt, Looker, Tableau, Hex, Hightouch, Census, Mode, Airbyte, Meltano, Airflow, Dagster, Prefect, Stitch, Rivery, Matillion, Segment, RudderStack, plus Snowflake's `SYSTEM` / `SNOWPIPE` / `WORKSHEETS_APP_USER` / `STREAMLIT_APP_USER`, plus glob patterns `*_SVC` / `SVC_*` / `*_BOT` / etc.
-- Docker image (`ghcr.io/kranzl/einblick:latest`) for scheduled runs. Mount `./reports` and `./history` as volumes for persistence.
-- History is kept under `~/.einblick/history/` (atomic writes, mode `0o600`, `0o700` directory) so run-over-run diffs work without you setting anything up.
-
-Tested end-to-end against live Snowflake, Databricks, and MotherDuck accounts. 341 unit tests plus opt-in live integration tests for each platform.
+See [CHANGELOG.md](./CHANGELOG.md).
 
 ## License
 
